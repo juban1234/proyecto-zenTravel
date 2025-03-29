@@ -14,9 +14,17 @@ let register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre, email, presupuesto, telefono, estiloVida, password } = req.body;
         console.log("📩 Recibiendo datos del usuario:", req.body);
-        const registerUsuario = yield (0, usuarioRepo_1.createUsuario)(nombre, email, presupuesto, telefono, estiloVida, password);
+        const usuario = {
+            nombre,
+            email,
+            presupuesto,
+            telefono,
+            estiloVida,
+            password,
+        };
+        const registerUsuario = yield usuarioRepo_1.createUsuario.add(usuario);
         console.log("Usuario registrado:", registerUsuario);
-        res.status(201).json({ message: "Usuario registrado con éxito" });
+        res.status(201).json(registerUsuario);
     }
     catch (error) {
         console.log(error);

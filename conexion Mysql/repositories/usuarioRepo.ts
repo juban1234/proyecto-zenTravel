@@ -1,19 +1,21 @@
 import db from '../configs/config';
 import bcrypt from "bcryptjs";
+import Usuario from '../Dto/UsuarioDto';
+import Login from '../Dto/loginDto';
 
 
 
-export const createUsuario = async( nombre:string ,email: string, presupuesto: number, telefono: string, estiloVida: string, password: string) => {
-        const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
-        const values = [nombre, email, presupuesto, telefono, estiloVida,password];
-        return db.execute(sql, values);
-    }
+export const createUsuario = async( usuario:Usuario) => {
+    const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
+    const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida,usuario.password];
+    return db.execute(sql, values);
+}
 
 
-export const buscarUsuarioPorEmail = async (email:string) => {
+export const buscarUsuarioPorEmail = async (login :Login) => {
     try {
         const sql = 'SELECT * FROM Usuario WHERE email = ?';
-        const values = [email];
+        const values = [login.email];
         return db.execute(sql, values);
 
     } catch (error) {
@@ -23,9 +25,10 @@ export const buscarUsuarioPorEmail = async (email:string) => {
 };
 
 // Función para comparar las contraseñas
-export const validarContraseña = async (password: string, passwordHash: string) => {
+export const validarContraseña = async (login :Login) => {
     try {
-        const passwordMatch = await bcrypt.compare(password, passwordHash);
+        
+        const passwordMatch = await bcrypt.compare(login.password, passwordHash);
         return passwordMatch; 
     } catch (error) {
         console.error('Error al comparar contraseñas:', error);

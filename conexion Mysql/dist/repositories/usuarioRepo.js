@@ -15,16 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarContraseña = exports.buscarUsuarioPorEmail = exports.createUsuario = void 0;
 const config_1 = __importDefault(require("../configs/config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const createUsuario = (nombre, email, presupuesto, telefono, estiloVida, password) => __awaiter(void 0, void 0, void 0, function* () {
+const createUsuario = (usuario) => __awaiter(void 0, void 0, void 0, function* () {
     const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
-    const values = [nombre, email, presupuesto, telefono, estiloVida, password];
+    const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida, usuario.password];
     return config_1.default.execute(sql, values);
 });
 exports.createUsuario = createUsuario;
-const buscarUsuarioPorEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+const buscarUsuarioPorEmail = (login) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sql = 'SELECT * FROM Usuario WHERE email = ?';
-        const values = [email];
+        const values = [login.email];
         return config_1.default.execute(sql, values);
     }
     catch (error) {
@@ -34,9 +34,9 @@ const buscarUsuarioPorEmail = (email) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.buscarUsuarioPorEmail = buscarUsuarioPorEmail;
 // Función para comparar las contraseñas
-const validarContraseña = (password, passwordHash) => __awaiter(void 0, void 0, void 0, function* () {
+const validarContraseña = (login) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const passwordMatch = yield bcryptjs_1.default.compare(password, passwordHash);
+        const passwordMatch = yield bcryptjs_1.default.compare(login.password, passwordHash);
         return passwordMatch;
     }
     catch (error) {

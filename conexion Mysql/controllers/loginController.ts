@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { buscarUsuarioPorEmail } from "../repositories/usuarioRepo";
-// import { validarContraseña } from "../repositories/usuarioRepo";
+import { validarContraseña } from "../repositories/usuarioRepo";
 
 let login = async(req:Request, res:Response) =>{
     try {
@@ -11,6 +11,8 @@ let login = async(req:Request, res:Response) =>{
         const login = await buscarUsuarioPorEmail(email);
         console.log("usuario encontrado" , login[0]);
 
+        const valitation = await validarContraseña(password,);
+        console.log("contraseña validada: ",valitation);
         
         
 

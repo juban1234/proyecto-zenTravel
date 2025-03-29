@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarContraseña = exports.buscarUsuarioPorEmail = exports.createUsuario = void 0;
-// import bcrypt from 'bcryptjs';
 const config_1 = __importDefault(require("../configs/config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const createUsuario = (nombre, email, presupuesto, telefono, estiloVida, password) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,12 +25,7 @@ const buscarUsuarioPorEmail = (email) => __awaiter(void 0, void 0, void 0, funct
     try {
         const sql = 'SELECT * FROM Usuario WHERE email = ?';
         const values = [email];
-        const [rows] = yield config_1.default.execute(sql, values);
-        // Si no se encuentra el usuario, retorna null
-        if (rows.length === 0) {
-            return null;
-        }
-        return rows[0]; // Si se encuentra, devuelve el primer usuario
+        return config_1.default.execute(sql, values);
     }
     catch (error) {
         console.error('Error al buscar usuario:', error);

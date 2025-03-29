@@ -12,6 +12,15 @@ estiloVida Varchar (100),
 primary key(id_usuario)
 );
 
+select * from Usuario;
+SELECT * FROM Usuario WHERE email = 'test@gmail.com';
+
+
+INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida) 
+VALUES ('Juan', 'test@gmail3.com', 33333, '23222dd', 'vago');
+
+
+
 CREATE TABLE PAQUETE (
     id_paquete INT PRIMARY KEY AUTO_INCREMENT,
     nombrePaquete VARCHAR(100),
@@ -89,6 +98,7 @@ CREATE TABLE PAQUETE_DESTINO (
     FOREIGN KEY (id_paquete) REFERENCES PAQUETE(id_paquete),
     FOREIGN KEY (id_destino) REFERENCES DESTINO(id_destino)
 );
+
 
 
 

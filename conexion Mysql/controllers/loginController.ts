@@ -15,7 +15,7 @@ let login = async(req:Request, res:Response) =>{
         
 
     } catch (error) {
-        console.error("ubo u error desconocido");
+        console.error("hubo un error desconocido");
     }
 }
 

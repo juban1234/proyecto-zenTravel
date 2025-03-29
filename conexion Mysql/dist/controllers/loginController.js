@@ -19,7 +19,7 @@ let login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("usuario encontrado", login[0]);
     }
     catch (error) {
-        console.error("ubo u error desconocido");
+        console.error("hubo un error desconocido");
     }
 });
 exports.default = login;

@@ -1,37 +1,45 @@
 import db from '../configs/config';
 import bcrypt from "bcryptjs";
+
 import Usuario from '../Dto/UsuarioDto';
 import Login from '../Dto/loginDto';
 
 
+class usuarioRepo {
 
-export const createUsuario = async( usuario:Usuario) => {
-    const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
-    const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida,usuario.password];
-    return db.execute(sql, values);
-}
-
-
-export const buscarUsuarioPorEmail = async (login :Login) => {
-    try {
-        const sql = 'SELECT * FROM Usuario WHERE email = ?';
-        const values = [login.email];
+    static async createUsuario( usuario:Usuario){
+        const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
+        const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida,usuario.password];
         return db.execute(sql, values);
-
-    } catch (error) {
-        console.error('Error al buscar usuario:', error);
-        throw new Error('Error al buscar el usuario');
     }
-};
+    
+    
+    
+static async buscarUsuario(login: Login) {
+  const sql = 'SELECT * FROM Usuario WHERE email = ?';
+  const values = [login.email];
+  const [rows]: any = await db.execute(sql, values);
 
-// Función para comparar las contraseñas
-export const validarContraseña = async (login :Login) => {
-    try {
-        
-        const passwordMatch = await bcrypt.compare(login.password, passwordHash);
-        return passwordMatch; 
-    } catch (error) {
-        console.error('Error al comparar contraseñas:', error);
-        throw new Error('Error al comparar contraseñas');
+  if (rows.length > 0) {
+    const usuario = rows[0];
+    
+    console.log("🔍 Usuario encontrado:", usuario); // Verifica que la contraseña se esté recuperando correctamente
+
+    if (!usuario.password) {
+      throw new Error("El usuario no tiene contraseña almacenada");
     }
-};
+
+    // Compara la contraseña ingresada con el hash almacenado
+    const isPasswordValid = await bcrypt.compare(login.password, usuario.password);
+
+    if (isPasswordValid) {
+      return { logged: true, status: "Successful authentication", id: usuario.id_usuario };
+    }
+
+    return { logged: false, status: "Invalid password" };
+  }
+
+  return { logged: false, status: "Invalid username or password" };
+}
+}
+export default usuarioRepo;

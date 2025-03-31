@@ -1,24 +1,28 @@
 import { Request, Response } from "express";
-import { buscarUsuarioPorEmail } from "../repositories/usuarioRepo";
-import { validarContraseña } from "../repositories/usuarioRepo";
+import usuarioServi from "../services/usuarioServi";
+import Login from "../Dto/loginDto";
+import generateToken from '../Helpers/generateToken';
+import dotenv from "dotenv";
 
-let login = async(req:Request, res:Response) =>{
-    try {
-        
-        const {email,password} = req.body;
-        console.log("datos resividos: " , req.body);
+dotenv.config();
 
-        const login = await buscarUsuarioPorEmail(email);
-        console.log("usuario encontrado" , login[0]);
 
-        const valitation = await validarContraseña(password,);
-        console.log("contraseña validada: ",valitation);
-        
-        
-
-    } catch (error) {
-        console.error("ubo u error desconocido");
+let login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const login = await usuarioServi.login(new Login(email, password));
+    if (login.logged) {
+      return res.status(200).json({
+        status: login.status,
+        token: generateToken({id: login.id}, Number(process.env.KEY_TOKEN) || 0)
+      });
     }
+    return res.status(401).json({status: login.status});
+    
+  } catch (error) {
+    console.log( error);
+  }
 }
+
 
 export default login;

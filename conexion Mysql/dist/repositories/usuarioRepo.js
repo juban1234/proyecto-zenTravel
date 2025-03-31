@@ -12,36 +12,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validarContraseña = exports.buscarUsuarioPorEmail = exports.createUsuario = void 0;
 const config_1 = __importDefault(require("../configs/config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const createUsuario = (usuario) => __awaiter(void 0, void 0, void 0, function* () {
-    const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
-    const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida, usuario.password];
-    return config_1.default.execute(sql, values);
-});
-exports.createUsuario = createUsuario;
-const buscarUsuarioPorEmail = (login) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const sql = 'SELECT * FROM Usuario WHERE email = ?';
-        const values = [login.email];
-        return config_1.default.execute(sql, values);
+class usuarioRepo {
+    static createUsuario(usuario) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
+            const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida, usuario.password];
+            return config_1.default.execute(sql, values);
+        });
     }
-    catch (error) {
-        console.error('Error al buscar usuario:', error);
-        throw new Error('Error al buscar el usuario');
+    static buscarUsuario(login) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sql = 'SELECT * FROM Usuario WHERE email = ?';
+            const values = [login.email];
+            const [rows] = yield config_1.default.execute(sql, values);
+            if (rows.length > 0) {
+                const usuario = rows[0];
+                console.log("🔍 Usuario encontrado:", usuario); // Verifica que la contraseña se esté recuperando correctamente
+                if (!usuario.password) {
+                    throw new Error("El usuario no tiene contraseña almacenada");
+                }
+                // Compara la contraseña ingresada con el hash almacenado
+                const isPasswordValid = yield bcryptjs_1.default.compare(login.password, usuario.password);
+                if (isPasswordValid) {
+                    return { logged: true, status: "Successful authentication", id: usuario.id_usuario };
+                }
+                return { logged: false, status: "Invalid password" };
+            }
+            return { logged: false, status: "Invalid username or password" };
+        });
     }
-});
-exports.buscarUsuarioPorEmail = buscarUsuarioPorEmail;
-// Función para comparar las contraseñas
-const validarContraseña = (login) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const passwordMatch = yield bcryptjs_1.default.compare(login.password, passwordHash);
-        return passwordMatch;
-    }
-    catch (error) {
-        console.error('Error al comparar contraseñas:', error);
-        throw new Error('Error al comparar contraseñas');
-    }
-});
-exports.validarContraseña = validarContraseña;
+}
+exports.default = usuarioRepo;

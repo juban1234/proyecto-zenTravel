@@ -8,20 +8,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const usuarioRepo_1 = require("../repositories/usuarioRepo");
-const usuarioRepo_2 = require("../repositories/usuarioRepo");
+const usuarioServi_1 = __importDefault(require("../services/usuarioServi"));
+const loginDto_1 = __importDefault(require("../Dto/loginDto"));
+const generateToken_1 = __importDefault(require("../Helpers/generateToken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 let login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        console.log("datos resividos: ", req.body);
-        const login = yield (0, usuarioRepo_1.buscarUsuarioPorEmail)(email);
-        console.log("usuario encontrado", login[0]);
-        const valitation = yield (0, usuarioRepo_2.validarContraseña)(password);
-        console.log("contraseña validada: ", valitation);
+        const login = yield usuarioServi_1.default.login(new loginDto_1.default(email, password));
+        if (login.logged) {
+            return res.status(200).json({
+                status: login.status,
+                token: (0, generateToken_1.default)({ id: login.id }, Number(process.env.KEY_TOKEN) || 0)
+            });
+        }
+        return res.status(401).json({ status: login.status });
     }
     catch (error) {
-        console.error("ubo u error desconocido");
+        console.log(error);
     }
 });
 exports.default = login;

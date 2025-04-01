@@ -37,14 +37,16 @@ export const NavBar = () => {
           <ul className="sm:hidden absolute top-16 left-0 right-0 bg-gray-800 py-4 px-6 rounded-b-lg shadow-lg flex flex-col space-y-4 mt-2">
           <ItemNav route={'/'} content='Home ' />
           <ItemNav route={'/login'} content='login ' />
-            <RiAccountCircleFill/>
+          <ItemNav route={'/register'} content='registrar' />
+            
           </ul>
         )}
 
         <ul className="hidden sm:flex space-x-8 font-extralight">
           <ItemNav route={'/'} content='Home ' />
           <ItemNav route={'/login'} content='login ' />
-          <RiAccountCircleFill/>
+          <ItemNav route={'/register'} content='registrar' />
+          
         </ul>
        
       </div>

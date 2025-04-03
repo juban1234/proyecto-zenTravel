@@ -24,7 +24,7 @@ let login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (login.logged) {
             return res.status(200).json({
                 status: login.status,
-                token: (0, generateToken_1.default)({ id: login.id }, Number(process.env.KEY_TOKEN) || 0)
+                token: (0, generateToken_1.default)({ id: login.id }, 5)
             });
         }
         return res.status(401).json({ status: login.status });

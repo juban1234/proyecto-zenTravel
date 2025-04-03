@@ -8,7 +8,7 @@ import Login from '../Dto/loginDto';
 class usuarioRepo {
 
     static async createUsuario( usuario:Usuario){
-        const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
+        const sql = 'CALL CrearUsuario(?, ?, ?, ?, ?, ?)';
         const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida,usuario.password];
         return db.execute(sql, values);
     }

@@ -15,7 +15,7 @@ app.use(cors());
 app.use('/register',register);
 app.use('/login',login);
 app.use('/profile', profile);
-app.use('/reserva', )
+// app.use('/reserva', )
 // app.use('/registerHotel',registerHotel);
 
 const PORT = process.env.PORT || 10101;

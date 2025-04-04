@@ -17,21 +17,17 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    // Buscar token en el header o en el cuerpo de la petición
-    const token = ((_a = req.header('Authorization')) === null || _a === void 0 ? void 0 : _a.split(" ")[1]) || req.body.token;
+    const token = (_a = req.header('Authorization')) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
-        return res.status(401).json({ error: 'No se ha enviado un token' });
+        return res.status(401).json({ error: 'Token no proporcionado' });
     }
     try {
-        if (!process.env.KEY_TOKEN) {
-            return res.status(500).json({ error: 'Error en la configuración del servidor: KEY_TOKEN no está definida' });
-        }
-        const verified = jsonwebtoken_1.default.verify(token, process.env.KEY_TOKEN);
-        req.body.user = verified.data; // Guardamos el usuario autenticado
-        next(); // Pasamos al siguiente middleware/ruta
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.KEY_TOKEN);
+        req.body.id_usuario = decoded.data.id; // Guarda el ID del usuario autenticado
+        next();
     }
     catch (error) {
-        return res.status(403).json({ status: 'Token inválido o expirado' });
+        return res.status(403).json({ error: 'Token inválido o expirado' });
     }
 });
 exports.default = verifyToken;

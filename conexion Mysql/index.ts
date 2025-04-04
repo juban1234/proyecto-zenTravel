@@ -14,7 +14,7 @@ app.use('/register',register);
 app.use('/login',login);
 // app.use('/registerHotel',registerHotel);
 
-const PORT = process.env.PORT || 10101;
+const PORT = process.env.PORT || 20101;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

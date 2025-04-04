@@ -32,3 +32,9 @@ export const validarContraseña = async (password: string, passwordHash: string)
         throw new Error('Error al comparar contraseñas');
     }
 };
+
+export const ActualizarPerfil = async (email: string,  telefono: boolean, estiloVida: string,nombre:String) => {
+    const sql = 'UPDATE Usuario SET telefono = ?, estiloVida = ?, nombre = ? WHERE email = ?';
+    const values = [email,  telefono, estiloVida, nombre];
+    return db.execute(sql, values);
+}

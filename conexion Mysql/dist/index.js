@@ -13,7 +13,7 @@ app.use(express_1.default.json());
 app.use('/register', register_1.default);
 app.use('/login', login_1.default);
 // app.use('/registerHotel',registerHotel);
-const PORT = process.env.PORT || 10101;
+const PORT = process.env.PORT || 20101;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

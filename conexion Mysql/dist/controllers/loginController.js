@@ -10,16 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const usuarioRepo_1 = require("../repositories/usuarioRepo");
-// import { validarContraseña } from "../repositories/usuarioRepo";
+const usuarioRepo_2 = require("../repositories/usuarioRepo");
 let login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
         console.log("datos resividos: ", req.body);
         const login = yield (0, usuarioRepo_1.buscarUsuarioPorEmail)(email);
         console.log("usuario encontrado", login[0]);
+        const validar = yield (0, usuarioRepo_2.validarContraseña)(email, password);
+        console.log("contraseña valida", validar);
     }
     catch (error) {
-        console.error("ubo u error desconocido");
+        console.error("hubo un error desconocido");
     }
 });
 exports.default = login;

@@ -11,12 +11,14 @@ let login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const login = await usuarioServi.login(new Login(email, password));
+    
     if (login.logged) {
       return res.status(200).json({
         status: login.status,
         token: generateToken({id: login.id}, 5)
       });
     }
+
     return res.status(401).json({status: login.status});
     
   } catch (error) { 

@@ -17,14 +17,14 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class usuarioRepo {
     static createUsuario(usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'INSERT INTO Usuario (nombre, email, presupuesto, telefono, estiloVida,password) VALUES (?, ?, ?, ?, ?,?)';
+            const sql = 'CALL CrearUsuario(?, ?, ?, ?, ?, ?)';
             const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida, usuario.password];
             return config_1.default.execute(sql, values);
         });
     }
     static buscarUsuario(login) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sql = 'SELECT * FROM Usuario WHERE email = ?';
+            const sql = 'call loginUsuario(?)';
             const values = [login.email];
             const [rows] = yield config_1.default.execute(sql, values);
             if (rows.length > 0) {

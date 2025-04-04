@@ -28,7 +28,7 @@ class usuarioRepo {
             const values = [login.email];
             const [rows] = yield config_1.default.execute(sql, values);
             if (rows.length > 0) {
-                const usuario = rows[0];
+                const usuario = rows[0][0];
                 console.log("🔍 Usuario encontrado:", usuario); // Verifica que la contraseña se esté recuperando correctamente
                 if (!usuario.password) {
                     throw new Error("El usuario no tiene contraseña almacenada");

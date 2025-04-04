@@ -18,7 +18,7 @@ class usuarioRepo {
     const [rows]: any = await db.execute(sql, values);
 
     if (rows.length > 0) {
-      const usuario = rows[0];
+      const usuario = rows[0][0];
       
       console.log("🔍 Usuario encontrado:", usuario); // Verifica que la contraseña se esté recuperando correctamente
 
@@ -34,10 +34,10 @@ class usuarioRepo {
       }
 
       return { logged: false, status: "Invalid password" };
-      
+ 
     }
-
     return { logged: false, status: "Invalid username or password" };
+
     }
 }
 export default usuarioRepo;

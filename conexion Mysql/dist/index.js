@@ -16,6 +16,7 @@ app.use((0, cors_1.default)());
 app.use('/register', register_1.default);
 app.use('/login', login_1.default);
 app.use('/profile', profile_1.default);
+app.use('/reserva');
 // app.use('/registerHotel',registerHotel);
 const PORT = process.env.PORT || 10101;
 app.listen(PORT, () => {

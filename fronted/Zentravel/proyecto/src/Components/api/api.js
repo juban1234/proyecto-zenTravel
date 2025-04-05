@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // URL base del servidor
-const API_URL = "http://localhost:10101";
+const API_URL = "http://localhost:10101/";
 
-// Función para registrar un usuario
+
 export const registerUser = async (
   nombre,
   email,
@@ -21,6 +21,7 @@ export const registerUser = async (
       estiloVida,
       password,
     });
+    localStorage.setItem("token", response.data.token);
     return response.data;
   } catch (error) {
     console.error("Error en el registro:", error);
@@ -28,7 +29,6 @@ export const registerUser = async (
   }
 };
 
-// Función para iniciar sesión
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}/login`, {
@@ -40,4 +40,29 @@ export const loginUser = async (email, password) => {
     console.error("Error en el login:", error);
     throw new Error(error.response?.data?.message || "Credenciales incorrectas");
   }
+};
+
+export const crearReserva = async (fecha, estado, id_paquete) => {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.post(`${API_URL}/reserva`, {
+      fecha,
+      estado,
+      id_paquete,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear reserva:", error);
+    throw new Error(error.response?.data?.errorInfo || "Error al crear reserva");
+  }
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
 };

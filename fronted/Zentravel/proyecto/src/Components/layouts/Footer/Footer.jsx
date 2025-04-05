@@ -1,4 +1,4 @@
-import { ItemNav } from "../../UI/ItemNav/ItemNav"
+import { ItemNav } from "../../UI/ItemNav"
 import { FaFacebook,FaGithub } from "react-icons/fa";
 
 
@@ -22,9 +22,7 @@ export const Footer = () => {
                     route={"https://www.facebook.com/"}
                 />
                 
-                </div>
-
-                
+                </div>                
             </footer>
         </>
     )

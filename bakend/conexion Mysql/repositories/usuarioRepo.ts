@@ -9,8 +9,8 @@ import Reservas from '../Dto/reservasDto';
 class usuarioRepo {
 
   static async createUsuario( usuario:Usuario){
-      const sql = 'CALL CrearUsuario(?, ?, ?, ?, ?, ?)';
-      const values = [usuario.nombre, usuario.email, usuario.presupuesto, usuario.telefono, usuario.estiloVida,usuario.password];
+      const sql = 'CALL CrearUsuario(?, ?, ?, ?)';
+      const values = [usuario.nombre, usuario.email, usuario.telefono,usuario.password];
       return db.execute(sql, values);
   }
     

@@ -6,12 +6,12 @@ import usuarioServi from "../services/usuarioServi";
 
 let register = async (req: Request, res: Response) => {
     try {
-      const {nombre,email,presupuesto,telefono,estiloVida,password } = req.body;
+      const {nombre,email,telefono,password } = req.body;
   
       console.log("📩 Recibiendo datos del usuario:", req.body);
   
       const registerUser = await usuarioServi.register(
-        new Usuario (nombre,email,presupuesto,telefono,estiloVida,password )
+        new Usuario (nombre,email,telefono,password )
       );
   
       console.log("✅ Usuario registrado con éxito ");

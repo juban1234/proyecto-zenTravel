@@ -4,16 +4,15 @@ import { registerUser } from "../../api/api"; // Importamos la función de conex
 export const Register = () => {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
-  const [presupuesto, setPresupuesto] = useState(0);
   const [telefono , setTelefono] = useState("");
-  const [estiloVida, setEstilovida] = useState("");
   const [password, setPassword] = useState("");
+
   const [mensaje, setMensaje] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const data = await registerUser(nombre, email,presupuesto,telefono,estiloVida, password);
+      const data = await registerUser(nombre, email,telefono, password);
       setMensaje(data.message);
     } catch (error) {
       setMensaje(error.message);
@@ -49,17 +48,6 @@ export const Register = () => {
           </div>
 
           <div className="mt-4">
-            <label className="block text-gray-600">estilo de vida</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="como vives"
-              value={estiloVida}
-              onChange={(e) => setEstilovida(e.target.value)}
-            />
-          </div>
-
-          <div className="mt-4">
             <label className="block text-gray-600">telefono</label>
             <input
               type="text"
@@ -67,16 +55,6 @@ export const Register = () => {
               placeholder="telefono"
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
-            />
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-600">presupuesto</label>
-            <input
-              type="number"
-              className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="cual es tu presupuesto"
-              value={presupuesto}
-              onChange={(e) => setPresupuesto(e.target.value)}
             />
           </div>
           <div className="mt-4">

@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { ItemNav } from '../../UI/ItemNav/ItemNav';
+import { ItemNav } from '../../UI/ItemNav';
 import React, { useState,useEffect } from 'react';
 import { RiAccountCircleFill } from "react-icons/ri";
 
@@ -38,6 +38,7 @@ export const NavBar = () => {
           <ItemNav route={'/'} content='Home ' />
           <ItemNav route={'/login'} content='login ' />
           <ItemNav route={'/register'} content='registrar' />
+          <ItemNav route={'/Reserva'} content='reserva' />
             
           </ul>
         )}
@@ -46,6 +47,7 @@ export const NavBar = () => {
           <ItemNav route={'/'} content='Home ' />
           <ItemNav route={'/login'} content='login ' />
           <ItemNav route={'/register'} content='registrar' />
+          <ItemNav route={'/Reserva'} content='reserva' />
           
         </ul>
        

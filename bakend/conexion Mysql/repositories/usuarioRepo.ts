@@ -48,10 +48,17 @@ class usuarioRepo {
     return db.execute(sql, values);
   }
   
-  static async EditarPerfil(){
-
+  static async buscarUsuarioPorEmail(email: string) {
+    const [rows]: any = await db.execute('CALL loginUsuario(?)', [email]);
+    return rows[0]?.[0] || null;
   }
 
+  static async EditarPerfil(email: string, hashedPassword: string) {
+    const [result] = await db.execute('CALL actualizar_contraseña(?, ?)', [email, hashedPassword]);
+    return result;
+  }
+
+  
 }
 export default usuarioRepo;
 

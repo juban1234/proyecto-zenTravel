@@ -75,7 +75,7 @@ export const reserva = async (req: Request, res: Response) => {
     }
 };
 
-export const  profile = async (req: Request, res: Response) => {
+export const profile = async (req: Request, res: Response) => {
     try {
         const { nombre, email, telefono, password, estiloVida } = req.body;
         const id_usuario = (req as any).user.id;

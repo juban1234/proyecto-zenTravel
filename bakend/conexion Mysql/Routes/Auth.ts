@@ -1,7 +1,7 @@
 import express from "express";
 import { login, register, reserva } from "../controllers/controlerUser";
 import verifyToken from "../middleware/verifyToken";
-import profile from "../controllers/profileController";
+import { profile } from "../controllers/controlerUser";
 
 const router = express.Router();
 

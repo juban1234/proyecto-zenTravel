@@ -1,6 +1,6 @@
 import db from '../configs/config';
 import bcrypt from "bcryptjs";
-import Usuario from '../Dto/UsuarioDto';
+import Usuario from '../Dto/registroDto';
 import Login from '../Dto/loginDto';
 import Reservas from '../Dto/reservasDto';
 
@@ -48,6 +48,10 @@ class usuarioRepo {
     return db.execute(sql, values);
   }
   
+  static async EditarPerfil(){
+
+  }
+
 }
 export default usuarioRepo;
 

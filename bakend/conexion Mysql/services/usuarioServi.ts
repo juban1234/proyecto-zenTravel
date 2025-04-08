@@ -2,7 +2,7 @@
 import generateHash from '../Helpers/generateHash';
 import usuarioRepo from '../repositories/usuarioRepo';
 
-import Usuario from '../Dto/UsuarioDto';
+import Usuario from '../Dto/registroDto';
 import Login from '../Dto/loginDto';
 
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import Usuario from "../Dto/UsuarioDto";
+import Usuario from "../Dto/registroDto";
 import usuarioServi from "../services/usuarioServi";
 
 

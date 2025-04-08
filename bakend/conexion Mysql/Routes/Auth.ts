@@ -1,7 +1,5 @@
 import express from "express";
-import login from "../controllers/loginController";
-import register from "../controllers/registerController";
-import reserva from "../controllers/reservaContoller";
+import { login, register, reserva } from "../controllers/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/profileController";
 

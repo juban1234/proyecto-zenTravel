@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import usuarioServi from "../services/usuarioServi";
 import Login from "../Dto/loginDto";
+import Reservas from "../Dto/reservasDto";
 import Usuario from "../Dto/registroDto";
 import usuarioRepo from "../repositories/usuarioRepo";
 import generateToken from '../Helpers/generateToken';
@@ -51,11 +52,9 @@ export const register = async (req: Request, res: Response) => {
   
       return res.status(500).json({ error: "Error en el servidor" });
     }
-  };
+};
   
-  import Reservas from "../Dto/reservasDto";
-
-  export const reserva = async (req: Request, res: Response) => {
+export const reserva = async (req: Request, res: Response) => {
     try {
       const { fecha, estado, id_paquete } = req.body;
       const id_usuario = (req as any).user.id;
@@ -73,4 +72,4 @@ export const register = async (req: Request, res: Response) => {
       console.error("❌ Error al crear la reserva:", error);
       return res.status(500).json({ errorInfo: "Error al crear la reserva" });
     }
-  };
+};

@@ -22,7 +22,7 @@ class usuarioRepo {
     if (rows.length > 0) {
       const usuario = rows[0][0];
       
-      console.log("🔍 Usuario encontrado:", usuario); // Verifica que la contraseña se esté recuperando correctamente
+      console.log("🔍 Usuario encontrado:", usuario); 
 
       if (!usuario.password) {
         throw new Error("El usuario no tiene contraseña almacenada");
@@ -53,8 +53,8 @@ class usuarioRepo {
     return rows[0]?.[0] || null;
   }
 
-  static async EditarPerfil(email: string, hashedPassword: string) {
-    const [result] = await db.execute('CALL actualizar_contraseña(?, ?)', [email, hashedPassword]);
+  static async cambiarContraseña(login: Login) {
+    const [result] = await db.execute('CALL actualizar_contraseña(?, ?)', [login.email, login.password]);
     return result;
   }
 

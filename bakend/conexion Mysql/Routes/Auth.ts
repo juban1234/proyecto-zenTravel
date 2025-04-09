@@ -1,7 +1,8 @@
 import express from "express";
-import { login, register, reserva } from "../controllers/controlerUser";
+import { login, register } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
-import profile from "../controllers/profileController";
+import profile from "../controllers/controlerUser/profileController";
+import { reserva } from "../controllers/controlerUser/ReservaControler";
 
 const router = express.Router();
 

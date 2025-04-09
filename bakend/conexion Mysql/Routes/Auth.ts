@@ -2,6 +2,7 @@ import express from "express";
 import { login, register, reserva } from "../controllers/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import { profile } from "../controllers/controlerUser";
+import { Router } from 'express';
 
 const router = express.Router();
 
@@ -14,3 +15,4 @@ router.get('/recuperarContraseña',verifyToken)
 
 
 export default router;
+

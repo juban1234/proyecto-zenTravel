@@ -14,10 +14,14 @@ app.use(cors());
 app.use('/Auth', Auth)
 // app.use('/registerHotel',registerHotel);
 
+
+app.use((req, res, next) => {
+  console.log(`Método: ${req.method} | URL: ${req.url} | Body:`, req.body);
+  next();
+});
+
 const PORT = process.env.PORT || 20101;
-
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
 

@@ -49,11 +49,20 @@ class usuarioRepo {
     return db.execute(sql, values);
   }
   
-  static async EditarPerfil(user : UpdateProfileDto){
-    const sql = 'CALL EditarPerfil(?, ?, ?, ?, ?)';
-    const values = [user.nombre,user.email, user.telefono,user.password, user.estiloVida];
-    return db.execute(sql, values);
-  }
+  static async EditarPerfil(profile: UpdateProfileDto){
+    const query = `call UpdateProfi(?, ?, ?,?)`;
+    const values = [
+      profile.id_usuario,
+      profile.nombre,
+      profile.telefono,
+      profile.estiloVida,
+    ];
+
+
+    return db.execute(query, values);
+    ;
+}
+
 
 }
 export default usuarioRepo;

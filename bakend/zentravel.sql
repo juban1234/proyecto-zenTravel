@@ -38,6 +38,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUsuario` (IN `p_email` VARCHAR
     SELECT * FROM usuario WHERE email = p_email;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateProfi`(IN `nombre` varchar(50), IN`telefono`  VARCHAR(15), IN `estiloVida` VARCHAR(255)) BEGIN
+	INSERT INTO Usuario (nombre,telefono,estiloVida)
+    VALUES(nombre,telefono,estiloVida);
+    END$$
+    
+    
+
 DELIMITER ;
 
 -- --------------------------------------------------------

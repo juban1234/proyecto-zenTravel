@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import Usuario from '../Dto/registroDto';
 import Login from '../Dto/loginDto';
 import Reservas from '../Dto/reservasDto';
+import UpdateProfileDto from '../Dto/UpdateProfileDto';
 
 
 
@@ -58,6 +59,19 @@ class usuarioRepo {
     return result;
   }
 
+  static async EditarPerfil(profile: UpdateProfileDto){
+    const query = `call UpdateProfi(?, ?, ?,?)`;
+    const values = [
+      profile.id_usuario,
+      profile.nombre,
+      profile.telefono,
+      profile.estiloVida,
+    ];
+
+
+    return db.execute(query, values);
+    ;
+}
   
 }
 export default usuarioRepo;

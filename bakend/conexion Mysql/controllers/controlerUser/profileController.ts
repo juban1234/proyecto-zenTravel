@@ -7,7 +7,6 @@ const profile = async (req: Request, res: Response) => {
     const { nombre, telefono, estiloVida } = req.body;
     const id_usuario = (req as any).user?.id;
 
-    // Validaciones
     if (!id_usuario) {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
@@ -18,12 +17,11 @@ const profile = async (req: Request, res: Response) => {
 
     console.log("📩 Datos del perfil a actualizar:", { id_usuario, nombre, telefono, estiloVida });
     
-    const actualizarPerfil = await usuarioRepo.EditarPerfil(
+    const resultado = await usuarioRepo.EditarPerfil(
       new UpdateProfileDto(id_usuario,nombre,telefono, estiloVida)
     );
     
-
-    console.log("✅ Perfil actualizado con éxito ", actualizarPerfil);
+    console.log("✅ Perfil actualizado con éxito ",resultado);
     return res.status(200).json({ status: "Perfil actualizado con éxito" });
 
   } catch (error: any) {

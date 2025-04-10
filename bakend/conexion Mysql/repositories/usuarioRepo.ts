@@ -70,7 +70,6 @@ class usuarioRepo {
 
 
     return db.execute(query, values);
-    ;
 }
   
 }

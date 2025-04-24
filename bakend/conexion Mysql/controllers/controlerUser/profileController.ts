@@ -4,29 +4,34 @@ import UpdateProfileDto from "../../Dto/UpdateProfileDto";
 
 const profile = async (req: Request, res: Response) => {
   try {
-    const { nombre, telefono, estiloVida } = req.body;
     const id_usuario = (req as any).user?.id;
-
     if (!id_usuario) {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
-    if (!nombre || !telefono || !estiloVida) {
-      return res.status(400).json({ error: "Faltan datos obligatorios para actualizar el perfil" });
+    const { nombre, telefono, estiloVida, presupuesto } = req.body;
+
+    if (!nombre && !telefono && !estiloVida && presupuesto === undefined) {
+      return res.status(400).json({ error: "No se enviaron campos para actualizar" });
     }
 
-    console.log("📩 Datos del perfil a actualizar:", { id_usuario, nombre, telefono, estiloVida });
-    
-    const resultado = await usuarioRepo.EditarPerfil(
-      new UpdateProfileDto(id_usuario,nombre,telefono, estiloVida)
+    const dto = new UpdateProfileDto(
+      id_usuario,
+      nombre,
+      telefono,
+      estiloVida,
+      presupuesto
     );
-    
-    console.log("✅ Perfil actualizado con éxito ",resultado);
-    return res.status(200).json({ status: "Perfil actualizado con éxito" });
+
+    const result = await usuarioRepo.EditarPerfil(dto);
+
+    console.log("✅ Resultado de actualización:", result);
+
+    return res.status(200).json({ status: "Perfil actualizado correctamente" });
 
   } catch (error: any) {
-    console.error("❌ Error al actualizar el perfil:", error.message, error.stack);
-    return res.status(500).json({ errorInfo: error.message });
+    console.error("❌ Error al actualizar perfil:", error.message);
+    return res.status(500).json({ error: error.message });
   }
 };
 export default profile;

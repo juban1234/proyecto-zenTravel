@@ -59,18 +59,34 @@ class usuarioRepo {
     return result;
   }
 
-  static async EditarPerfil(profile: UpdateProfileDto){
-    const query = `call UpdateProfi(?, ?, ?,?)`;
-    const values = [
-      profile.id_usuario,
-      profile.nombre,
-      profile.telefono,
-      profile.estiloVida,
-    ];
-
-
-    return db.execute(query, values);
-}
+  static async EditarPerfil(profile: UpdateProfileDto) {
+    let campos: string[] = [];
+    let valores: any[] = [];
+  
+    if (profile.nombre) {
+      campos.push("nombre = ?");
+      valores.push(profile.nombre);
+    }
+    if (profile.telefono) {
+      campos.push("telefono = ?");
+      valores.push(profile.telefono);
+    }
+    if (profile.estiloVida) {
+      campos.push("estiloVida = ?");
+      valores.push(profile.estiloVida);
+    }
+    if (profile.presupuesto !== undefined) {
+      campos.push("presupuesto = ?");
+      valores.push(profile.presupuesto);
+    }
+  
+    if (campos.length === 0) return { message: "No hay campos para actualizar" };
+  
+    const query = `UPDATE Usuario SET ${campos.join(", ")} WHERE id_usuario = ?`;
+    valores.push(profile.id_usuario);
+  
+    return db.execute(query, valores);
+  }
   
 }
 export default usuarioRepo;

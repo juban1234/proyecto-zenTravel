@@ -14,6 +14,7 @@ app.use(cors());
 
 app.use('/Auth', Auth)
 app.use('/Password',Validator);
+app.use('/paquete',)
 
 const PORT = process.env.PORT || 10101;
 

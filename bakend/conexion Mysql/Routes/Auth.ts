@@ -6,11 +6,10 @@ import { reserva } from "../controllers/controlerUser/ReservaControler";
 
 const router = express.Router();
 
-router.post('/login', login)
-router.post('/register', register)
-router.post('/reserva', verifyToken, reserva)
-router.patch('/profile', verifyToken,profile)
-router.get('/recuperarContraseña',verifyToken)
+router.post('/login', login)// funcional
+router.post('/register', register)// funcional
+router.post('/reserva', verifyToken, reserva) // proceso de pruebas y reestructuracion  de la base de datos
+router.patch('/profile', verifyToken,profile) // funcional
 
 
 

@@ -1,4 +1,4 @@
-class Paquete {
+class Package {
 
     private _id_paquete: number;
     private _nombrePaquete: string;
@@ -54,4 +54,4 @@ class Paquete {
     }
 }
 
-export default Paquete;
+export default Package;

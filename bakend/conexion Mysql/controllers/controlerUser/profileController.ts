@@ -19,8 +19,7 @@ const profile = async (req: Request, res: Response) => {
       id_usuario,
       nombre,
       telefono,
-      estiloVida,
-      presupuesto
+      estiloVida
     );
 
     const result = await usuarioRepo.EditarPerfil(dto);

@@ -4,7 +4,6 @@ class UpdateProfileDto {
       public nombre?: string,
       public telefono?: string,
       public estiloVida?: string,
-      public presupuesto?: number
     ) {}
   }
   

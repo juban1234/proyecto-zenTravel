@@ -1,10 +1,9 @@
-
 import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
-import Auth from './Routes/Auth'
-import Validator from './Routes/Validator'
-
+import Auth from './Routes/Auth';
+import Validator from './Routes/Validator';
+import Paquete from './Routes/Paquete';
 
 dotenv.config();
 
@@ -14,7 +13,7 @@ app.use(cors());
 
 app.use('/Auth', Auth)
 app.use('/Password',Validator);
-app.use('/paquete',)
+app.use('/Api',Paquete)
 
 const PORT = process.env.PORT || 10101;
 

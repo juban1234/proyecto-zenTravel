@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
     if (login.logged) {
       return res.status(200).json({
         status: login.status,
-        token: generateToken({id: login.id}, 5)
+        token: generateToken({id: login.id}, 60)
       });
     }
 
@@ -38,7 +38,7 @@ export const register = async (req: Request, res: Response) => {
         new Usuario (nombre,email,telefono,password )
       );
   
-      console.log("✅ Usuario registrado con éxito ");
+      console.log("✅ Usuario registrado con éxito ",registerUser);
   
       return res.status(201).json({ status: "register ok" });
     } catch (error: any) {

@@ -1,11 +1,11 @@
 import db from '../configs/config';
 import Destino from '../Dto/destino';
-import Paquete from '../Dto/paquete';
+import Package from '../Dto/Paquete';
 
 
 class Paquetes {
 
-    static async agregarDireccion(destino:Destino){
+    static async direccion(destino:Destino){
         const sql = 'INSERT INTO `zentravel`.`destino` (`nombre`, `direccion`, `descripcion`) VALUES (?, ?, ?)';
         const values = [
             destino.nombre,
@@ -15,13 +15,13 @@ class Paquetes {
         return db.execute(sql, values);
     }
 
-    static async generarPaquete(paquete:Paquete){
+    static async hotel(P:Package){
 
         const sql = 'INSERT INTO `zentravel`.`paquete` (`nombrePaquete`, `descripcion`, `precioTotal`) VALUES (?,?,?);';
         const value = [
-            paquete.nombrePaquete,
-            paquete.descripcion,
-            paquete.precioTotal
+            P.nombrePaquete,
+            P.descripcion,
+            P.precioTotal
         ];
 
         return db.execute(sql,value);

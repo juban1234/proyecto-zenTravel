@@ -1,7 +1,11 @@
 import express from "express";
+import { destino } from "../controllers/controllerProvider/PaqueteController";
 const router = express.Router();
 
+router.post('/destiny',destino)
+router.post('/hotel')
+router.post('/transport')
+router.post('/package')
 
-router.post('/destino')
 
 export default router;

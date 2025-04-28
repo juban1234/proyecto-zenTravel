@@ -10,7 +10,7 @@ import UpdateProfileDto from '../Dto/UpdateProfileDto';
 class usuarioRepo {
 
   static async createUsuario( usuario:Usuario){
-      const sql = 'CALL CrearUsuario(?, ?, ?, ?)';
+      const sql = 'CALL CrearUsuario(?, ?, ?, ?,"cliente")';
       const values = [usuario.nombre, usuario.email, usuario.telefono,usuario.password];
       return db.execute(sql, values);
   }
@@ -75,11 +75,7 @@ class usuarioRepo {
       campos.push("estiloVida = ?");
       valores.push(profile.estiloVida);
     }
-    if (profile.presupuesto !== undefined) {
-      campos.push("presupuesto = ?");
-      valores.push(profile.presupuesto);
-    }
-  
+
     if (campos.length === 0) return { message: "No hay campos para actualizar" };
   
     const query = `UPDATE Usuario SET ${campos.join(", ")} WHERE id_usuario = ?`;

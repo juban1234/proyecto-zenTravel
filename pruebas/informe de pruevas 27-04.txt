@@ -1,0 +1,54 @@
+pruevas de funcionamiento del serviodor zentravel
+
+prueba de registro de usuarios
+
+- la prueba fun un exito al momento de ingresar un acuenta se registra sin problemas pero como anotacion se deveria 
+agregar  una funcion que permita ingresar solo un correo valido en estructura , ademas deveria poder vincular cuentas de 
+otros servicios para el inicio de sesion aun que no se ve demaciado necesario,tambiense deve poner un verificadoir para 
+que solo se pongan cuantas de gmail
+
+- nota parami debo investigart como funciona la vinculacion de cuantas diferentes
+
+prueva de al login de los usuarios
+
+- la pueva fue un exito las verificaciones y la respuetas de errores estan bien , pero se deve majorar en el manejo de 
+errores un ejemplo es que cuando puse un correo equivocado dijo que era u error en el servidor cuando eso no es sierto ,
+sinplemente no se encontro un correo coincidente por lo cual sedebe mojorar en al manejo de estos errores
+
+prueva de la actualizacion de un perfil
+
+- nota para el frontend para poder actualiar un perfil primero se debe obtener un token para que se verifique 
+el usuario antes que se pueda realizar la accion de modificarlo.la llava del token es 
+'Authorization Bearer token_recibido' 
+
+- la primer prueba fue un exito el perfil se actualizo demanera correcta , en este primer intento intenter modificar 
+el nombre,estilo de vida ,telefono y presupusto, anque pensano lo mejor el presuypuesto deberia ser un valorque se 
+pone en cada vez que se quiere armar un paquete 
+
+- bien las prebas para modificar el perfil solo con uno o mas variables fue un exito lo permite sin ningun 
+problema no hay grandes cosas por poner o destacar todo funciona correctamente
+
+- pero como nota se deberia de poner una restriccion que impida el uso de nombres inapropiados 
+
+prueva de la reserva para los usuarios
+
+- la prueva fue un fallo en cuanto a logica planteada la base de datos tiene que ser cambiada y ademas se tendra 
+que modificar los procesos almacenados relacionados con estos 
+
+prueva de recupercion  de contraseñas 
+
+- el envio de correos funciona sin probles actualmente 
+- el combi de la contraseña tambien funciona adecuadamente solo se necesia cambiar la redireccion 
+de el cambio de la contreseña para que se rediriga en una pagina con un formulario que permita usarlo 
+no se necesita mas por ahora
+
+
+
+
+
+
+
+
+
+
+

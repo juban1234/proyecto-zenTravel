@@ -1,5 +1,5 @@
 import express from "express";
-import { destino } from "../controllers/controllerProvider/PaqueteController";
+import { destino } from "../controllers/controllerProvider/Check-inController";
 const router = express.Router();
 
 router.post('/destiny',destino)

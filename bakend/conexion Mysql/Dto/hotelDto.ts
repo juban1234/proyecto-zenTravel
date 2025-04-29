@@ -1,4 +1,4 @@
-class Destino {
+class Hotel {
     private _nombre:string;
     private _direccion:string;
     private _descripcion:string;
@@ -41,4 +41,4 @@ class Destino {
     }
 }
 
-export default Destino;
+export default Hotel;

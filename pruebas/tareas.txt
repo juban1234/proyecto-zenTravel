@@ -1,4 +1,7 @@
 RF-01 Personalización de Paquetes
+	
+	 RF-00.1 agregar destinos	
+	
          RF-01.1 Buscar destinos
 
          RF-01.2 Crear itinerarios

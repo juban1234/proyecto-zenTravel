@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-04-2025 a las 00:38:16
+-- Tiempo de generación: 29-04-2025 a las 02:31:12
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.1.25
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,21 +33,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearReserva` (IN `id_usuario` INT,
 	insert into reservas(id_usuario,fecha,estado,id_paquete) value(id_usuario,fecha,estado,id_paquete);
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearUsuario` (IN `nombre` VARCHAR(255), IN `email` VARCHAR(255), IN `telefono` VARCHAR(15), IN `password` VARCHAR(255))   BEGIN
-    INSERT INTO Usuario (nombre, email, telefono, password)
-    VALUES (nombre, email, telefono, password);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearUsuario` (IN `nombre` VARCHAR(255), IN `email` VARCHAR(255), IN `telefono` VARCHAR(15), IN `password` VARCHAR(255), IN `rol` ENUM('cliente','proveedor','admin'))   BEGIN
+    INSERT INTO Usuario (nombre, email, telefono, password,rol)
+    VALUES (nombre, email, telefono, password,rol);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listarPaquetes` ()   BEGIN
+    SELECT 
+        id_paquete,
+        nombrePaquete,
+        precioTotal,
+        duracionDias,
+        imagenUrl,
+        descuento
+    FROM paquete
+    WHERE estado = 'activo';
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUsuario` (IN `p_email` VARCHAR(225))   BEGIN
     SELECT * FROM usuario WHERE email = p_email;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateProfi` (IN `id` INT, IN `p_nombre` VARCHAR(50), IN `p_telefono` VARCHAR(15), IN `p_estilovida` VARCHAR(255))   BEGIN
-  UPDATE Usuario
-  SET nombre = p_nombre,
-      telefono = p_telefono,
-      estiloVida = p_estilovida
-  WHERE id_usuario = id;
 END$$
 
 DELIMITER ;
@@ -60,9 +64,18 @@ DELIMITER ;
 
 CREATE TABLE `destino` (
   `id_destino` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
   `direccion` varchar(200) DEFAULT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `destino`
+--
+
+INSERT INTO `destino` (`id_destino`, `nombre`, `direccion`, `descripcion`) VALUES
+(1, 'paquistan', 'armenia', 'es un lugar colotido'),
+(2, 'villa nueva', 'calarca ', 'es una villa en calarca');
 
 -- --------------------------------------------------------
 
@@ -75,6 +88,13 @@ CREATE TABLE `hotel` (
   `nombreHotel` varchar(50) DEFAULT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `hotel`
+--
+
+INSERT INTO `hotel` (`id_hotel`, `nombreHotel`, `descripcion`) VALUES
+(1, 'wonjd', 'ccecec');
 
 -- --------------------------------------------------------
 
@@ -101,15 +121,24 @@ CREATE TABLE `paquete` (
   `id_paquete` int(11) NOT NULL,
   `nombrePaquete` varchar(100) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
-  `precioTotal` decimal(10,2) DEFAULT NULL
+  `precioTotal` decimal(10,2) DEFAULT NULL,
+  `imagenUrl` varchar(255) DEFAULT NULL COMMENT 'URL de imagen de portada del paquete',
+  `duracionDias` int(11) DEFAULT NULL COMMENT 'Duración en días del paquete',
+  `fechaInicioDisponible` date DEFAULT NULL COMMENT 'Desde qué fecha se puede reservar',
+  `fechaFinDisponible` date DEFAULT NULL COMMENT 'Hasta qué fecha se puede reservar',
+  `estado` enum('activo','inactivo') DEFAULT 'activo' COMMENT 'Estado del paquete',
+  `descuento` decimal(5,2) DEFAULT 0.00 COMMENT 'Porcentaje de descuento aplicado'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `paquete`
 --
 
-INSERT INTO `paquete` (`id_paquete`, `nombrePaquete`, `descripcion`, `precioTotal`) VALUES
-(1, 'pepe', 'eded', 121313.00);
+INSERT INTO `paquete` (`id_paquete`, `nombrePaquete`, `descripcion`, `precioTotal`, `imagenUrl`, `duracionDias`, `fechaInicioDisponible`, `fechaFinDisponible`, `estado`, `descuento`) VALUES
+(1, 'pepe', 'eded', 121313.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
+(2, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
+(3, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
+(999, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00);
 
 -- --------------------------------------------------------
 
@@ -133,6 +162,13 @@ CREATE TABLE `paquete_hotel` (
   `id_hotel` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `paquete_hotel`
+--
+
+INSERT INTO `paquete_hotel` (`id_paquete`, `id_hotel`) VALUES
+(999, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -147,41 +183,14 @@ CREATE TABLE `paquete_transporte` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `reservas`
---
-
-CREATE TABLE `reservas` (
-  `id_reservas` int(11) NOT NULL,
-  `fecha` date DEFAULT NULL,
-  `estado` varchar(50) DEFAULT NULL,
-  `id_usuario` int(11) DEFAULT NULL,
-  `id_paquete` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `reservas`
---
-
-INSERT INTO `reservas` (`id_reservas`, `fecha`, `estado`, `id_usuario`, `id_paquete`) VALUES
-(9, '2025-04-05', 'confirmada', 1, 1),
-(10, '2025-04-05', 'confirmada', 9, 1),
-(11, '2001-03-03', 'pendiente', 9, 1),
-(12, '2001-03-03', 'pendiente', 9, 1),
-(13, '2025-04-05', 'confirmada', 9, 1),
-(14, '2025-04-05', 'confirmada', 12, 1),
-(15, '2025-04-05', 'confirmada', 12, 1),
-(16, '2025-04-05', 'confirmada', 14, 1);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `sugerencia`
 --
 
 CREATE TABLE `sugerencia` (
   `id_sugerencia` int(11) NOT NULL,
   `descripcion` text DEFAULT NULL,
-  `id_usuario` int(11) DEFAULT NULL
+  `id_usuario` int(11) DEFAULT NULL,
+  `presupuestol` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -196,6 +205,13 @@ CREATE TABLE `transporte` (
   `empresa` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `transporte`
+--
+
+INSERT INTO `transporte` (`id_transporte`, `tipoTransporte`, `empresa`) VALUES
+(1, 'acuatico', 'arbales');
+
 -- --------------------------------------------------------
 
 --
@@ -206,25 +222,19 @@ CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `presupuesto` decimal(10,2) DEFAULT NULL,
   `telefono` varchar(30) DEFAULT NULL,
   `estiloVida` varchar(100) DEFAULT NULL,
-  `password` varchar(60) NOT NULL
+  `password` varchar(60) NOT NULL,
+  `rol` enum('cliente','proveedor','admin') NOT NULL DEFAULT 'cliente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `presupuesto`, `telefono`, `estiloVida`, `password`) VALUES
-(1, 'Juan Pérez', 'juanperez1@email.com', 2500.00, '3111234567', 'aventurero', '$2b$10$XqkXD6lSqbRszSq2QPv9kuxbhxxg/i.gYqSDbzLQ3aN50xHCzlIBW'),
-(2, 'juan', 'dgiraldograjales5@gmail.com', 10000.00, '223232', 'perezoso', '$2b$10$3B4OLQgPDyOS.9J0KzK55u9hJUspzkCgFlxbIeUTJi/YmIecvrcBy'),
-(3, 'pepe', 'hffjdkksfk835@gmail.com', 1.00, 'frfr', 'frf', '$2b$10$jzywO2dNyKm9CuQK32yQpObXDXNbxShakE2cwslD.G0BBB7Av/5iu'),
-(5, 'Juan Pérez', 'juanperez12@email.com', NULL, '3111234567', NULL, '$2b$10$iZvZgllGpeUGDq6rJUZXmOGv29xTX6fkx1pH5RUxNNiJIBdVnbqTm'),
-(6, 'Juan Pérez', 'juanperez32@email.com', NULL, '3111234567', NULL, '$2b$10$R8hvnkt5s.lyLrH7FoDw/.6Hc8ys1GQ357/FahQgpbbEEt75dyXk2'),
-(14, 'juanito alimaña', 'gjuanesteban413@gmail.com', NULL, '2', 'bajo', '$2b$10$xWYmXtLBZkWMKicfHQBOYujE90/mp6qOMC2Eb1A04qQKjIbTiqDze'),
-(15, 'Juan Pérez', 'alexzo8677@gmail.com', NULL, '3111234567', NULL, '$2b$10$H31FoUGOqd8A1AHydp0LoeVBA1xY0YTfmF4d87shUqCyuC3EnXHNm'),
-(16, 'juan alimaña', 'alexzo8676@gmail.com', NULL, '11', 'bajo', '$2b$10$L8CD8JeFxuCKSXoXCFPWHu271t/SUrIWgps7S05DEwuNKmh4nEEUC');
+INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `telefono`, `estiloVida`, `password`, `rol`) VALUES
+(24, '1', 'gjuanesteban413@gmail.com', '201234567', 'Activo', '$2b$10$q6puD.iJyr218eXu6pzEeeCkSGHar3b1VrJpLZYNkmvYoMVAvXR8S', 'cliente'),
+(26, 'Juan Pérez', 'alexzo8677@gmail.com', '3111234567', NULL, '$2b$10$VR1FASdKG.1NadiJRkSJQujXlyu2p85D2/5MNvYrFVQXkH1uvliRe', 'cliente');
 
 --
 -- Índices para tablas volcadas
@@ -277,14 +287,6 @@ ALTER TABLE `paquete_transporte`
   ADD KEY `id_transporte` (`id_transporte`);
 
 --
--- Indices de la tabla `reservas`
---
-ALTER TABLE `reservas`
-  ADD PRIMARY KEY (`id_reservas`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `id_paquete` (`id_paquete`);
-
---
 -- Indices de la tabla `sugerencia`
 --
 ALTER TABLE `sugerencia`
@@ -312,31 +314,19 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `destino`
 --
 ALTER TABLE `destino`
-  MODIFY `id_destino` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_destino` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
   MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `paquete`
---
-ALTER TABLE `paquete`
-  MODIFY `id_paquete` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `reservas`
---
-ALTER TABLE `reservas`
-  MODIFY `id_reservas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `sugerencia`
@@ -348,13 +338,7 @@ ALTER TABLE `sugerencia`
 -- AUTO_INCREMENT de la tabla `transporte`
 --
 ALTER TABLE `transporte`
-  MODIFY `id_transporte` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_transporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -370,35 +354,21 @@ ALTER TABLE `pago`
 -- Filtros para la tabla `paquete_destino`
 --
 ALTER TABLE `paquete_destino`
-  ADD CONSTRAINT `paquete_destino_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
+  ADD CONSTRAINT `fk_paquete_destino_paquete` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`) ON DELETE CASCADE,
   ADD CONSTRAINT `paquete_destino_ibfk_2` FOREIGN KEY (`id_destino`) REFERENCES `destino` (`id_destino`);
 
 --
 -- Filtros para la tabla `paquete_hotel`
 --
 ALTER TABLE `paquete_hotel`
-  ADD CONSTRAINT `paquete_hotel_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
   ADD CONSTRAINT `paquete_hotel_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
 
 --
 -- Filtros para la tabla `paquete_transporte`
 --
 ALTER TABLE `paquete_transporte`
-  ADD CONSTRAINT `paquete_transporte_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
+  ADD CONSTRAINT `fk_paquete_transporte_paquete` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`) ON DELETE CASCADE,
   ADD CONSTRAINT `paquete_transporte_ibfk_2` FOREIGN KEY (`id_transporte`) REFERENCES `transporte` (`id_transporte`);
-
---
--- Filtros para la tabla `reservas`
---
-ALTER TABLE `reservas`
-  ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `sugerencia`
---
-ALTER TABLE `sugerencia`
-  ADD CONSTRAINT `sugerencia_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

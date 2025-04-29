@@ -5,12 +5,12 @@ import Package from '../Dto/Paquete';
 
 class Paquetes {
 
-    static async direccion(destino:Destino){
+    static async direccion(d:Destino){
         const sql = 'INSERT INTO `zentravel`.`destino` (`nombre`, `direccion`, `descripcion`) VALUES (?, ?, ?)';
         const values = [
-            destino.nombre,
-            destino.direccion,
-            destino.descripcion
+            d.nombre,
+            d.direccion,
+            d.descripcion
         ];
         return db.execute(sql, values);
     }

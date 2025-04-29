@@ -9,8 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendRecoveryEmail = async (to: string, token: string) => {
-  const recoveryLink = `http://localhost:10101/reset-password?token=${token}`;
-
+  const recoveryLink = `http://localhost:10101/Password/reset-password?token=${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,

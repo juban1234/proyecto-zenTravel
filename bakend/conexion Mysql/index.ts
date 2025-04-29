@@ -2,7 +2,9 @@
 import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
-import Auth from './Routes/Auth'
+import Auth from './Routes/Auth';
+import Validator from './Routes/Validator';
+import Paquete from './Routes/Paquete';
 
 
 dotenv.config();
@@ -12,16 +14,15 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/Auth', Auth)
-// app.use('/registerHotel',registerHotel);
 
+app.use('/Password',Validator);
+app.use('/Api',Paquete)
 
-app.use((req, res, next) => {
-  console.log(`Método: ${req.method} | URL: ${req.url} | Body:`, req.body);
-  next();
-});
+const PORT = process.env.PORT || 10101;
 
-const PORT = process.env.PORT || 20101;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
+
+
 });
 

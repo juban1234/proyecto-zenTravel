@@ -1,14 +1,9 @@
 RF-01 Personalización de Paquetes
-	
-	 RF-00.1 agregar destinos	
+		
 	
          RF-01.1 Buscar destinos
 
-         RF-01.2 Crear itinerarios
-
          RF-01.3 Seleccionar alojamiento 
-
-         RF-01.4 Agregar actividades
 
          RF-01.5 Calcular presupuesto
 

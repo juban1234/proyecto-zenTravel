@@ -13,6 +13,8 @@ post http://localhost:10101/Auth/register
 - actualizacion de un perfil
 patch http://localhost:10101/Auth/profile
 
+Authorization Bearer: token del login 
+
 {
     "nombre":"juanito alimaña",
     "telefono":"fsffsfs",

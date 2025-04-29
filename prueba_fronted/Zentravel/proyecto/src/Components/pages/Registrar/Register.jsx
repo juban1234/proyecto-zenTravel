@@ -79,5 +79,6 @@ export const Register = () => {
         <p className="mt-4 text-sm text-center text-gray-500">{mensaje}</p>
       </div>
     </div>
+    
   );
 };

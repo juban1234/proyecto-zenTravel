@@ -15,7 +15,7 @@ app.use('/Auth', Auth)
 app.use('/Password',Validator);
 app.use('/Api',Paquete)
 
-const PORT = process.env.PORT || 10101;
+const PORT = process.env.PORT || 20101;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

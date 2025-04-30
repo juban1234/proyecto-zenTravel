@@ -9,7 +9,6 @@ export const registerUser = async (
   nombre,
   email,
   telefono,
-  estiloVida,
   password ) => {
     
   try {
@@ -17,10 +16,8 @@ export const registerUser = async (
       nombre,
       email,
       telefono,
-      estiloVida,
       password
     });
-    localStorage.setItem("token", response.data.token);
     return response.data;
   } catch (error) {
     console.error("Error en el registro:", error);

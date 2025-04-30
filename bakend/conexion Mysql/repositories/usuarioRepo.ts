@@ -119,6 +119,13 @@ class usuarioRepo {
 
     return rows;
   }
+
+  static async buscarHotelPornombre(nombre: string) {
+    const sql = 'SELECT * FROM hoteles WHERE nombre LIKE ?';
+    const values = [`%${nombre}%`];
+    const [rows]: any = await db.execute(sql, values);
+    return rows;
+  }
   
 
 }

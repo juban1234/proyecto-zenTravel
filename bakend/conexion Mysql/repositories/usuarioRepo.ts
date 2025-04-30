@@ -120,12 +120,18 @@ class usuarioRepo {
     return rows;
   }
 
-  static async buscarHotelPornombre(nombre: string) {
-    const sql = 'SELECT * FROM hoteles WHERE nombre LIKE ?';
-    const values = [`%${nombre}%`];
-    const [rows]: any = await db.execute(sql, values);
-    return rows;
-  }
+
+static async buscarHotelPorNombre(nombre: string) {
+  const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
+  const values = [`%${nombre}%`];  // Usamos LIKE para hacer coincidencias parciales
+  const [rows]: any = await db.execute(sql, values);
+  return rows;
+}
+
+
+
+
+
   
 
 }

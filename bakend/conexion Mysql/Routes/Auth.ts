@@ -3,8 +3,7 @@ import { login, register } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/controlerUser/profileController";
 import { reserva } from "../controllers/controlerUser/ReservaControler";
-import { buscar } from "../controllers/controlerUser/SearchController";
-import  { SelectHotel } from "../controllers/controlerUser/SelectHotel";
+import { buscar,SearchHotelByName } from "../controllers/controlerUser/SearchController";
 
 
 const router = express.Router();
@@ -15,7 +14,10 @@ router.post('/register', register); // Funcional
 router.post('/reserva', verifyToken, reserva); // En pruebas, verifica la reestructuración de la base de datos
 router.patch('/profile', verifyToken, profile); // Funcional
 router.get('/search',buscar);
-router.get('/hotel', SelectHotel);
+router.get('/hotel/:nombre', SearchHotelByName);
+
+
+
 
 
 export default router;

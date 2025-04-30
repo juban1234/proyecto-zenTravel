@@ -22,5 +22,27 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
     }
 };
 
+export const SearchHotelByName = async (req: Request, res: Response) => {
+    try {
+
+        const { nombre } = req.params;
+
+        if (!nombre || nombre.trim() === "") {
+            return res.status(400).json({ message: "El nombre del hotel es requerido." });
+        }
+
+        const hoteles = await usuarioRepo.buscarHotelPorNombre(nombre);
+
+        if (hoteles.length === 0) {
+            return res.status(404).json({ message: "No se encontró ningún hotel con ese nombre." });
+        }
+
+        return res.status(200).json(hoteles);
+    } catch (error) {
+        console.error("Error al buscar hotel por nombre:", error);
+        return res.status(500).json({ error: "Error del servidor." });
+    }
+};
+
 
 

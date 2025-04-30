@@ -14,9 +14,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/Auth', Auth)
-
 app.use('/Password',Validator);
-app.use('/Api',Paquete)
+app.use('/packages',Paquete)
 
 const PORT = process.env.PORT || 10101;
 

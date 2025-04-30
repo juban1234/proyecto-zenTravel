@@ -123,7 +123,14 @@ class usuarioRepo {
 
 static async buscarHotelPorNombre(nombre: string) {
   const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
-  const values = [`%${nombre}%`];  // Usamos LIKE para hacer coincidencias parciales
+  const values = [`%${nombre}%`]; 
+  const [rows]: any = await db.execute(sql, values);
+  return rows;
+}
+
+static async buscartransportePorNombre(nombre: string) {
+  const sql = 'SELECT * FROM Transporte WHERE empresa LIKE ?';
+  const values = [`%${nombre}%`]; 
   const [rows]: any = await db.execute(sql, values);
   return rows;
 }

@@ -1,11 +1,15 @@
 import express from "express";
-import { destino } from "../controllers/controllerProvider/Check-inController";
+import { buscar ,SearchHotelByName,SearchTransporteByName} from "../controllers/controlerUser/SearchController";
+import verifyToken from "../middleware/verifyToken";
+import { reserva } from "../controllers/controlerUser";
+
 const router = express.Router();
 
-router.post('/destiny',destino)
-router.post('/hotel')
-router.post('/transport')
-router.post('/package')
 
+router.post('/package')
+router.get('/search',buscar); // Funcional
+router.get('/hotel/:nombre', SearchHotelByName); // Funcional
+router.get('/SearchTransport/:nombre',SearchTransporteByName); // Funcional
+router.post('/reserva', verifyToken, reserva); // En pruebas, verifica la reestructuración de la base de datos
 
 export default router;

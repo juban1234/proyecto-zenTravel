@@ -44,5 +44,29 @@ export const SearchHotelByName = async (req: Request, res: Response) => {
     }
 };
 
+export const SearchTransporteByName = async (req: Request, res: Response) => {
+    try {
+
+        const { nombre } = req.params;
+
+        if (!nombre || nombre.trim() === "") {
+            return res.status(400).json({ message: "El nombre del Transporte es requerido." });
+        }
+
+        const transport = await usuarioRepo.buscartransportePorNombre(nombre);
+
+        if (transport.length === 0) {
+            return res.status(404).json({ message: "No se encontró ningún Transporte con ese nombre." });
+        }
+
+        return res.status(200).json(transport);
+    } catch (error) {
+        console.error("Error al buscar transporte por nombre:", error);
+        return res.status(500).json({ error: "Error del servidor." });
+    }
+};
+
+
+
 
 

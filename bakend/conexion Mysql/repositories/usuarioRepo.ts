@@ -4,12 +4,14 @@ import Usuario from '../Dto/registroDto';
 import Login from '../Dto/loginDto';
 import Reservas from '../Dto/reservasDto';
 import UpdateProfileDto from '../Dto/UpdateProfileDto';
+import SearchDto from '../Dto/SearchDto';
 
 
 
 class usuarioRepo {
 
   static async createUsuario( usuario:Usuario){
+
       const sql = 'CALL CrearUsuario(?, ?, ?, ?,"cliente")';
       const values = [usuario.nombre, usuario.email, usuario.telefono,usuario.password];
       return db.execute(sql, values);
@@ -23,7 +25,9 @@ class usuarioRepo {
     if (rows.length > 0) {
       const usuario = rows[0][0];
       
+
       console.log("🔍 Usuario encontrado:", usuario); 
+
 
       if (!usuario.password) {
         throw new Error("El usuario no tiene contraseña almacenada");
@@ -49,6 +53,7 @@ class usuarioRepo {
     return db.execute(sql, values);
   }
   
+
   static async buscarUsuarioPorEmail(email: string) {
     const [rows]: any = await db.execute('CALL loginUsuario(?)', [email]);
     return rows[0]?.[0] || null;
@@ -83,7 +88,59 @@ class usuarioRepo {
   
     return db.execute(query, valores);
   }
+
+   static async buscarDestino(search: SearchDto) {
+    let condiciones: string[] = [];
+    let valores: any[] = [];
+
+    if (search.nombre) {
+      condiciones.push("nombre LIKE ?");
+      valores.push(`%${search.nombre}%`);
+    }
+    if (search.pais) {
+      condiciones.push("pais LIKE ?");
+      valores.push(`%${search.pais}%`);
+    }
+    if (search.direccion) {
+      condiciones.push("direccion LIKE ?");
+      valores.push(`%${search.direccion}%`);
+    }
+    if (search.descripcion) {
+      condiciones.push("descripcion LIKE ?");
+      valores.push(`%${search.descripcion}%`);
+    }
+
+    if (condiciones.length === 0) {
+      return { message: "No se especificaron criterios de búsqueda" };
+    }
+
+    const query = `SELECT * FROM Destinos WHERE ${condiciones.join(" AND ")}`;
+    const [rows]: any = await db.execute(query, valores);
+
+    return rows;
+  }
+
+
+static async buscarHotelPorNombre(nombre: string) {
+  const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
+  const values = [`%${nombre}%`]; 
+  const [rows]: any = await db.execute(sql, values);
+  return rows;
+}
+
+static async buscartransportePorNombre(nombre: string) {
+  const sql = 'SELECT * FROM Transporte WHERE empresa LIKE ?';
+  const values = [`%${nombre}%`]; 
+  const [rows]: any = await db.execute(sql, values);
+  return rows;
+}
+
+
+
+
+
   
+
 }
 export default usuarioRepo;
 

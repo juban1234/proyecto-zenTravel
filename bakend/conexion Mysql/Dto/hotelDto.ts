@@ -1,43 +1,64 @@
 class Hotel {
-    private _nombre:string;
-    private _direccion:string;
-    private _descripcion:string;
+    private _nombre: string;
+    private _descripcion: string;
+    private _ubicacion: string;
+    private _precio: number;
+    private _imagenes: string[]; 
 
     constructor(
-        nombre:string,
-        direccion:string,
-        descripcion:string
-
+        nombre: string,
+        descripcion: string,
+        ubicacion: string,
+        precio: number,
+        imagenes: string[]
     ) {
         this._nombre = nombre;
-        this._direccion = direccion;
         this._descripcion = descripcion;
+        this._ubicacion = ubicacion;
+        this._precio = precio;
+        this._imagenes = imagenes;
     }
 
-    //geteer
-    get nombre(): string{
+    // Getters
+    get nombre(): string {
         return this._nombre;
     }
 
-    get direccion():string{
-        return this._direccion;
-    }
-
-    get descripcion():string{
+    get descripcion(): string {
         return this._descripcion;
     }
 
-    //setter
-    set nombre(nombre:string){
+    get ubicacion(): string {
+        return this._ubicacion;
+    }
+
+    get precio(): number {
+        return this._precio;
+    }
+
+    get imagenes(): string[] {
+        return this._imagenes;
+    }
+
+    // Setters
+    set nombre(nombre: string) {
         this._nombre = nombre;
     }
 
-    set direccion(direccion:string){
-        this._direccion = direccion;
+    set descripcion(descripcion: string) {
+        this._descripcion = descripcion;
     }
 
-    set descripcion(descripcion: string){
-        this._descripcion = descripcion;
+    set ubicacion(ubicacion: string) {
+        this._ubicacion = ubicacion;
+    }
+
+    set precio(precio: number) {
+        this._precio = precio;
+    }
+
+    set imagenes(imagenes: string[]) { 
+        this._imagenes = imagenes;
     }
 }
 

@@ -1,4 +1,11 @@
 
+
+RF-01 Personalización de Paquetes
+
+         RF-01.3 Seleccionar alojamiento 
+
+         RF-01.5 Calcular presupuesto
+
 RF-04 Gestión de Pagos
 
         RF-04.1 Seleccionar método de pago

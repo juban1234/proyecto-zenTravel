@@ -1,4 +1,5 @@
 class UpdateProfileDto {
+
     constructor(
       public id_usuario: number,
       public nombre?: string,
@@ -8,3 +9,4 @@ class UpdateProfileDto {
   }
   
   export default UpdateProfileDto;
+

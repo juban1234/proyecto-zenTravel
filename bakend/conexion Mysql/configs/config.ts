@@ -1,5 +1,7 @@
 import mysql from 'mysql2';
+
 require('dotenv').config();
+
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -21,4 +23,5 @@ db.on('error', (err) => {
 });
 
 export default db.promise();
+
 

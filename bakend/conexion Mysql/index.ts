@@ -1,9 +1,11 @@
+
 import express from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
 import Auth from './Routes/Auth';
 import Validator from './Routes/Validator';
 import Paquete from './Routes/Paquete';
+
 
 dotenv.config();
 
@@ -13,12 +15,11 @@ app.use(cors());
 
 app.use('/Auth', Auth)
 app.use('/Password',Validator);
-app.use('/Api',Paquete)
+app.use('/packages',Paquete)
 
-const PORT = process.env.PORT || 20101;
+const PORT = process.env.PORT || 10101;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-
 });
 

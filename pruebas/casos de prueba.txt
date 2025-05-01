@@ -10,6 +10,15 @@ post http://localhost:10101/Auth/register
     "password": "MiClaveSegura123"
 }
 
+- login 
+post http://localhost:10101/Auth/login
+
+{
+    "email":"alexzo8677@gmail.com",
+	"password": "MiClaveSegura123"
+}
+
+
 - actualizacion de un perfil
 patch http://localhost:10101/Auth/profile
 

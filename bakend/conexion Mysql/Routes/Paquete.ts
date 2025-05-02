@@ -1,15 +1,14 @@
 import express from "express";
-import { buscar ,SearchHotelByName,SearchTransporteByName} from "../controllers/controlerUser/SearchController";
+import { buscar ,SearchHotelByName,SearchTransporteByName} from "../controllers/controllerServis/SearchController";
 import verifyToken from "../middleware/verifyToken";
-import { reserva } from "../controllers/controlerUser";
+import { reserva } from "../controllers/controllerServis/ReservaControler"; 
 
 const router = express.Router();
 
-
-router.post('/package')
 router.get('/search',buscar); // Funcional
 router.get('/hotel/:nombre', SearchHotelByName); // Funcional
 router.get('/SearchTransport/:nombre',SearchTransporteByName); // Funcional
-router.post('/reserva', verifyToken, reserva); // En pruebas, verifica la reestructuración de la base de datos
+router.post('/package') // crea los paquetes que prefiera el usuario
+router.post('/reserva', verifyToken, reserva); // no funciona debo restructurar la la fun cion de reservas
 
 export default router;

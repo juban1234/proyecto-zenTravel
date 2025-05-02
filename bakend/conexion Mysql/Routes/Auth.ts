@@ -2,8 +2,6 @@ import express from "express";
 import { login, register } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/controlerUser/profileController";
-import { reserva } from "../controllers/controlerUser/ReservaControler";
-import { buscar,SearchHotelByName,SearchTransporteByName } from "../controllers/controlerUser/SearchController";
 import { validatorParams,validator } from "../middleware/register-validator";
 
 

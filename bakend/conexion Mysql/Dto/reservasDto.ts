@@ -1,12 +1,10 @@
 class Reservas {
 
-    private _fecha:Date;
     private _estado:string;
     private _id_usuario:number;
     private _id_paquete:number;
 
     constructor(
-        fecha: Date,
         estado: string,
         id_usuario: number,
         id_paquete: number
@@ -19,9 +17,7 @@ class Reservas {
     }
 
     //geeters
-    get fecha(): Date {
-        return this._fecha;
-    }
+
     get estado(): string {
         return this._estado;
     }
@@ -35,9 +31,6 @@ class Reservas {
 
     //setters
 
-    set fecha(fecha: Date) {
-        this._fecha = fecha;
-    }
     set estado(estado: string) {
         this._estado = estado;
     }

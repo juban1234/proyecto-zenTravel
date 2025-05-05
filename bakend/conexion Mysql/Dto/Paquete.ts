@@ -1,5 +1,6 @@
 class Package {
-    private _id_paquete: number;
+
+    private _id_usuario: number;
     private _nombrePaquete: string;
     private _descripcion: string;
     private _precioTotal: number;
@@ -13,7 +14,7 @@ class Package {
     private _nombreDestino: string;
 
     constructor(
-        id_paquete: number,
+        id_usuario: number,
         nombrePaquete: string,
         descripcion: string,
         precioTotal: number,
@@ -26,7 +27,7 @@ class Package {
         nombreTransporte: string,
         nombreDestino: string
     ) {
-        this._id_paquete = id_paquete;
+        this._id_usuario = id_usuario;
         this._nombrePaquete = nombrePaquete;
         this._descripcion = descripcion;
         this._precioTotal = precioTotal;
@@ -40,10 +41,13 @@ class Package {
         this._nombreDestino = nombreDestino;
     }
 
-    // Getters
-    get id_paquete(): number {
-        return this._id_paquete;
+    // Getters and Setters for id_usuario
+    get id_usuario(): number {
+        return this._id_usuario;
     }
+   
+
+    // Getters
 
     get nombrePaquete(): string {
         return this._nombrePaquete;
@@ -90,8 +94,8 @@ class Package {
     }
 
     // Setters
-    set id_paquete(id_paquete: number) {
-        this._id_paquete = id_paquete;
+    set id_usuario(id_usuario: number) {
+        this._id_usuario = id_usuario;
     }
 
     set nombrePaquete(nombrePaquete: string) {

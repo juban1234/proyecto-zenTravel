@@ -5,6 +5,7 @@ import Login from '../Dto/loginDto';
 import Reservas from '../Dto/reservasDto';
 import UpdateProfileDto from '../Dto/UpdateProfileDto';
 import SearchDto from '../Dto/SearchDto';
+import Package from '../Dto/Paquete';
 
 
 
@@ -136,11 +137,12 @@ static async buscartransportePorNombre(nombre: string) {
 }
 
 
-static async createPackage(paquete: any) { 
+static async createPackage(paquete: Package) { 
   const sql = `
-      CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      CALL crear_paquete_con_nombres(?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const values = [
+      paquete.id_usuario,
       paquete.nombrePaquete,           
       paquete.descripcion,             
       paquete.precioTotal,            
@@ -160,13 +162,8 @@ static async createPackage(paquete: any) {
   } catch (error) {
       console.error("Error al crear paquete:", error);
       throw error;  
+    }
   }
-}
-
-
-
-
-
 }
 export default usuarioRepo;
 

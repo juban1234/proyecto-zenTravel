@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/search',buscar); // Funcional
 router.get('/hotel/:nombre', SearchHotelByName); // Funcional
 router.get('/SearchTransport/:nombre',SearchTransporteByName); // Funcional pruebas, verifica la reestructuración de la base de datos
-router.post('/paquetes', createPackage);
-router.post('/reserva', verifyToken, reserva); // no funciona debo restructurar la la fun cion de reservas
+router.post('/paquetes',verifyToken, createPackage);
+router.post('/reserva', verifyToken, reserva); 
 
 export default router;

@@ -1,29 +1,24 @@
 class Reservas {
 
-    private _fecha:Date;
-    private _estado:string;
+    private _cedula:string;
     private _id_usuario:number;
     private _id_paquete:number;
 
     constructor(
-        fecha: Date,
-        estado: string,
+        cedula: string,
         id_usuario: number,
         id_paquete: number
 
     ) {
-        this._fecha = fecha;
-        this._estado = estado;
+        this._cedula = cedula;
         this._id_usuario = id_usuario;
         this._id_paquete = id_paquete;
     }
 
     //geeters
-    get fecha(): Date {
-        return this._fecha;
-    }
-    get estado(): string {
-        return this._estado;
+
+    get cedula(): string {
+        return this._cedula;
     }
 
     get id_usuario(): number {
@@ -35,11 +30,8 @@ class Reservas {
 
     //setters
 
-    set fecha(fecha: Date) {
-        this._fecha = fecha;
-    }
-    set estado(estado: string) {
-        this._estado = estado;
+    set estado(cedula: string) {
+        this._cedula = cedula;
     }
     set id_usuario(id_usuario: number) {
         this._id_usuario = id_usuario;

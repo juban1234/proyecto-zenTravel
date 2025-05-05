@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
     if (login.logged) {
       return res.status(200).json({
         status: login.status,
-        token: generateToken({id: login.id}, 60)
+        token: generateToken({id: login.id, rol: login.rol}, 60)
       });
     }
 

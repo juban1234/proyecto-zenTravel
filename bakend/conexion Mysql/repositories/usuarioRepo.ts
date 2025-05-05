@@ -37,7 +37,7 @@ class usuarioRepo {
       const isPasswordValid = await bcrypt.compare(login.password, usuario.password);
 
       if (isPasswordValid) {
-        return { logged: true, status: "Successful authentication", id: usuario.id_usuario };
+        return { logged: true, status: "Successful authentication", id: usuario.id_usuario ,rol: usuario.rol};
       }
 
       return { logged: false, status: "Invalid password" };
@@ -48,8 +48,8 @@ class usuarioRepo {
   }
 
   static async crearReserva(reserva: Reservas) {
-    const sql = 'CALL CrearReserva(?, ?, ?, ?)';
-    const values = [reserva.id_usuario, reserva.fecha, reserva.estado, reserva.id_paquete];
+    const sql = 'CALL CrearReserva(?, ?, ?)';
+    const values = [reserva.id_usuario, reserva.cedula, reserva.id_paquete];
     return db.execute(sql, values);
   }
   

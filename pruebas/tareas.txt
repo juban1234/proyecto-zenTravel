@@ -1,15 +1,40 @@
+
+
 RF-01 Personalización de Paquetes
 
          RF-01.3 Seleccionar alojamiento 
 
          RF-01.5 Calcular presupuesto
 
-RF-02 Gestión de Documentación
+RF-04 Gestión de Pagos
 
-        RF-02.1 Cargar documentos
+        RF-04.1 Seleccionar método de pago
 
-RF-07 Soporte Técnico y Mantenimiento
+        RF-04.2 Realizar Pagos
 
-        RF-07.1 Contactar al Soporte
+        RF-04.3 Generar Facturas
 
-        RF-07.2 Consultar Preguntas Frecuentes
+RF-05 Gestión de reservas
+
+        RF-05.2 Actualizar reserva
+
+        RF-05.3 Cancelar reserva
+
+        RF-05.4 Historial de reservas
+
+RF-06 Inteligencia Artificial IA
+
+       RF-06.1 Obtener Recomendaciones
+
+       RF-06.2 Realizar Búsquedas Inteligentes
+
+       RF-06.3 Recomendaciones inteligentes de acuerdo a los agentes de viajes
+
+
+RF-9 Marketing y Promociones
+
+         RF-09.1 Canjear Códigos y Promociones
+
+RF-10 Análisis y Datos
+
+         RF-10.1 Generar Reportes

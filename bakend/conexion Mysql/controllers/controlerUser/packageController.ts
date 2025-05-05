@@ -66,7 +66,13 @@ export const createPackage = async (req: Request, res: Response) => {
 
         return res.status(400).json({ status: "Error al crear el paquete" });
     } catch (error: any) {
-        console.error("❌ Error al crear el paquete:", error);
+        console.error(" Error al crear el paquete:", error);
         return res.status(500).json({ error: "Error en el servidor" });
     }
 };
+
+
+
+
+
+

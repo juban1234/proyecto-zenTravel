@@ -3,11 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
-
--- Tiempo de generación: 29-04-2025 a las 02:31:12
+-- Tiempo de generación: 02-05-2025 a las 21:41:33
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
-
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,25 +25,54 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-<<<<<<< HEAD
-=======
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_contraseña` (IN `p_email` VARCHAR(100), IN `p_password` VARCHAR(255))   BEGIN
   UPDATE usuario SET password = p_password WHERE email = p_email;
 END$$
 
->>>>>>> main
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearReserva` (IN `id_usuario` INT, IN `fecha` DATE, IN `estado` VARCHAR(50), IN `id_paquete` INT)   begin 
 	insert into reservas(id_usuario,fecha,estado,id_paquete) value(id_usuario,fecha,estado,id_paquete);
 end$$
 
-<<<<<<< HEAD
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearUsuario` (IN `nombre` VARCHAR(255), IN `email` VARCHAR(255), IN `telefono` VARCHAR(15), IN `password` VARCHAR(255))   BEGIN
-    INSERT INTO Usuario (nombre, email, telefono, password)
-    VALUES (nombre, email, telefono, password);
-=======
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CrearUsuario` (IN `nombre` VARCHAR(255), IN `email` VARCHAR(255), IN `telefono` VARCHAR(15), IN `password` VARCHAR(255), IN `rol` ENUM('cliente','proveedor','admin'))   BEGIN
     INSERT INTO Usuario (nombre, email, telefono, password,rol)
     VALUES (nombre, email, telefono, password,rol);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `crear_paquete_con_nombres` (IN `p_nombrePaquete` VARCHAR(100), IN `p_descripcion` TEXT, IN `p_precioTotal` DECIMAL(10,2), IN `p_imagenUrl` VARCHAR(255), IN `p_duracionDias` INT, IN `p_fechaInicioDisponible` DATE, IN `p_fechaFinDisponible` DATE, IN `p_descuento` DECIMAL(5,2), IN `p_nombreHotel` VARCHAR(100), IN `p_nombreTransporte` VARCHAR(100), IN `p_nombreDestino` VARCHAR(200))   BEGIN
+    DECLARE v_id_hotel INT;
+    DECLARE v_id_transporte INT;
+    DECLARE v_id_destino INT;
+
+    -- Obtener el id del hotel por su nombre
+    SELECT id_alojamiento INTO v_id_hotel
+    FROM HOTEL
+    WHERE nombre = p_nombreHotel
+    LIMIT 1;
+
+    -- Obtener el id del transporte por su nombre
+    SELECT id_transporte INTO v_id_transporte
+    FROM TRANSPORTE
+    WHERE empresa = p_nombreTransporte
+    LIMIT 1;
+
+    -- Obtener el id del destino por su nombre
+    SELECT id_destino INTO v_id_destino
+    FROM DESTINOS
+    WHERE nombre = p_nombreDestino
+    LIMIT 1;
+
+    -- Verificar si los IDs se encontraron (de lo contrario, se detiene el proceso)
+    IF v_id_hotel IS NULL OR v_id_transporte IS NULL OR v_id_destino IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Uno o más de los elementos no existen en la base de datos.';
+    ELSE
+        -- Crear el paquete en la tabla PAQUETE con los IDs encontrados
+        INSERT INTO PAQUETE (nombrePaquete, descripcion, precioTotal, imagenUrl, duracionDias, fechaInicioDisponible, fechaFinDisponible, descuento, id_alojamiento, id_transporte, id_destino)
+        VALUES (p_nombrePaquete, p_descripcion, p_precioTotal, p_imagenUrl, p_duracionDias, p_fechaInicioDisponible, p_fechaFinDisponible, p_descuento, v_id_hotel, v_id_transporte, v_id_destino);
+
+        -- Devolver el ID del paquete creado
+        SELECT LAST_INSERT_ID() AS id_paquete_creado;
+    END IF;
+
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarPaquetes` ()   BEGIN
@@ -58,52 +85,48 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listarPaquetes` ()   BEGIN
         descuento
     FROM paquete
     WHERE estado = 'activo';
->>>>>>> main
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUsuario` (IN `p_email` VARCHAR(225))   BEGIN
     SELECT * FROM usuario WHERE email = p_email;
 END$$
 
-<<<<<<< HEAD
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateProfi`(IN `nombre` varchar(50), IN`telefono`  VARCHAR(15), IN `estiloVida` VARCHAR(255)) BEGIN
-	INSERT INTO Usuario (nombre,telefono,estiloVida)
-    VALUES(nombre,telefono,estiloVida);
-    END$$
-    
-    
-
-=======
->>>>>>> main
 DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `destino`
+-- Estructura de tabla para la tabla `destinos`
 --
 
-CREATE TABLE `destino` (
+CREATE TABLE `destinos` (
   `id_destino` int(11) NOT NULL,
-<<<<<<< HEAD
-=======
-  `nombre` varchar(100) DEFAULT NULL,
->>>>>>> main
+  `Nombre` varchar(200) DEFAULT NULL,
+  `pais` varchar(200) DEFAULT NULL,
   `direccion` varchar(200) DEFAULT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
-=======
 --
--- Volcado de datos para la tabla `destino`
+-- Volcado de datos para la tabla `destinos`
 --
 
-INSERT INTO `destino` (`id_destino`, `nombre`, `direccion`, `descripcion`) VALUES
-(1, 'paquistan', 'armenia', 'es un lugar colotido'),
-(2, 'villa nueva', 'calarca ', 'es una villa en calarca');
+INSERT INTO `destinos` (`id_destino`, `Nombre`, `pais`, `direccion`, `descripcion`) VALUES
+(3, 'Cartagena', 'Colombia', 'Centro histórico, Cartagena, Bolívar', 'Cartagena es una ciudad costera famosa por sus playas doradas y su arquitectura colonial que conserva un aire histórico, con calles empedradas y coloridas casas coloniales. Es uno de los destinos más visitados de Colombia.'),
+(4, 'Medellín', 'Colombia', 'Avenida El Poblado, Medellín, Antioquia', 'Medellín, conocida como la ciudad de la eterna primavera, es famosa por su clima templado, su desarrollo urbano y su cultura vibrante. La ciudad se caracteriza por su innovadora infraestructura y su vida nocturna dinámica.'),
+(5, 'Bogotá', 'Colombia', 'La Candelaria, Bogotá, Cundinamarca', 'Bogotá es la capital cultural y política de Colombia, ubicada en el centro del país. Ofrece una mezcla de historia, arte y cultura, con museos de renombre como el Museo del Oro y el Museo Botero. Su altitud proporciona vistas espectaculares.'),
+(6, 'Cali', 'Colombia', 'Avenida Sexta, Cali, Valle del Cauca', 'Cali es la salsa capital del mundo, famosa por su vibrante música y su vida nocturna llena de movimiento. La ciudad también es conocida por su gastronomía y la calidez de su gente.'),
+(7, 'Santa Marta', 'Colombia', 'Centro histórico, Santa Marta, Magdalena', 'Santa Marta es un puerto histórico y uno de los destinos de playa más famosos en la región caribeña. Además de sus playas, es el punto de entrada al Parque Nacional Natural Tayrona, que ofrece naturaleza exuberante.'),
+(8, 'Barranquilla', 'Colombia', 'Avenida 38, Barranquilla, Atlántico', 'Barranquilla es conocida por su carnaval, uno de los más grandes y famosos de América Latina. La ciudad también es un importante centro comercial y cultural en la región Caribe de Colombia.'),
+(9, 'San Andrés', 'Colombia', 'Isla San Andrés, Archipiélago de San Andrés, Providencia y Santa Catalina', 'San Andrés es un paraíso tropical ubicado en el mar Caribe, famoso por sus aguas cristalinas y playas de arena blanca. La isla es conocida por sus deportes acuáticos y su cultura caribeña.'),
+(10, 'Eje cafetero', 'Colombia', 'Quindío, Risaralda y Caldas', 'El Eje cafetero es una región montañosa que abarca los departamentos de Quindío, Risaralda y Caldas, famosa por sus plantaciones de café. Aquí se puede disfrutar de paisajes hermosos, pueblos pintorescos y la cultura del café.'),
+(11, 'Popayán', 'Colombia', 'Centro histórico, Popayán, Cauca', 'Popayán, conocida como la ciudad blanca, es famosa por su bien conservada arquitectura colonial. La ciudad es un importante centro religioso y cultural, y alberga una de las procesiones de Semana Santa más importantes de Colombia.'),
+(12, 'Villa de Leyva', 'Colombia', 'Centro histórico, Villa de Leyva, Boyacá', 'Villa de Leyva es un pequeño pueblo colonial lleno de encanto, con calles empedradas y casas de época. Es un destino turístico popular por su arquitectura, su cercanía al Parque Arqueológico de Monquirá y su ambiente tranquilo.'),
+(13, 'Cartagena', 'Colombia', 'Centro histórico, Cartagena, Bolívar', 'Famosa por sus playas y arquitectura colonial.'),
+(14, 'Medellín', 'Colombia', 'Avenida El Poblado, Medellín, Antioquia', 'Conocida como la ciudad de la eterna primavera.'),
+(15, 'Cartagena', 'Colombia', 'Centro histórico, Cartagena, Bolívar', 'Famosa por sus playas y arquitectura colonial.'),
+(16, 'Medellín', 'Colombia', 'Avenida El Poblado, Medellín, Antioquia', 'Conocida como la ciudad de la eterna primavera.');
 
->>>>>>> main
 -- --------------------------------------------------------
 
 --
@@ -111,21 +134,34 @@ INSERT INTO `destino` (`id_destino`, `nombre`, `direccion`, `descripcion`) VALUE
 --
 
 CREATE TABLE `hotel` (
-  `id_hotel` int(11) NOT NULL,
-  `nombreHotel` varchar(50) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL
+  `id_alojamiento` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `ubicacion` varchar(100) DEFAULT NULL,
+  `precio` decimal(10,2) DEFAULT NULL,
+  `imagenes` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
-=======
 --
 -- Volcado de datos para la tabla `hotel`
 --
 
-INSERT INTO `hotel` (`id_hotel`, `nombreHotel`, `descripcion`) VALUES
-(1, 'wonjd', 'ccecec');
+INSERT INTO `hotel` (`id_alojamiento`, `nombre`, `descripcion`, `ubicacion`, `precio`, `imagenes`) VALUES
+(1, 'Hotel Colonial Cartagena', 'Ubicado en el corazón del centro histórico, este hotel combina arquitectura colonial con comodidades modernas.', 'Centro histórico, Cartagena, Bolívar', 150.00, NULL),
+(2, 'Hotel Primavera Medellín', 'Hotel moderno en El Poblado, con vistas a las montañas y acceso cercano a bares y restaurantes.', 'Avenida El Poblado, Medellín, Antioquia', 120.00, NULL),
+(3, 'Hotel Cultural Bogotá', 'A pasos del Museo del Oro, ofrece habitaciones cómodas y una experiencia auténtica en el centro histórico.', 'La Candelaria, Bogotá, Cundinamarca', 110.00, NULL),
+(4, 'Hotel Salsa Real Cali', 'Con temática salsera, este hotel celebra la cultura local con shows en vivo y gastronomía típica.', 'Avenida Sexta, Cali, Valle del Cauca', 95.00, NULL),
+(5, 'Hotel Tayrona Beach', 'Frente al mar Caribe, ideal para disfrutar del sol y la entrada al Parque Tayrona.', 'Centro histórico, Santa Marta, Magdalena', 130.00, NULL),
+(6, 'Hotel Carnaval Barranquilla', 'Con ambiente festivo todo el año, está decorado con motivos del famoso carnaval.', 'Avenida 38, Barranquilla, Atlántico', 100.00, NULL),
+(7, 'Hotel Paraíso San Andrés', 'Rodeado de palmeras y frente al mar, es ideal para practicar snorkel y buceo.', 'Isla San Andrés, Archipiélago de San Andrés, Providencia y Santa Catalina', 160.00, NULL),
+(8, 'Hotel Finca Café Tradición', 'Finca-hotel rodeada de cafetales, con tours de café y vistas espectaculares.', 'Quindío, Risaralda y Caldas', 85.00, NULL),
+(9, 'Hotel Blanco Colonial', 'Conserva la arquitectura blanca tradicional y está ubicado cerca de iglesias y museos.', 'Centro histórico, Popayán, Cauca', 90.00, NULL),
+(10, 'Hotel Plaza Leyva', 'A pocos metros de la plaza principal, este hotel ofrece tranquilidad y ambiente colonial.', 'Centro histórico, Villa de Leyva, Boyacá', 100.00, NULL),
+(11, 'Hotel Colonial Cartagena', 'Hotel en el corazón del centro histórico.', 'Centro histórico, Cartagena, Bolívar', 150.00, NULL),
+(12, 'Hotel Primavera Medellín', 'Hotel moderno en El Poblado.', 'Avenida El Poblado, Medellín, Antioquia', 120.00, NULL),
+(13, 'Hotel Colonial Cartagena', 'Hotel en el corazón del centro histórico.', 'Centro histórico, Cartagena, Bolívar', 150.00, NULL),
+(14, 'Hotel Primavera Medellín', 'Hotel moderno en El Poblado.', 'Avenida El Poblado, Medellín, Antioquia', 120.00, NULL);
 
->>>>>>> main
 -- --------------------------------------------------------
 
 --
@@ -151,9 +187,6 @@ CREATE TABLE `paquete` (
   `id_paquete` int(11) NOT NULL,
   `nombrePaquete` varchar(100) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
-<<<<<<< HEAD
-  `precioTotal` decimal(10,2) DEFAULT NULL
-=======
   `precioTotal` decimal(10,2) DEFAULT NULL,
   `imagenUrl` varchar(255) DEFAULT NULL COMMENT 'URL de imagen de portada del paquete',
   `duracionDias` int(11) DEFAULT NULL COMMENT 'Duración en días del paquete',
@@ -161,71 +194,21 @@ CREATE TABLE `paquete` (
   `fechaFinDisponible` date DEFAULT NULL COMMENT 'Hasta qué fecha se puede reservar',
   `estado` enum('activo','inactivo') DEFAULT 'activo' COMMENT 'Estado del paquete',
   `descuento` decimal(5,2) DEFAULT 0.00 COMMENT 'Porcentaje de descuento aplicado'
->>>>>>> main
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `paquete`
 --
 
-<<<<<<< HEAD
-INSERT INTO `paquete` (`id_paquete`, `nombrePaquete`, `descripcion`, `precioTotal`) VALUES
-(1, 'pepe', 'eded', 121313.00);
-=======
 INSERT INTO `paquete` (`id_paquete`, `nombrePaquete`, `descripcion`, `precioTotal`, `imagenUrl`, `duracionDias`, `fechaInicioDisponible`, `fechaFinDisponible`, `estado`, `descuento`) VALUES
 (1, 'pepe', 'eded', 121313.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
 (2, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
 (3, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00),
 (999, 'Prueba', 'Desc', 0.00, NULL, NULL, NULL, NULL, 'activo', 0.00);
->>>>>>> main
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `paquete_destino`
---
-
-CREATE TABLE `paquete_destino` (
-  `id_paquete` int(11) NOT NULL,
-  `id_destino` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `paquete_hotel`
---
-
-CREATE TABLE `paquete_hotel` (
-  `id_paquete` int(11) NOT NULL,
-  `id_hotel` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-<<<<<<< HEAD
-=======
---
--- Volcado de datos para la tabla `paquete_hotel`
---
-
-INSERT INTO `paquete_hotel` (`id_paquete`, `id_hotel`) VALUES
-(999, 1);
-
->>>>>>> main
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `paquete_transporte`
---
-
-CREATE TABLE `paquete_transporte` (
-  `id_paquete` int(11) NOT NULL,
-  `id_transporte` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
-<<<<<<< HEAD
 -- Estructura de tabla para la tabla `reservas`
 --
 
@@ -237,34 +220,17 @@ CREATE TABLE `reservas` (
   `id_paquete` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `reservas`
---
-
-INSERT INTO `reservas` (`id_reservas`, `fecha`, `estado`, `id_usuario`, `id_paquete`) VALUES
-(9, '2025-04-05', 'confirmada', 1, 1),
-(10, '2025-04-05', 'confirmada', 9, 1),
-(11, '2001-03-03', 'pendiente', 9, 1),
-(12, '2001-03-03', 'pendiente', 9, 1),
-(13, '2025-04-05', 'confirmada', 9, 1);
-
 -- --------------------------------------------------------
 
 --
-=======
->>>>>>> main
 -- Estructura de tabla para la tabla `sugerencia`
 --
 
 CREATE TABLE `sugerencia` (
   `id_sugerencia` int(11) NOT NULL,
   `descripcion` text DEFAULT NULL,
-<<<<<<< HEAD
-  `id_usuario` int(11) DEFAULT NULL
-=======
   `id_usuario` int(11) DEFAULT NULL,
   `presupuestol` decimal(10,2) DEFAULT NULL
->>>>>>> main
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -275,20 +241,38 @@ CREATE TABLE `sugerencia` (
 
 CREATE TABLE `transporte` (
   `id_transporte` int(11) NOT NULL,
-  `tipoTransporte` varchar(50) DEFAULT NULL,
-  `empresa` varchar(100) DEFAULT NULL
+  `tipo` varchar(50) NOT NULL,
+  `empresa` varchar(100) NOT NULL,
+  `origen` varchar(100) NOT NULL,
+  `destino` varchar(100) NOT NULL,
+  `fecha_salida` datetime NOT NULL,
+  `fecha_llegada` datetime NOT NULL,
+  `duracion` varchar(50) DEFAULT NULL,
+  `precio` decimal(10,2) NOT NULL,
+  `capacidad` int(11) NOT NULL,
+  `clase` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
-=======
 --
 -- Volcado de datos para la tabla `transporte`
 --
 
-INSERT INTO `transporte` (`id_transporte`, `tipoTransporte`, `empresa`) VALUES
-(1, 'acuatico', 'arbales');
+INSERT INTO `transporte` (`id_transporte`, `tipo`, `empresa`, `origen`, `destino`, `fecha_salida`, `fecha_llegada`, `duracion`, `precio`, `capacidad`, `clase`) VALUES
+(1, 'Avión', 'Avianca', 'Bogotá', 'Cartagena', '2025-05-15 08:00:00', '2025-05-15 09:30:00', '1h 30min', 250.00, 180, 'Económica'),
+(2, 'Avión', 'LATAM', 'Medellín', 'San Andrés', '2025-05-16 10:30:00', '2025-05-16 12:40:00', '2h 10min', 400.00, 150, 'Ejecutiva'),
+(3, 'Autobús', 'Copetran', 'Bogotá', 'Medellín', '2025-05-14 21:00:00', '2025-05-15 06:00:00', '9h', 100.00, 45, 'Económica'),
+(4, 'Autobús', 'Expreso Brasilia', 'Cartagena', 'Santa Marta', '2025-05-18 07:00:00', '2025-05-18 11:00:00', '4h', 40.00, 50, 'Económica'),
+(5, 'Autobús', 'Tren Turístico', 'Zipaquirá', 'Bogotá', '2025-05-20 09:00:00', '2025-05-20 10:20:00', '1h 20min', 30.00, 60, 'Turística'),
+(6, 'Avión', 'SATENA', 'Cali', 'Popayán', '2025-05-17 12:00:00', '2025-05-17 12:45:00', '0h 45min', 150.00, 70, 'Económica'),
+(7, 'Autobús', 'Bolivariano', 'Pereira', 'Manizales', '2025-05-13 15:30:00', '2025-05-13 17:30:00', '2h', 20.00, 40, 'Económica'),
+(8, 'Avión', 'Avianca', 'Bogotá', 'San Andrés', '2025-05-19 11:00:00', '2025-05-19 13:00:00', '2h', 300.00, 180, 'Ejecutiva'),
+(9, 'Autobús', 'Flota Magdalena', 'Neiva', 'Bogotá', '2025-05-15 20:00:00', '2025-05-16 03:00:00', '7h', 90.00, 50, 'Económica'),
+(10, 'Autobús', 'Expreso', 'Armenia', 'Pijao', '2025-05-21 08:00:00', '2025-05-21 09:00:00', '1h', 25.00, 35, 'Turística'),
+(11, 'Avión', 'Avianca', 'Bogotá', 'Cartagena', '2025-05-15 08:00:00', '2025-05-15 09:30:00', '1h 30min', 250.00, 180, 'Económica'),
+(12, 'Autobús', 'Copetran', 'Bogotá', 'Medellín', '2025-05-14 21:00:00', '2025-05-15 06:00:00', '9h', 100.00, 45, 'Económica'),
+(13, 'Avión', 'Avianca', 'Bogotá', 'Cartagena', '2025-05-15 08:00:00', '2025-05-15 09:30:00', '1h 30min', 250.00, 180, 'Económica'),
+(14, 'Autobús', 'Copetran', 'Bogotá', 'Medellín', '2025-05-14 21:00:00', '2025-05-15 06:00:00', '9h', 100.00, 45, 'Económica');
 
->>>>>>> main
 -- --------------------------------------------------------
 
 --
@@ -299,56 +283,36 @@ CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-<<<<<<< HEAD
-  `presupuesto` decimal(10,2) DEFAULT NULL,
-  `telefono` varchar(30) DEFAULT NULL,
-  `estiloVida` varchar(100) DEFAULT NULL,
-  `password` varchar(60) NOT NULL
-=======
   `telefono` varchar(30) DEFAULT NULL,
   `estiloVida` varchar(100) DEFAULT NULL,
   `password` varchar(60) NOT NULL,
   `rol` enum('cliente','proveedor','admin') NOT NULL DEFAULT 'cliente'
->>>>>>> main
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-<<<<<<< HEAD
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `presupuesto`, `telefono`, `estiloVida`, `password`) VALUES
-(1, 'Juan Pérez', 'juanperez1@email.com', 2500.00, '3111234567', 'aventurero', '$2b$10$XqkXD6lSqbRszSq2QPv9kuxbhxxg/i.gYqSDbzLQ3aN50xHCzlIBW'),
-(2, 'juan', 'dgiraldograjales5@gmail.com', 10000.00, '223232', 'perezoso', '$2b$10$3B4OLQgPDyOS.9J0KzK55u9hJUspzkCgFlxbIeUTJi/YmIecvrcBy'),
-(3, 'pepe', 'hffjdkksfk835@gmail.com', 1.00, 'frfr', 'frf', '$2b$10$jzywO2dNyKm9CuQK32yQpObXDXNbxShakE2cwslD.G0BBB7Av/5iu'),
-(4, 'ju', 'frufnrf1@gmail.com', 222.00, '22d2e3', '', '12345678'),
-(5, 'Juan Pérez', 'juanperez12@email.com', NULL, '3111234567', NULL, '$2b$10$iZvZgllGpeUGDq6rJUZXmOGv29xTX6fkx1pH5RUxNNiJIBdVnbqTm'),
-(6, 'Juan Pérez', 'juanperez32@email.com', NULL, '3111234567', NULL, '$2b$10$R8hvnkt5s.lyLrH7FoDw/.6Hc8ys1GQ357/FahQgpbbEEt75dyXk2'),
-(8, 'Juan Pérez', 'juanperez42@email.com', NULL, '3111234567', NULL, '$2b$10$xCemBnDII4hOccKFmh.Xge.V9vUGb/GY45/YrjfUwbCibWXPU5.QC'),
-(9, 'Juan Pérez', 'juanperez52@email.com', NULL, '3111234567', NULL, '$2b$10$/vW3.jNKYWN74z.EOASkvOIMeJWzPKm7naBsqs1dx1Q3CFhuHHJni'),
-(10, 'juan', 'Gjaunesten133@gmail.com', NULL, '2424', NULL, '$2b$10$fgPUerw5EdD7zHmchjywkOY6Y8FIJ2EpibaHgjj9fPea3TxwKoALe'),
-(11, 'juj', 'fneofoem@gmail.com', NULL, 'r3r3r3', NULL, '$2b$10$m0mlIXfnlSITvM5IyHvoUe8v0c/FrHrIYwhEihNTbBBwtpWGS1AvW');
-=======
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `telefono`, `estiloVida`, `password`, `rol`) VALUES
+(0, 'Juan Pérez', 'alexzo8676@gmail.com', '3111234567', NULL, '$2b$10$b2w1EM5wwiwNJpimTZmwmOzfkat1XlZ4fPfkLPcgIo0zpeds8R64i', 'cliente'),
 (24, '1', 'gjuanesteban413@gmail.com', '201234567', 'Activo', '$2b$10$q6puD.iJyr218eXu6pzEeeCkSGHar3b1VrJpLZYNkmvYoMVAvXR8S', 'cliente'),
 (26, 'Juan Pérez', 'alexzo8677@gmail.com', '3111234567', NULL, '$2b$10$VR1FASdKG.1NadiJRkSJQujXlyu2p85D2/5MNvYrFVQXkH1uvliRe', 'cliente');
->>>>>>> main
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `destino`
+-- Indices de la tabla `destinos`
 --
-ALTER TABLE `destino`
+ALTER TABLE `destinos`
   ADD PRIMARY KEY (`id_destino`);
 
 --
 -- Indices de la tabla `hotel`
 --
 ALTER TABLE `hotel`
-  ADD PRIMARY KEY (`id_hotel`);
+  ADD PRIMARY KEY (`id_alojamiento`);
 
 --
 -- Indices de la tabla `pago`
@@ -364,28 +328,6 @@ ALTER TABLE `paquete`
   ADD PRIMARY KEY (`id_paquete`);
 
 --
--- Indices de la tabla `paquete_destino`
---
-ALTER TABLE `paquete_destino`
-  ADD PRIMARY KEY (`id_paquete`,`id_destino`),
-  ADD KEY `id_destino` (`id_destino`);
-
---
--- Indices de la tabla `paquete_hotel`
---
-ALTER TABLE `paquete_hotel`
-  ADD PRIMARY KEY (`id_paquete`,`id_hotel`),
-  ADD KEY `id_hotel` (`id_hotel`);
-
---
--- Indices de la tabla `paquete_transporte`
---
-ALTER TABLE `paquete_transporte`
-  ADD PRIMARY KEY (`id_paquete`,`id_transporte`),
-  ADD KEY `id_transporte` (`id_transporte`);
-
---
-<<<<<<< HEAD
 -- Indices de la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -394,8 +336,6 @@ ALTER TABLE `reservas`
   ADD KEY `id_paquete` (`id_paquete`);
 
 --
-=======
->>>>>>> main
 -- Indices de la tabla `sugerencia`
 --
 ALTER TABLE `sugerencia`
@@ -420,24 +360,16 @@ ALTER TABLE `usuario`
 --
 
 --
--- AUTO_INCREMENT de la tabla `destino`
+-- AUTO_INCREMENT de la tabla `destinos`
 --
-ALTER TABLE `destino`
-<<<<<<< HEAD
-  MODIFY `id_destino` int(11) NOT NULL AUTO_INCREMENT;
-=======
-  MODIFY `id_destino` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
->>>>>>> main
+ALTER TABLE `destinos`
+  MODIFY `id_destino` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `hotel`
 --
 ALTER TABLE `hotel`
-<<<<<<< HEAD
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT;
-=======
-  MODIFY `id_hotel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
->>>>>>> main
+  MODIFY `id_alojamiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -446,21 +378,12 @@ ALTER TABLE `pago`
   MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT;
 
 --
-<<<<<<< HEAD
--- AUTO_INCREMENT de la tabla `paquete`
---
-ALTER TABLE `paquete`
-  MODIFY `id_paquete` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `id_reservas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_reservas` int(11) NOT NULL AUTO_INCREMENT;
 
 --
-=======
->>>>>>> main
 -- AUTO_INCREMENT de la tabla `sugerencia`
 --
 ALTER TABLE `sugerencia`
@@ -470,56 +393,11 @@ ALTER TABLE `sugerencia`
 -- AUTO_INCREMENT de la tabla `transporte`
 --
 ALTER TABLE `transporte`
-<<<<<<< HEAD
-  MODIFY `id_transporte` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-=======
-  MODIFY `id_transporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
->>>>>>> main
+  MODIFY `id_transporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `pago`
---
-ALTER TABLE `pago`
-  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_reserva`) REFERENCES `reservas` (`id_reservas`);
-
---
--- Filtros para la tabla `paquete_destino`
---
-ALTER TABLE `paquete_destino`
-<<<<<<< HEAD
-  ADD CONSTRAINT `paquete_destino_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
-=======
-  ADD CONSTRAINT `fk_paquete_destino_paquete` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`) ON DELETE CASCADE,
->>>>>>> main
-  ADD CONSTRAINT `paquete_destino_ibfk_2` FOREIGN KEY (`id_destino`) REFERENCES `destino` (`id_destino`);
-
---
--- Filtros para la tabla `paquete_hotel`
---
-ALTER TABLE `paquete_hotel`
-<<<<<<< HEAD
-  ADD CONSTRAINT `paquete_hotel_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
-=======
->>>>>>> main
-  ADD CONSTRAINT `paquete_hotel_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`);
-
---
--- Filtros para la tabla `paquete_transporte`
---
-ALTER TABLE `paquete_transporte`
-<<<<<<< HEAD
-  ADD CONSTRAINT `paquete_transporte_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`),
-  ADD CONSTRAINT `paquete_transporte_ibfk_2` FOREIGN KEY (`id_transporte`) REFERENCES `transporte` (`id_transporte`);
 
 --
 -- Filtros para la tabla `reservas`
@@ -527,16 +405,6 @@ ALTER TABLE `paquete_transporte`
 ALTER TABLE `reservas`
   ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`);
-
---
--- Filtros para la tabla `sugerencia`
---
-ALTER TABLE `sugerencia`
-  ADD CONSTRAINT `sugerencia_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-=======
-  ADD CONSTRAINT `fk_paquete_transporte_paquete` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id_paquete`) ON DELETE CASCADE,
-  ADD CONSTRAINT `paquete_transporte_ibfk_2` FOREIGN KEY (`id_transporte`) REFERENCES `transporte` (`id_transporte`);
->>>>>>> main
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

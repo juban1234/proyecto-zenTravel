@@ -1,16 +1,20 @@
 import jwt from 'jsonwebtoken';
 
-let generateToken = (properties: any, minutes: number) => {
-    const secretKey = process.env.KEY_TOKEN; 
-    
-    if (!secretKey) {
-        throw new Error("La clave secreta JWT no está definida en el archivo .env");
-    }
+const secretKey = process.env.KEY_TOKEN;
+const refreshSecret = process.env.REFRESH_KEY_TOKEN;
 
-    return jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (minutes * 60),
-        data: properties
-    }, secretKey);
-};
+if (!secretKey) {
+    throw new Error("Falta la variable KEY_TOKEN en el archivo .env");
+  }
+  
+  if (!refreshSecret) {
+    throw new Error("Falta la variable REFRESH_KEY_TOKEN en el archivo .env");
+  }
 
-export default generateToken;
+export const generateAccessToken = (data: any, minutes = 15) => {
+    return jwt.sign({ data }, secretKey, { expiresIn: `${minutes}m` });
+  };
+  
+  export const generateRefreshToken = (data: any) => {
+    return jwt.sign({ data }, refreshSecret, { expiresIn: '7d' });
+  };

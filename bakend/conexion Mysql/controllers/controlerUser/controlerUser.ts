@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import usuarioServi from "../../services/usuarioServi";
 import Login from "../../Dto/loginDto";
 import Usuario from "../../Dto/registroDto";
-import generateToken from '../../Helpers/generateToken';
+import {generateAccessToken,generateRefreshToken} from '../../Helpers/generateToken';
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,19 +14,25 @@ export const login = async (req: Request, res: Response) => {
     const login = await usuarioServi.login(new Login(email, password));
     
     if (login.logged) {
+      // Generar ambos tokens
+      const payload = { id: login.id, rol: login.rol };
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+      
       return res.status(200).json({
         status: login.status,
-        token: generateToken({id: login.id, rol: login.rol}, 60)
+        accessToken,
+        refreshToken
       });
     }
 
-    return res.status(401).json({status: login.status});
-    
+    return res.status(401).json({ status: login.status });
+
   } catch (error: any) {
     console.error("❌ Error en login:", error);
     return res.status(500).json({ error: "Error en el servidor" });
   }
-}
+};
 
 export const register = async (req: Request, res: Response) => {
     try {

@@ -7,7 +7,7 @@ post http://localhost:10101/Auth/register
     "nombre": "Juan Pérez",
     "email":"alexzo8677@gmail.com",
     "telefono": "3111234567",
-    "password": "MiClaveSegura123"
+    "password": "MiClaveSegura12"
 }
 
 - login 
@@ -15,7 +15,7 @@ post http://localhost:10101/Auth/login
 
 {
     "email":"alexzo8677@gmail.com",
-	"password": "MiClaveSegura123"
+	"password": "MiClaveSegura12"
 }
 
 
@@ -26,7 +26,7 @@ Authorization Bearer: token del login
 
 {
     "nombre":"juanito alimaña",
-    "telefono":"fsffsfs",
+    "telefono":"3172398182",
     "estiloVida":"perezoso"
 }
 
@@ -37,6 +37,26 @@ post http://localhost:10101/Password/validar-password
 {
     "email":"gjuanesteban413@gmail.com"
 }
+
+- cambiar contraseña
+
+post http://localhost:10101/Password/reset-password/token?=token dado
+
+{
+    "newPassword":"nueva constraseña"
+}
+
+- buscar destino
+
+get http://localhost:10101/packages/search?nombre=Cuzco Aventura
+
+- buscar hotel
+
+
+
+
+
+
 
 
 

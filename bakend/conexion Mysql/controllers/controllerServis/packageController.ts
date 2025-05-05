@@ -19,13 +19,13 @@ export const createPackage = async (req: Request, res: Response) => {
 
 export const reserva = async (req: Request, res: Response) => {
     try {
-      const { fecha, estado, id_paquete } = req.body;
+      const { estado, id_paquete } = req.body;
       const id_usuario = (req as any).user.id;
   
-      console.log("📩 Recibiendo datos de la reserva:", { id_usuario, fecha, estado, id_paquete });
+      console.log("📩 Recibiendo datos de la reserva:", { id_usuario, estado, id_paquete });
   
       const HacerReserva = await usuarioRepo.crearReserva(
-        new Reservas(fecha, estado, id_usuario, id_paquete)
+        new Reservas(estado, id_usuario, id_paquete)
       );
   
       console.log("✅ Reserva creada con éxito ", HacerReserva);

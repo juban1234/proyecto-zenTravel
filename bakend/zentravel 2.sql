@@ -205,8 +205,8 @@ INSERT INTO `paquete` (`id_paquete`, `nombrePaquete`, `descripcion`, `precioTota
 
 CREATE TABLE `reservas` (
   `id_reservas` int(11) NOT NULL,
-  `fecha` date DEFAULT NULL,
-  `estado` varchar(50) DEFAULT NULL,
+  `fecha` datetime DEFAULT current_timestamp,
+  `cedula` varchar(65) default null, 
   `id_usuario` int(11) DEFAULT NULL,
   `id_paquete` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -276,7 +276,7 @@ CREATE TABLE `usuario` (
   `email` varchar(100) DEFAULT NULL,
   `telefono` varchar(30) DEFAULT NULL,
   `estiloVida` varchar(100) DEFAULT NULL,
-  `rol` enum('cliente','admin','jefe') DEFAULT 'cliente',
+  `rol` enum('cliente','vendedor','admin','soporte') DEFAULT 'cliente',
   `password` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

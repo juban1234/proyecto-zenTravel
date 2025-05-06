@@ -210,6 +210,12 @@ static async createPackage(paquete: Package) {
     }
   }
 
+  static async getUserById(id_usuario: number) {
+    const sql = 'SELECT * FROM Usuario WHERE id_usuario = ?';
+    const [rows]: any = await db.execute(sql, [id_usuario]);
+    return rows[0] || null;
+  }
+
 }
 
 export default usuarioRepo;

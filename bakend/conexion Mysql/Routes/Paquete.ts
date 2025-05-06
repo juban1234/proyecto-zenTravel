@@ -13,6 +13,6 @@ router.get('/SearchTransport/:nombre',SearchTransporteByName);
 router.post('/paquetes',verifyToken, createPackage);
 router.post('/reserva', verifyToken, reserva); 
 router.post('/')
-router.get('/packages/HistorialReservas/:id_usuario', obtenerHistorialReservas);
+router.get('/HistorialReservas/:id_usuario', obtenerHistorialReservas);
 
 export default router;

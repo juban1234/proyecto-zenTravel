@@ -4,6 +4,7 @@ import Login from "../../Dto/loginDto";
 import Usuario from "../../Dto/registroDto";
 import generateToken from '../../Helpers/generateToken';
 import dotenv from "dotenv";
+import usuarioRepo from "../../repositories/usuarioRepo";
 
 dotenv.config();
 
@@ -53,4 +54,24 @@ export const register = async (req: Request, res: Response) => {
 };
   
 
+
+export const informationUser = async (req: Request, res: Response) => {
+  try {
+    const id_usuario = (req as any).user.id;
+      
+    console.log("Buscando información del usuario con ID:", id_usuario);
+
+    const userInfo = await usuarioRepo.getUserById(id_usuario);
+    if (!userInfo) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    console.log("Información del usuario encontrada:", userInfo);
+
+    return res.status(200).json(userInfo);
+  } catch (error: any) {
+    console.error("Error al obtener información del usuario:", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
 

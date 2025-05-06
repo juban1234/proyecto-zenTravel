@@ -1,23 +1,29 @@
 class Usuario {
 
+
     private _nombre: string;
     private _email: string;
     private _telefono: string;
     private _Password: string;
 
+
     constructor(
         nombre: string,
         email: string,
         telefono: string,
+
         password: string
+
     ) {
         this._nombre = nombre;
         this._email = email;
         this._telefono = telefono;
+
         this._Password = password;
     }
 
     //Getters
+
     get nombre(): string {
         return this._nombre;
     }
@@ -52,3 +58,4 @@ class Usuario {
 }
 
 export default Usuario;
+

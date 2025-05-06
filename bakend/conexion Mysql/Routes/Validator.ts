@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { forgotPassword } from '../controllers/ValidatoPassword';
+import { validatePassword,resetPassword } from '../controllers/controlerUser/ValidatoPassword';
 
 const router = Router();
 
-router.post('/forgot-password', forgotPassword);
-// router.post('/reset-password', resetPassword);
+router.post('/validar-password', validatePassword); //funcional
+router.post('/reset-password', resetPassword); // funcional
+
+export default router;

@@ -1,16 +1,17 @@
 import express from "express";
-import { login, register, reserva } from "../controllers/controlerUser";
+import { login, register } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
-import profile from "../controllers/profileController";
+import profile from "../controllers/controlerUser/profileController";
+import { validatorParams,validator } from "../middleware/register-validator";
+
 
 const router = express.Router();
 
-router.post('/login', login)
-router.post('/register', register)
-router.post('/reserva', verifyToken, reserva)
-router.get('/profile', verifyToken,profile)
-router.get('/recuperarContraseña',verifyToken)
-
+// Rutas de autenticación
+router.post('/login', login); // Funcional
+router.post('/register' ,validatorParams, validator, register); // Funcional
+router.patch('/profile', verifyToken, profile); // Funcional
 
 
 export default router;
+

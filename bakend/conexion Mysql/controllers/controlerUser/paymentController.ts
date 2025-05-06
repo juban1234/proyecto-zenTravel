@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 import paypal from '../../services/paypalServices';
 import { generateToken } from '../../Helpers/generateTokenPaypal';
 
+
+// crear el pago del paquete
+
+
 export const createPayment = (req: Request, res: Response): void => {
     const customToken = generateToken(); // Generar token único
   
@@ -54,17 +58,7 @@ export const createPayment = (req: Request, res: Response): void => {
   });
 };
 
-
-
-
-
-
-
-
-
-
-
-
+// Verificar el pago
 
 
 export const successPayment = (req: Request, res: Response): void => {

@@ -5,10 +5,10 @@ import usuarioRepo from "../../repositories/usuarioRepo";
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {
-        // Mostrar el body completo recibido para depurar
+      
         console.log("📩 Datos recibidos:", req.body);
 
-        // ✅ Obtener el ID del usuario autenticado desde el token
+      
         const id_usuario = (req as any).user.id;
 
         if (!id_usuario) {
@@ -17,7 +17,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         
         console.log("ID de usuario autenticado:", id_usuario);
 
-        // ✅ Extraer los datos del body
+   
         const {
             nombrePaquete,
             descripcion,
@@ -32,7 +32,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             nombreDestino
         } = req.body;
 
-        // Verificar si hay algún campo requerido que sea undefined o vacío
         console.log("Datos de Paquete:", {
             nombrePaquete,
             descripcion,

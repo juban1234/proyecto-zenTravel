@@ -6,6 +6,7 @@ import Reservas from '../Dto/reservasDto';
 import UpdateProfileDto from '../Dto/UpdateProfileDto';
 import SearchDto from '../Dto/SearchDto';
 import Package from '../Dto/Paquete';
+import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 
 
 
@@ -164,6 +165,29 @@ static async createPackage(paquete: Package) {
       throw error;  
     }
   }
+
+  static async createSupportRequest(solicitud: SupportRequestDTO) {
+    const sql = `
+        INSERT INTO solicitudes_atencion (nombre, email, asunto, mensaje, fecha)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [
+        solicitud.getNombre,     
+        solicitud.getEmail,      
+        solicitud.getAsunto,      
+        solicitud.getMensaje,     
+        solicitud.getFecha        
+    ];
+    
+    try {
+        const [result]: any = await db.execute(sql, values);
+        return result;  
+    } catch (error) {
+        console.error("Error al crear solicitud de soporte:", error);
+        throw error;  
+    }
 }
+}
+
 export default usuarioRepo;
 

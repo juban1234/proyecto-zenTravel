@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import usuarioRepo from "../../repositories/usuarioRepo";
-import UpdateProfileDto from "../../Dto/UpdateProfileDto";
+import ProfileDto from "../../Dto/ProfileDto";
 
 const profile = async (req: Request, res: Response) => {
   try {
@@ -9,13 +9,13 @@ const profile = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
-    const { nombre, telefono, estiloVida, presupuesto } = req.body;
+    const { nombre, telefono, estiloVida } = req.body;
 
-    if (!nombre && !telefono && !estiloVida && presupuesto === undefined) {
+    if (!nombre && !telefono && !estiloVida ) {
       return res.status(400).json({ error: "No se enviaron campos para actualizar" });
     }
 
-    const dto = new UpdateProfileDto(
+    const dto = new ProfileDto(
       id_usuario,
       nombre,
       telefono,

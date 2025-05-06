@@ -2,9 +2,7 @@ import db from '../configs/config';
 import bcrypt from "bcryptjs";
 import Usuario from '../Dto/registroDto';
 import Login from '../Dto/loginDto';
-import Reservas from '../Dto/reservasDto';
-import UpdateProfileDto from '../Dto/UpdateProfileDto';
-import SearchDto from '../Dto/SearchDto';
+import ProfileDto from '../Dto/ProfileDto';
 
 
 
@@ -46,14 +44,7 @@ class usuarioRepo {
     return { logged: false, status: "Invalid username or password" };
 
   }
-
-  static async crearReserva(reserva: Reservas) {
-    const sql = 'CALL CrearReserva(?, ?, ?)';
-    const values = [reserva.id_usuario, reserva.cedula, reserva.id_paquete];
-    return db.execute(sql, values);
-  }
   
-
   static async buscarUsuarioPorEmail(email: string) {
     const [rows]: any = await db.execute('CALL loginUsuario(?)', [email]);
     return rows[0]?.[0] || null;
@@ -64,7 +55,7 @@ class usuarioRepo {
     return result;
   }
 
-  static async EditarPerfil(profile: UpdateProfileDto) {
+  static async EditarPerfil(profile: ProfileDto) {
     let campos: string[] = [];
     let valores: any[] = [];
   
@@ -89,84 +80,77 @@ class usuarioRepo {
     return db.execute(query, valores);
   }
 
-   static async buscarDestino(search: SearchDto) {
-    let condiciones: string[] = [];
-    let valores: any[] = [];
+  static async buscarDestino() {
+  // let condiciones: string[] = [];
+  // let valores: any[] = [];
 
-    if (search.nombre) {
-      condiciones.push("nombre LIKE ?");
-      valores.push(`%${search.nombre}%`);
-    }
-    if (search.pais) {
-      condiciones.push("pais LIKE ?");
-      valores.push(`%${search.pais}%`);
-    }
-    if (search.direccion) {
-      condiciones.push("direccion LIKE ?");
-      valores.push(`%${search.direccion}%`);
-    }
-    if (search.descripcion) {
-      condiciones.push("descripcion LIKE ?");
-      valores.push(`%${search.descripcion}%`);
-    }
+  // if (search.nombre) {
+  //   condiciones.push("nombre LIKE ?");
+  //   valores.push(`%${search.nombre}%`);
+  // }
+  // if (search.pais) {
+  //   condiciones.push("pais LIKE ?");
+  //   valores.push(`%${search.pais}%`);
+  // }
+  // if (search.direccion) {
+  //   condiciones.push("direccion LIKE ?");
+  //   valores.push(`%${search.direccion}%`);
+  // }
+  // if (search.descripcion) {
+  //   condiciones.push("descripcion LIKE ?");
+  //   valores.push(`%${search.descripcion}%`);
+  // }
 
-    if (condiciones.length === 0) {
-      return { message: "No se especificaron criterios de búsqueda" };
-    }
+  // if (condiciones.length === 0) {
+  //   return { message: "No se especificaron criterios de búsqueda" };
+  // }
 
-    const query = `SELECT * FROM Destinos WHERE ${condiciones.join(" AND ")}`;
-    const [rows]: any = await db.execute(query, valores);
+  const query = `SELECT * FROM Destinos`;
+  const [rows]: any = await db.execute(query);
 
+  return rows;
+  }
+
+  static async buscarHotelPorNombre() {
+    const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
+    const [rows]: any = await db.execute(sql);
     return rows;
   }
 
-
-static async buscarHotelPorNombre(nombre: string) {
-  const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
-  const values = [`%${nombre}%`]; 
-  const [rows]: any = await db.execute(sql, values);
-  return rows;
-}
-
-static async buscartransportePorNombre(nombre: string) {
-  const sql = 'SELECT * FROM Transporte WHERE empresa LIKE ?';
-  const values = [`%${nombre}%`]; 
-  const [rows]: any = await db.execute(sql, values);
-  return rows;
-}
-
-
-static async createPackage(paquete: any) { 
-  const sql = `
-      CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-  const values = [
-      paquete.nombrePaquete,           
-      paquete.descripcion,             
-      paquete.precioTotal,            
-      paquete.imagenUrl,              
-      paquete.duracionDias,          
-      paquete.fechaInicioDisponible, 
-      paquete.fechaFinDisponible,    
-      paquete.descuento,               
-      paquete.nombreHotel,             
-      paquete.nombreTransporte,       
-      paquete.nombreDestino
-  ];
-  
-  try {
-      const [result]: any = await db.execute(sql, values);
-      return result;  
-  } catch (error) {
-      console.error("Error al crear paquete:", error);
-      throw error;  
+  static async buscartransportePorNombre() {
+    const sql = 'SELECT * FROM Transporte';
+    const [rows]: any = await db.execute(sql);
+    return rows;
   }
+
+  static async createPackage(paquete: any) { 
+    const sql = `
+        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+        paquete.nombrePaquete,           
+        paquete.descripcion,             
+        paquete.precioTotal,            
+        paquete.imagenUrl,              
+        paquete.duracionDias,          
+        paquete.fechaInicioDisponible, 
+        paquete.fechaFinDisponible,    
+        paquete.descuento,               
+        paquete.nombreHotel,             
+        paquete.nombreTransporte,       
+        paquete.nombreDestino
+    ];
+    
+    try {
+        const [result]: any = await db.execute(sql, values);
+        return result;  
+    } catch (error) {
+        console.error("Error al crear paquete:", error);
+        throw error;  
+    }
+  }
+
 }
 
-
-
-
-
-}
 export default usuarioRepo;
 

@@ -1,4 +1,4 @@
-class UpdateProfileDto {
+class ProfileDto {
 
     constructor(
       public id_usuario: number,
@@ -8,5 +8,5 @@ class UpdateProfileDto {
     ) {}
   }
   
-  export default UpdateProfileDto;
+  export default ProfileDto;
 

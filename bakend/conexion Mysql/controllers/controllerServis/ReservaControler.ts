@@ -1,4 +1,4 @@
-import usuarioRepo from "../../repositories/usuarioRepo";
+import reservaRepo from "../../repositories/reservasRepo";
 import  Reservas  from "../../Dto/reservasDto";
 import { Request, Response } from "express";
 
@@ -9,7 +9,7 @@ export const reserva = async (req: Request, res: Response) => {
   
       console.log("📩 Recibiendo datos de la reserva:", { id_usuario, cedula, id_paquete });
   
-      const HacerReserva = await usuarioRepo.crearReserva(
+      const HacerReserva = await reservaRepo.crearReserva(
         new Reservas( cedula, id_usuario, id_paquete)
       );
 
@@ -23,6 +23,34 @@ export const reserva = async (req: Request, res: Response) => {
 };
 
 
-export const actReserva = async(req: Request, res:Response) => {
-
+export const actualizar = async(req: Request, res:Response) => {
+    try {
+      const id_usuario = (req as any).user?.id;
+      if (!id_usuario) {
+        return res.status(401).json({ error: "Usuario no autenticado" });
+      }
+  
+      const {id_reserva, cedula,id_paquete } = req.body;
+  
+      if (!cedula && !id_paquete && !id_reserva ) {
+        return res.status(400).json({ error: "No se enviaron campos para actualizar" });
+      }
+  
+      const dto = new Reservas(
+        id_reserva,
+        id_usuario,      
+        cedula,
+        id_paquete
+      );
+  
+      const result = await reservaRepo.actualizarReserva(dto);
+  
+      console.log("✅ Resultado de actualización:", result);
+  
+      return res.status(200).json({ status: "Reserva actualizado correctamente" });
+  
+    } catch (error: any) {
+      console.error("❌ Error al actualizar Reserva:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
 };

@@ -1,5 +1,5 @@
 import express from "express";
-import { login, register } from "../controllers/controlerUser/controlerUser";
+import { informationUser, login, register } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
@@ -11,7 +11,8 @@ const router = express.Router();
 router.post('/login', login); // Funcional
 router.post('/register' ,validatorParams, validator, register); // Funcional
 router.patch('/profile', verifyToken, profile); // Funcional
-
+// router.post('/customerSupport', customerSupport);
+router.get('/infoUserDTO',verifyToken,informationUser);
 
 export default router;
 

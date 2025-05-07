@@ -216,6 +216,12 @@ static async createPackage(paquete: Package) {
     return rows[0] || null;
   }
 
+  static async getPackageById(id_paquete: number) {
+    const sql = 'SELECT * FROM Paquete WHERE id_paquete = ?';
+    const [rows]: any = await db.execute(sql, [id_paquete]);
+    return rows[0] || null;
+  }
+
 }
 
 export default usuarioRepo;

@@ -53,8 +53,6 @@ export const register = async (req: Request, res: Response) => {
     }
 };
   
-
-
 export const informationUser = async (req: Request, res: Response) => {
   try {
     const id_usuario = (req as any).user.id;

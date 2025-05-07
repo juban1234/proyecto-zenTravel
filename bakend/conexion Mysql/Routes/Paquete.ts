@@ -1,9 +1,10 @@
 import express from "express";
 import { buscar ,SearchHotelByName,SearchTransporteByName} from "../controllers/controllerServis/SearchController";
 import verifyToken from "../middleware/verifyToken";
-import { createPackage } from "../controllers/controlerUser/packageController";
+import { createPackage,valuePackage } from "../controllers/controlerUser/packageController";
 import { reserva } from "../controllers/controllerServis/ReservaControler";
 import {  obtenerHistorialReservas } from "../controllers/controlerUser/reservasController";
+
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.post('/paquetes',verifyToken, createPackage);
 router.post('/reserva', verifyToken, reserva); 
 router.post('/')
 router.get('/HistorialReservas/:id_usuario', obtenerHistorialReservas);
+router.get('/valuePackage/:id_paquete', valuePackage);
 
 export default router;

@@ -50,7 +50,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
-        // ✅ Validar fechas
         const fechaInicio = new Date(fechaInicioDisponible);
         const fechaFin = new Date(fechaFinDisponible);
         if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
@@ -60,7 +59,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             return res.status(400).json({ error: "La fecha de inicio debe ser anterior a la fecha de fin" });
         }
 
-        // ✅ Crear instancia de Paquete
+     
         const newPackage = new Package(
             id_usuario,                     
             nombrePaquete,
@@ -76,7 +75,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             nombreDestino
         );
 
-        // ✅ Enviar a la base de datos
+       
         const resultado = await usuarioRepo.createPackage(newPackage);
 
         console.log("✅ Reserva creada con éxito ", resultado);
@@ -86,3 +85,35 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         return res.status(500).json({ error: "Error en el servidor" });
     }
 };
+
+
+
+export const valuePackage = async (req: Request, res: Response) => {
+    try {
+        const { id_paquete } = req.params;  
+
+        if (!id_paquete || isNaN(Number(id_paquete))) {
+            return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
+        }
+
+        const paquete = await usuarioRepo.getPackageById(Number(id_paquete));
+
+        if (!paquete) {
+            return res.status(404).json({ error: "Paquete no encontrado" });
+        }
+
+        const total = paquete.precioTotal - (paquete.descuento || 0);
+
+        return res.status(200).json({
+            id_paquete: paquete.id_paquete,
+            nombre: paquete.nombrePaquete,
+            total
+        });
+    } catch (error) {
+        console.error("Error al calcular el total del paquete:", error);
+        return res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
+
+

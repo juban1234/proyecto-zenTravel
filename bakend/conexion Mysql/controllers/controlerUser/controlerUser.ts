@@ -39,7 +39,7 @@ export const register = async (req: Request, res: Response) => {
       const {nombre,email,telefono,password } = req.body;
   
       console.log("📩 Recibiendo datos del usuario:", req.body);
-  
+
       const registerUser = await usuarioServi.register(
         new Usuario (nombre,email,telefono,password )
       );

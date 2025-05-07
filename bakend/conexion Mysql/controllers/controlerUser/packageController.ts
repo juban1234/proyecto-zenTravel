@@ -2,8 +2,21 @@ import { Request, Response } from "express";
 import Package from "../../Dto/Paquete";
 import usuarioRepo from "../../repositories/usuarioRepo";
 
-export const createPackage = async (req: Request, res: Response) => {
+export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {
+      
+        console.log("📩 Datos recibidos:", req.body);
+
+      
+        const id_usuario = (req as any).user.id;
+
+        if (!id_usuario) {
+            return res.status(401).json({ error: "Usuario no autenticado" });
+        }
+        
+        console.log("ID de usuario autenticado:", id_usuario);
+
+   
         const {
             nombrePaquete,
             descripcion,
@@ -18,7 +31,7 @@ export const createPackage = async (req: Request, res: Response) => {
             nombreDestino
         } = req.body;
 
-        const requiredFields = {
+        console.log("Datos de Paquete:", {
             nombrePaquete,
             descripcion,
             precioTotal,
@@ -30,43 +43,45 @@ export const createPackage = async (req: Request, res: Response) => {
             nombreHotel,
             nombreTransporte,
             nombreDestino
-        };
+        });
 
-        for (const [key, value] of Object.entries(requiredFields)) {
-            if (value === undefined || value === null || value === "") {
-                return res.status(400).json({ error: `El campo ${key} es obligatorio` });
-            }
+        if (!nombrePaquete || !descripcion || !precioTotal || !imagenUrl || !duracionDias || !fechaInicioDisponible || !fechaFinDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
+            return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
+        // ✅ Validar fechas
+        const fechaInicio = new Date(fechaInicioDisponible);
+        const fechaFin = new Date(fechaFinDisponible);
+        if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
+            return res.status(400).json({ error: "Las fechas proporcionadas no son válidas" });
+        }
+        if (fechaInicio >= fechaFin) {
+            return res.status(400).json({ error: "La fecha de inicio debe ser anterior a la fecha de fin" });
+        }
+
+        // ✅ Crear instancia de Paquete
         const newPackage = new Package(
-            0, 
+            id_usuario,                     
             nombrePaquete,
             descripcion,
             precioTotal,
             imagenUrl,
             duracionDias,
-            new Date(fechaInicioDisponible),
-            new Date(fechaFinDisponible),
+            fechaInicio,
+            fechaFin,
             descuento,
             nombreHotel,
             nombreTransporte,
             nombreDestino
         );
 
+        // ✅ Enviar a la base de datos
         const resultado = await usuarioRepo.createPackage(newPackage);
 
-        if (resultado && resultado.length > 0) {
-            const idPaqueteCreado = resultado[0].id_paquete_creado;
-
-            return res.status(201).json({
-                status: "Paquete creado exitosamente",
-                id_paquete: idPaqueteCreado
-            });
-        }
-
-        return res.status(400).json({ status: "Error al crear el paquete" });
+        console.log("✅ Reserva creada con éxito ", resultado);
+        return res.status(201).json({ status: "paquete creado con éxito" });
     } catch (error: any) {
-        console.error(" Error al crear el paquete:", error);
+        console.error("Error al crear el paquete:", error.message || error);
         return res.status(500).json({ error: "Error en el servidor" });
     }
 };

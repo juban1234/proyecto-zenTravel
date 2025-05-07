@@ -3,6 +3,7 @@ import { informationUser, login, register } from "../controllers/controlerUser/c
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
+import { refreshToken } from "../middleware/refreshToken";
 
 
 const router = express.Router();
@@ -13,6 +14,7 @@ router.post('/register' ,validatorParams, validator, register); // Funcional
 router.patch('/profile', verifyToken, profile); // Funcional
 // router.post('/customerSupport', customerSupport);
 router.get('/infoUserDTO',verifyToken,informationUser);
+router.post('/refresToken', refreshToken)
 
 export default router;
 

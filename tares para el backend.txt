@@ -11,11 +11,5 @@ funciones actuales delk sistema funcionales
 tareas que faltan 
 - atencion al ciente // nicolas
 - administracion de administradores //juan
-- actualizar reserva //juan
 - cancelar reserva// juan
-- historial de reservas //nicolas
-- integresion con la ia //juan
-- creacion de paquetes //nicolas
-- calcular valor del paquete//juan
-- metodos de pago //no se
 - marketing// nicolas

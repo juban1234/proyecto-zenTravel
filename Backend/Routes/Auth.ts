@@ -9,7 +9,7 @@ import { refreshToken } from "../middleware/refreshToken";
 const router = express.Router();
 
 // Rutas de autenticación
-router.post('/login', login); // Funcional
+router.post('/login', validatorParams, validator, login); // Funcional
 router.post('/register' ,validatorParams, validator, register); // Funcional
 router.patch('/profile', verifyToken, profile); // Funcional
 // router.post('/customerSupport', customerSupport);

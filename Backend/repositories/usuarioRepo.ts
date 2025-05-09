@@ -217,7 +217,8 @@ static async createPackage(paquete: Package) {
   }
 
   static async getPackageById(id_paquete: number) {
-    const sql = 'SELECT * FROM Paquete WHERE id_paquete = ?';
+    const sql = 'call calcular_precio_paquete(?)';
+
     const [rows]: any = await db.execute(sql, [id_paquete]);
     return rows[0] || null;
   }

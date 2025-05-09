@@ -86,11 +86,9 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
     }
 };
 
-
-
 export const valuePackage = async (req: Request, res: Response) => {
     try {
-        const { id_paquete } = req.params;  
+        const { id_paquete } = req.body;  
 
         if (!id_paquete || isNaN(Number(id_paquete))) {
             return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
@@ -98,17 +96,9 @@ export const valuePackage = async (req: Request, res: Response) => {
 
         const paquete = await usuarioRepo.getPackageById(Number(id_paquete));
 
-        if (!paquete) {
-            return res.status(404).json({ error: "Paquete no encontrado" });
-        }
-
-        const total = paquete.precioTotal - (paquete.descuento || 0);
-
         return res.status(200).json({
-            id_paquete: paquete.id_paquete,
-            nombre: paquete.nombrePaquete,
-            total
-        });
+            status:"Paquete actualizado",
+    });
     } catch (error) {
         console.error("Error al calcular el total del paquete:", error);
         return res.status(500).json({ error: "Error en el servidor" });

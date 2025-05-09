@@ -16,6 +16,7 @@ export const login = async (req: Request, res: Response) => {
     if (login.logged) {
       // Generar ambos tokens
       const payload = { id: login.id, rol: login.rol };
+      generateAccessToken(payload)
       generateRefreshToken(payload);
 
       return res.status(200).json({

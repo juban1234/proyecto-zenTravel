@@ -1,7 +1,6 @@
 import reservaRepo from "../../repositories/reservasRepo";
 import  Reservas  from "../../Dto/reservasDto";
 import { Request, Response } from "express";
-import usuarioRepo from "../../repositories/usuarioRepo";
 
 export const reserva = async (req: Request, res: Response) => {
     try {
@@ -64,7 +63,7 @@ export const Historial = async (req: Request, res: Response): Promise<Response> 
       return res.status(400).json({ error: 'El id_usuario es requerido y debe ser un número válido' });
     }
 
-    const historial = await usuarioRepo.HistorialReservas(parseInt(id_usuario));
+    const historial = await reservaRepo.HistorialReservas(parseInt(id_usuario));
 
     if (!historial || historial.length === 0) {
       return res.status(404).json({ message: 'No se encontraron reservas para este usuario' });

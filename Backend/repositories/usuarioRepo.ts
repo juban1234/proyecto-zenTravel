@@ -125,9 +125,8 @@ class usuarioRepo {
   }
 
   static async createPackage(paquete: any) { 
-    const sql = `
-        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
     const values = [
         paquete.nombrePaquete,           
         paquete.descripcion,             
@@ -157,26 +156,6 @@ class usuarioRepo {
     return rows[0] || null;
   }
 
-  static async HistorialReservas(id_usuario: number) {
-    const sql = `SELECT * FROM RESERVAS WHERE id_usuario = ? ORDER BY fecha DESC`;
-    try {
-      const [reservas]: any = await db.execute(sql, [id_usuario]);
-
-      const historial = reservas.map((reserva: any) => {
-        return new Reservas(
-          reserva.id_reservas,
-          reserva.id_usuario,
-          reserva.cedula,
-          reserva.id_paquete
-        );
-      });
-
-      return historial;
-    } catch (error) {
-      console.error('Error al obtener historial de reservas:', error);
-      throw error;
-    }
-  }
 
 }
 

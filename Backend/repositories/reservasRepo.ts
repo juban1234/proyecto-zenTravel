@@ -30,5 +30,27 @@ class reservaRepo {
         valores.push(reserva.id_reserva)
         return db.execute(sql,valores);
     }
+
+    static async HistorialReservas(id_usuario: number) {
+        const sql = `SELECT * FROM RESERVAS WHERE id_usuario = ? ORDER BY fecha DESC`;
+        try {
+        const [reservas]: any = await db.execute(sql, [id_usuario]);
+
+        const historial = reservas.map((reserva: any) => {
+            return new Reservas(
+            reserva.id_reservas,
+            reserva.id_usuario,
+            reserva.cedula,
+            reserva.id_paquete
+            );
+        });
+
+        return historial;
+        } catch (error) {
+        console.error('Error al obtener historial de reservas:', error);
+        throw error;
+        }
+    }
+
 }
 export default reservaRepo;

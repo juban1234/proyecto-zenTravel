@@ -3,17 +3,7 @@ import usuarioRepo from "../../repositories/usuarioRepo";
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
     try {
-        // const { nombre = "", pais = "", direccion = "", descripcion = "" } = req.query as {
-        //     nombre?: string;
-        //     pais?: string;
-        //     direccion?: string;
-        //     descripcion?: string;
-        // };
-
-        // const search = new Search(nombre, pais, direccion, descripcion);
-
         const result = await usuarioRepo.buscarDestino();
-
         return res.status(200).json({ status: "Búsqueda exitosa", data: result });
     } catch (error) {
         console.error("Error al buscar el destino:", error);
@@ -23,13 +13,6 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
 
 export const SearchHotelByName = async (req: Request, res: Response) => {
     try {
-
-        // const { nombre } = req.params;
-
-        // if (!nombre || nombre.trim() === "") {
-        //     return res.status(400).json({ message: "El nombre del hotel es requerido." });
-        // }
-
         const hoteles = await usuarioRepo.buscarHotelPorNombre();
 
         if (hoteles.length === 0) {
@@ -45,12 +28,6 @@ export const SearchHotelByName = async (req: Request, res: Response) => {
 
 export const SearchTransporteByName = async (req: Request, res: Response) => {
     try {
-
-        // const { nombre } = req.params;
-
-        // if (!nombre || nombre.trim() === "") {
-        //     return res.status(400).json({ message: "El nombre del Transporte es requerido." });
-        // }
 
         const transport = await usuarioRepo.buscartransportePorNombre();
 

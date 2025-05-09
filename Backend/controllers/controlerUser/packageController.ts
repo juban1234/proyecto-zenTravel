@@ -87,6 +87,13 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
 };
 
 
+export const Destino = async(req: Request, res:Response) =>{
+    const {pais,departamento,nombre,descripcio} = req.body;
+     console.log("datos del destino recibido", req.body);
+     
+    
+
+}
 
 
 

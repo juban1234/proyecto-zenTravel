@@ -26,10 +26,10 @@ const colombiaKeywords = [
     "platos típicos", "bebidas tradicionales", "fiestas patronales", "carnaval",
     "lenguas indígenas", "dialectos", "creencias", "religión", "vestimenta",
     "trajes típicos", "mitos", "leyendas", "cuentos tradicionales", "arquitectura tradicional",
-    // Palabras clave añadidas para planificación y presupuesto
     "plan", "presupuesto", "costo", "precio", "gasto", "viaje", "organizar",
     "alojamiento", "transporte", "comida", "actividad", "excursión", "tour",
-    "cuánto cuesta", "aproximado", "estimado"
+    "cuánto cuesta", "aproximado", "estimado", "rango de precios", "gastos", "ahorrar", "planificación",
+    "itinerario", "ruta", "horarios", "reservas", "compras", "ofertas"
 ];
 
 // Verifica si la pregunta contiene palabras clave relacionadas con Colombia

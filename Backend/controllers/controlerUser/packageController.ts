@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import Package from "../../Dto/Paquete";
-import usuarioRepo from "../../repositories/usuarioRepo";
+import Paquetes from "../../repositories/paqueteRepo";
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {
-      
         console.log("📩 Datos recibidos:", req.body);
-
-      
         const id_usuario = (req as any).user.id;
 
         if (!id_usuario) {
@@ -76,7 +73,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         );
 
         // ✅ Enviar a la base de datos
-        const resultado = await usuarioRepo.createPackage(newPackage);
+        const resultado = await Paquetes.createPackage(newPackage);
 
         console.log("✅ Reserva creada con éxito ", resultado);
         return res.status(201).json({ status: "paquete creado con éxito" });
@@ -86,14 +83,25 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
     }
 };
 
+export const valuePackage = async (req: Request, res: Response) => {
+    try {
+        const { id_paquete } = req.body;  
 
-export const Destino = async(req: Request, res:Response) =>{
-    const {pais,departamento,nombre,descripcio} = req.body;
-     console.log("datos del destino recibido", req.body);
-     
-    
+        if (!id_paquete || isNaN(Number(id_paquete))) {
+            return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
+        }
 
-}
+        const paquete = await Paquetes.calcularPaquete(Number(id_paquete));
+
+        return res.status(200).json({
+            status:"Paquete actualizado",
+    });
+    } catch (error) {
+        console.error("Error al calcular el total del paquete:", error);
+        return res.status(500).json({ error: "Error en el servidor" });
+    }
+
+};
 
 
 

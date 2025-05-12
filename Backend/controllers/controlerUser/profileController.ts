@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import usuarioRepo from "../../repositories/usuarioRepo";
-import ProfileDto from "../../Dto/ProfileDto";
+import {ProfileDto }from "../../Dto/User";
 
 const profile = async (req: Request, res: Response) => {
   try {

@@ -1,11 +1,7 @@
 import db from '../configs/config';
 import bcrypt from "bcryptjs";
-import Usuario from '../Dto/registroDto';
-import Login from '../Dto/loginDto';
-import ProfileDto from '../Dto/ProfileDto';
-import Reservas from '../Dto/reservasDto';
-
-
+import {ProfileDto,Login,Usuario} from '../Dto/User';
+import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 
 class usuarioRepo {
 
@@ -81,81 +77,33 @@ class usuarioRepo {
     return db.execute(query, valores);
   }
 
-  static async buscarDestino() {
-  // let condiciones: string[] = [];
-  // let valores: any[] = [];
-
-  // if (search.nombre) {
-  //   condiciones.push("nombre LIKE ?");
-  //   valores.push(`%${search.nombre}%`);
-  // }
-  // if (search.pais) {
-  //   condiciones.push("pais LIKE ?");
-  //   valores.push(`%${search.pais}%`);
-  // }
-  // if (search.direccion) {
-  //   condiciones.push("direccion LIKE ?");
-  //   valores.push(`%${search.direccion}%`);
-  // }
-  // if (search.descripcion) {
-  //   condiciones.push("descripcion LIKE ?");
-  //   valores.push(`%${search.descripcion}%`);
-  // }
-
-  // if (condiciones.length === 0) {
-  //   return { message: "No se especificaron criterios de búsqueda" };
-  // }
-
-  const query = `SELECT * FROM Destinos`;
-  const [rows]: any = await db.execute(query);
-
-  return rows;
-  }
-
-  static async buscarHotelPorNombre() {
-    const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
-    const [rows]: any = await db.execute(sql);
-    return rows;
-  }
-
-  static async buscartransportePorNombre() {
-    const sql = 'SELECT * FROM Transporte';
-    const [rows]: any = await db.execute(sql);
-    return rows;
-  }
-
-  static async createPackage(paquete: any) { 
-    const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    const values = [
-        paquete.nombrePaquete,           
-        paquete.descripcion,             
-        paquete.precioTotal,            
-        paquete.imagenUrl,              
-        paquete.duracionDias,          
-        paquete.fechaInicioDisponible, 
-        paquete.fechaFinDisponible,    
-        paquete.descuento,               
-        paquete.nombreHotel,             
-        paquete.nombreTransporte,       
-        paquete.nombreDestino
-    ];
-    
-    try {
-        const [result]: any = await db.execute(sql, values);
-        return result;  
-    } catch (error) {
-        console.error("Error al crear paquete:", error);
-        throw error;  
-    }
-  }
-
   static async getUserById(id_usuario: number) {
     const sql = 'SELECT * FROM Usuario WHERE id_usuario = ?';
     const [rows]: any = await db.execute(sql, [id_usuario]);
     return rows[0] || null;
   }
 
+  static async createSupportRequest(solicitud: SupportRequestDTO) {
+    const sql = `
+        INSERT INTO solicitudes_atencion (nombre, email, asunto, mensaje, fecha)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [
+        solicitud.getNombre,     
+        solicitud.getEmail,      
+        solicitud.getAsunto,      
+        solicitud.getMensaje,     
+        solicitud.getFecha        
+    ];
+    
+    try {
+        const [result]: any = await db.execute(sql, values);
+        return result;  
+    } catch (error) {
+        console.error("Error al crear solicitud de soporte:", error);
+        throw error;  
+    }
+  }
 
 }
 

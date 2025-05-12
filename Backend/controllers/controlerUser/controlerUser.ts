@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import usuarioServi from "../../services/usuarioServi";
-import Login from "../../Dto/loginDto";
-import Usuario from "../../Dto/registroDto";
+import { Login ,Usuario } from "../../Dto/User";
 import {generateAccessToken,generateRefreshToken} from '../../Helpers/generateToken';
 import dotenv from "dotenv";
 import usuarioRepo from "../../repositories/usuarioRepo";

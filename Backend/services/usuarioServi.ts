@@ -1,9 +1,7 @@
 
 import generateHash from '../Helpers/generateHash';
 import usuarioRepo from '../repositories/usuarioRepo';
-
-import Usuario from '../Dto/registroDto';
-import Login from '../Dto/loginDto';
+import { Login ,Usuario } from '../Dto/User';
 
 
 class usuarioServi {

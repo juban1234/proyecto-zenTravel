@@ -6,7 +6,7 @@ import sendRecoveryEmail from "../../Helpers/sendRecoveryEmail";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import generateHash from "../../Helpers/generateHash";
-import Login from "../../Dto/loginDto";
+import { Login } from "../../Dto/User";
 
 dotenv.config();
 

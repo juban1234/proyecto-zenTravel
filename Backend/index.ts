@@ -6,6 +6,7 @@ import Auth from './Routes/Auth';
 import Validator from './Routes/Validator';
 import Paquete from './Routes/Paquete';
 import Reservaciones from './Routes/Reservaciones'
+import { PreguntarAI } from './controllers/controllerServis/geminiController';
 
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use('/Auth', Auth)
 app.use('/Password',Validator);
 app.use('/packages',Paquete)
 app.use('/reservas',Reservaciones)
+app.post('/Preguntar', PreguntarAI);
 
 const PORT = process.env.PORT || 10101;
 

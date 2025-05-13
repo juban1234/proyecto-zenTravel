@@ -1,21 +1,18 @@
-class Hotel {
+export class Hotel {
     private _nombre: string;
     private _descripcion: string;
     private _ubicacion: string;
-    private _precio: number;
     private _imagenes: string[]; 
 
     constructor(
         nombre: string,
         descripcion: string,
         ubicacion: string,
-        precio: number,
         imagenes: string[]
     ) {
         this._nombre = nombre;
         this._descripcion = descripcion;
         this._ubicacion = ubicacion;
-        this._precio = precio;
         this._imagenes = imagenes;
     }
 
@@ -32,10 +29,7 @@ class Hotel {
         return this._ubicacion;
     }
 
-    get precio(): number {
-        return this._precio;
-    }
-
+  
     get imagenes(): string[] {
         return this._imagenes;
     }
@@ -53,13 +47,9 @@ class Hotel {
         this._ubicacion = ubicacion;
     }
 
-    set precio(precio: number) {
-        this._precio = precio;
-    }
 
     set imagenes(imagenes: string[]) { 
         this._imagenes = imagenes;
     }
 }
 
-export default Hotel;

@@ -9,7 +9,7 @@ import { HistorialReservasDTO } from '../Dto/HistorialReservasDTO';
 import Package from '../Dto/Paquete';
 import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 import { destino } from '../Dto/destino';
-
+import { Hotel } from "../Dto/hotelDto"; 
 
 class usuarioRepo {
 
@@ -241,6 +241,24 @@ static async createDestino(destino: destino) {
     }
   }
 
+    static async createHotel(hotel: Hotel) {
+    const sql = `
+      INSERT INTO Hotel (nombre, descripcion, ubicacion) 
+      VALUES (?, ?, ?)
+    `;
+    const values = [
+      hotel.nombre,
+      hotel.descripcion,
+      hotel.ubicacion, 
+    ];
+    try {
+      const [result]: any = await db.execute(sql, values);
+      return result;
+    } catch (error) {
+      console.error("Error al crear hotel:", error);
+      throw error;
+    }
+  }
 
 }
 

@@ -4,6 +4,7 @@ import verifyToken from "../middleware/verifyToken";
 import { createPackage,valuePackage } from "../controllers/controlerUser/packageController";
 import { reserva } from "../controllers/controllerServis/ReservaControler";
 import {  obtenerHistorialReservas } from "../controllers/controlerUser/reservasController";
+import { createDestino } from "../controllers/controlerUser/insertController";
 
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.post('/paquetes',verifyToken, createPackage);
 router.post('/reserva', verifyToken, reserva); 
 router.get('/HistorialReservas/:id_usuario', obtenerHistorialReservas);
 router.post('/valuePackage', valuePackage);
+router.post('/createDestino',createDestino);
 
 export default router;

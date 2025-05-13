@@ -8,7 +8,7 @@ import SearchDto from '../Dto/SearchDto';
 import { HistorialReservasDTO } from '../Dto/HistorialReservasDTO';
 import Package from '../Dto/Paquete';
 import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
-
+import { destino } from '../Dto/destino';
 
 
 class usuarioRepo {
@@ -227,6 +227,18 @@ static async createPackage(paquete: Package) {
     const sql = 'SELECT nombre, email FROM Usuario WHERE rol = "cliente"';
     const [rows]: any = await db.execute(sql);
     return rows[0] || null;
+  }
+
+static async createDestino(destino: destino) {
+    const sql = 'INSERT INTO Destinos (pais,departamento,nombre,descripcion) VALUES (?, ?, ?, ?)';
+    const values = [destino.pais, destino.departamento, destino.nombre, destino.descripcion];
+    try {
+      const [result]: any = await db.execute(sql, values);
+      return result;
+    } catch (error) {
+      console.error("Error al crear destino:", error);
+      throw error;
+    }
   }
 
 

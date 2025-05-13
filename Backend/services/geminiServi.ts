@@ -38,13 +38,19 @@ const isColombiaRelated = (text: string): boolean => {
     return colombiaKeywords.some(keyword => lowerText.includes(keyword));
 };
 
+const truncateText = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return text.substring(0, maxLength - 3) + "..."; // Restamos 3 para añadir los puntos suspensivos
+};
+
 export const getResponseFromAIZenTravel = async (Preguntar: string): Promise<string> => {
     if (!isColombiaRelated(Preguntar)) {
-        return "Lo siento, solo puedo responder preguntas relacionadas con turismo, historia, actividades y detalles de Colombia y sus departamentos.";
+        return "Lo siento, solo puedo responder preguntas relacionadas con turismo, historia, actividades, cultura, gastronomía y detalles de Colombia y sus departamentos.";
     }
 
-    // Instrucción de contexto para enfocar la IA en el turismo colombiano por departamento
-    const prompt = `Eres un asistente experto en turismo, historia, actividades recreativas, cultura, gastronomía y **planificación de viajes con estimaciones de presupuesto** para los diferentes departamentos de Colombia. Responde preguntas detalladas sobre los lugares turísticos, actividades para hacer, información relevante, la historia, las tradiciones culturales, la música, la danza, la artesanía, la gastronomía y **ayuda a los usuarios a armar planes de viaje y obtener presupuestos aproximados** para cada departamento colombiano. Proporciona sugerencias y recomendaciones basadas en la cultura local, las festividades, los platos típicos y las experiencias auténticas que los usuarios pueden disfrutar, **incluyendo estimaciones de costos de alojamiento, transporte, alimentación y actividades.** Si la pregunta se centra en un departamento o región específica y solicita un plan o presupuesto, proporciona información detallada sobre ese lugar, incluyendo sus particularidades culturales y **posibles rangos de precios para diferentes aspectos del viaje.**\n\n${Preguntar}`;
+    const prompt = `Eres un asistente experto en turismo, historia, actividades recreativas, cultura, gastronomía y planificación de viajes con estimaciones de presupuesto para los diferentes departamentos de Colombia. Responde preguntas detalladas sobre los lugares turísticos, actividades para hacer, información relevante, la historia, las tradiciones culturales, la música, la danza, la artesanía, la gastronomía y ayuda a los usuarios a armar planes de viaje y obtener presupuestos aproximados para cada departamento colombiano. Proporciona sugerencias y recomendaciones basadas en la cultura local, las festividades, los platos típicos y las experiencias auténticas que los usuarios pueden disfrutar, incluyendo estimaciones de costos de alojamiento, transporte, alimentación y actividades. Si la pregunta se centra en un departamento o región específica y solicita un plan o presupuesto, proporciona información detallada sobre ese lugar, incluyendo sus particularidades culturales y posibles rangos de precios para diferentes aspectos del viaje.\n\n${Preguntar}`;
 
     try {
         const response = await ai.models.generateContent({
@@ -54,8 +60,9 @@ export const getResponseFromAIZenTravel = async (Preguntar: string): Promise<str
 
         const rawText = response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanedText = cleanResponseText(rawText);
+        const truncatedText = truncateText(cleanedText, 1500); // Llamada correcta a la función
 
-        return cleanedText;
+        return truncatedText;
     } catch (error) {
         throw new Error("Error al obtener la respuesta de la IA: " + error);
     }

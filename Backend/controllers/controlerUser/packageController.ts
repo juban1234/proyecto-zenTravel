@@ -21,11 +21,9 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         const {
             nombrePaquete,
             descripcion,
-            precioTotal,
             imagenUrl,
             duracionDias,
             fechaInicioDisponible,
-            fechaFinDisponible,
             descuento,
             nombreHotel,
             nombreTransporte,
@@ -35,40 +33,30 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         console.log("Datos de Paquete:", {
             nombrePaquete,
             descripcion,
-            precioTotal,
             imagenUrl,
             duracionDias,
             fechaInicioDisponible,
-            fechaFinDisponible,
             descuento,
             nombreHotel,
             nombreTransporte,
             nombreDestino
         });
 
-        if (!nombrePaquete || !descripcion || !precioTotal || !imagenUrl || !duracionDias || !fechaInicioDisponible || !fechaFinDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
+        if (!nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible  || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
         const fechaInicio = new Date(fechaInicioDisponible);
-        const fechaFin = new Date(fechaFinDisponible);
-        if (isNaN(fechaInicio.getTime()) || isNaN(fechaFin.getTime())) {
-            return res.status(400).json({ error: "Las fechas proporcionadas no son válidas" });
-        }
-        if (fechaInicio >= fechaFin) {
-            return res.status(400).json({ error: "La fecha de inicio debe ser anterior a la fecha de fin" });
-        }
+       
 
      
         const newPackage = new Package(
             id_usuario,                     
             nombrePaquete,
             descripcion,
-            precioTotal,
             imagenUrl,
             duracionDias,
             fechaInicio,
-            fechaFin,
             descuento,
             nombreHotel,
             nombreTransporte,

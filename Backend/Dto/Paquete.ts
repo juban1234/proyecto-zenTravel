@@ -3,11 +3,10 @@ class Package {
     private _id_usuario: number;
     private _nombrePaquete: string;
     private _descripcion: string;
-    private _precioTotal: number;
+
     private _imagenUrl: string;
     private _duracionDias: number;
     private _fechaInicioDisponible: Date;
-    private _fechaFinDisponible: Date;
     private _descuento: number;
     private _nombreHotel: string;
     private _nombreTransporte: string;
@@ -17,11 +16,9 @@ class Package {
         id_usuario: number,
         nombrePaquete: string,
         descripcion: string,
-        precioTotal: number,
         imagenUrl: string,
         duracionDias: number,
         fechaInicioDisponible: Date,
-        fechaFinDisponible: Date,
         descuento: number,
         nombreHotel: string,
         nombreTransporte: string,
@@ -30,11 +27,9 @@ class Package {
         this._id_usuario = id_usuario;
         this._nombrePaquete = nombrePaquete;
         this._descripcion = descripcion;
-        this._precioTotal = precioTotal;
         this._imagenUrl = imagenUrl;
         this._duracionDias = duracionDias;
         this._fechaInicioDisponible = fechaInicioDisponible;
-        this._fechaFinDisponible = fechaFinDisponible;
         this._descuento = descuento;
         this._nombreHotel = nombreHotel;
         this._nombreTransporte = nombreTransporte;
@@ -57,10 +52,6 @@ class Package {
         return this._descripcion;
     }
 
-    get precioTotal(): number {
-        return this._precioTotal;
-    }
-
     get imagenUrl(): string {
         return this._imagenUrl;
     }
@@ -73,9 +64,6 @@ class Package {
         return this._fechaInicioDisponible;
     }
 
-    get fechaFinDisponible(): Date {
-        return this._fechaFinDisponible;
-    }
 
     get descuento(): number {
         return this._descuento;
@@ -106,9 +94,6 @@ class Package {
         this._descripcion = descripcion;
     }
 
-    set precioTotal(precioTotal: number) {
-        this._precioTotal = precioTotal;
-    }
 
     set imagenUrl(imagenUrl: string) {
         this._imagenUrl = imagenUrl;
@@ -122,9 +107,6 @@ class Package {
         this._fechaInicioDisponible = fechaInicioDisponible;
     }
 
-    set fechaFinDisponible(fechaFinDisponible: Date) {
-        this._fechaFinDisponible = fechaFinDisponible;
-    }
 
     set descuento(descuento: number) {
         this._descuento = descuento;

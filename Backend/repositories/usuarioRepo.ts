@@ -10,6 +10,7 @@ import Package from '../Dto/Paquete';
 import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 import { destino } from '../Dto/destino';
 import { Hotel } from "../Dto/hotelDto"; 
+import { HabitacionDTO } from '../Dto/HabitacionDTO';
 
 class usuarioRepo {
 
@@ -141,17 +142,15 @@ static async buscartransportePorNombre(nombre: string) {
 
 static async createPackage(paquete: Package) { 
   const sql = `
-      CALL crear_paquete_con_nombres(?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const values = [
       paquete.id_usuario,
       paquete.nombrePaquete,           
-      paquete.descripcion,             
-      paquete.precioTotal,            
+      paquete.descripcion,                        
       paquete.imagenUrl,              
       paquete.duracionDias,          
       paquete.fechaInicioDisponible, 
-      paquete.fechaFinDisponible,    
       paquete.descuento,               
       paquete.nombreHotel,             
       paquete.nombreTransporte,       
@@ -241,7 +240,7 @@ static async createDestino(destino: destino) {
     }
   }
 
-    static async createHotel(hotel: Hotel) {
+  static async createHotel(hotel: Hotel) {
     const sql = `
       INSERT INTO Hotel (nombre, descripcion, ubicacion) 
       VALUES (?, ?, ?)
@@ -250,6 +249,26 @@ static async createDestino(destino: destino) {
       hotel.nombre,
       hotel.descripcion,
       hotel.ubicacion, 
+    ];
+    try {
+      const [result]: any = await db.execute(sql, values);
+      return result;
+    } catch (error) {
+      console.error("Error al crear hotel:", error);
+      throw error;
+    }
+  }
+
+  static async createHabitacion(habitacion: HabitacionDTO) {
+    const sql = `
+      INSERT INTO Habitacion (tipo,numero,precio,disponible) 
+      VALUES (?, ?, ?, ?)
+    `;
+    const values = [
+      habitacion.tipo,
+      habitacion.numero,
+      habitacion.precio,
+      habitacion.disponible,
     ];
     try {
       const [result]: any = await db.execute(sql, values);

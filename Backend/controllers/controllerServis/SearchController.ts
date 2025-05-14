@@ -1,9 +1,9 @@
 import { Request, Response } from "express";    
-import Paquetes from "../../repositories/paqueteRepo";
+import searchRepo from "../../repositories/searchRepo";
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const result = await Paquetes.buscarDestino();
+        const result = await searchRepo.buscarDestino();
         return res.status(200).json({ status: "Búsqueda exitosa", data: result });
     } catch (error) {
         console.error("Error al buscar el destino:", error);
@@ -13,7 +13,7 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
 
 export const SearchHotelByName = async (req: Request, res: Response) => {
     try {
-        const hoteles = await Paquetes.buscarHotelPorNombre();
+        const hoteles = await searchRepo.buscarHotelPorNombre();
 
         if (hoteles.length === 0) {
             return res.status(404).json({ message: "No se encontró ningún hotel." });
@@ -29,7 +29,7 @@ export const SearchHotelByName = async (req: Request, res: Response) => {
 export const SearchTransporteByName = async (req: Request, res: Response) => {
     try {
 
-        const transport = await Paquetes.buscartransportePorNombre();
+        const transport = await searchRepo.buscartransportePorNombre();
 
         if (transport.length === 0) {
             return res.status(404).json({ message: "No se encontró ningún Transporte " });

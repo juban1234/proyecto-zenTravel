@@ -11,6 +11,7 @@ import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 import { destino } from '../Dto/destino';
 import { Hotel } from "../Dto/hotelDto"; 
 import { HabitacionDTO } from '../Dto/HabitacionDTO';
+import { TransporteDTO } from '../Dto/TransporteDTO';
 
 class usuarioRepo {
 
@@ -278,6 +279,39 @@ static async createDestino(destino: destino) {
       throw error;
     }
   }
+
+   static async createTransporte(transporte: TransporteDTO) {
+  const sql = `
+    INSERT INTO Transporte (
+      tipo, empresa, origen, destino,
+      fecha_salida, fecha_llegada,
+      duracion, precio, capacidad, clase
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const values = [
+    transporte.tipo,
+    transporte.empresa,
+    transporte.origen,
+    transporte.destino,
+    transporte.fechaSalida,
+    transporte.fechaLlegada,
+    transporte.duracion,
+    transporte.precio,
+    transporte.capacidad,
+    transporte.clase
+  ];
+
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al crear transporte:", error);
+    throw error;
+  }
+}
+
 
 }
 

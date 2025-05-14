@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { destino } from "../../Dto/destino";
 import { Hotel } from "../../Dto/hotelDto"; 
 import { HabitacionDTO } from "../../Dto/HabitacionDTO";
+import { TransporteDTO } from "../../Dto/TransporteDTO"; 
 import usuarioRepo from "../../repositories/usuarioRepo";
 
 export const createDestino = async (req: Request, res: Response): Promise<Response> => {
@@ -99,4 +100,77 @@ export const createHabitacion = async (req: Request, res: Response): Promise<Res
         console.error("Error al crear la habitación:", error);
         return res.status(500).json({ message: "Ocurrió un error al intentar crear la habitación. Por favor, intente nuevamente." });
     }
+};
+
+export const createTransporte = async (req: Request, res: Response): Promise<Response> => {
+    try {
+    const {
+    tipo,
+    empresa,
+    origen,
+    destino,
+    fechaSalida,
+    fechaLlegada,
+    duracion,
+    precio,
+    capacidad,
+    clase
+} = req.body;
+
+if (
+    typeof tipo !== 'string' || tipo.trim() === '' ||
+    typeof empresa !== 'string' || empresa.trim() === '' ||
+    typeof origen !== 'string' || origen.trim() === '' ||
+    typeof destino !== 'string' || destino.trim() === '' ||
+    typeof fechaSalida !== 'string' || isNaN(Date.parse(fechaSalida)) ||
+    typeof fechaLlegada !== 'string' || isNaN(Date.parse(fechaLlegada)) ||
+    typeof duracion !== 'number' || isNaN(duracion) ||
+    typeof precio !== 'number' || isNaN(precio) ||
+    typeof capacidad !== 'number' || isNaN(capacidad) ||
+    typeof clase !== 'string' || clase.trim() === ''
+) {
+    return res.status(400).json({ message: "Todos los campos son requeridos." });
+}
+
+        const nuevoTransporte = new TransporteDTO(
+            tipo.trim(),
+            empresa.trim(),
+            origen,
+            destino,
+            new Date(fechaSalida),
+            new Date(fechaLlegada),
+            Number(duracion),
+            Number(precio),
+            Number(capacidad),
+            clase.trim()
+        );
+
+        const resultado = await usuarioRepo.createTransporte(nuevoTransporte);
+
+        const transporteCreado = {
+            id: resultado.insertId,
+            tipo: nuevoTransporte.tipo,
+            empresa: nuevoTransporte.empresa,
+            origen: nuevoTransporte.origen,
+            destino: nuevoTransporte.destino,
+            fechaSalida: nuevoTransporte.fechaSalida,
+            fechaLlegada: nuevoTransporte.fechaLlegada,
+            duracion: nuevoTransporte.duracion,
+            precio: nuevoTransporte.precio,
+            capacidad: nuevoTransporte.capacidad,
+            clase: nuevoTransporte.clase,
+        };
+
+        return res.status(201).json({
+            message: "Transporte insertado exitosamente.",
+            data: transporteCreado,
+        });
+  } catch (error: any) {
+    console.error("Error al insertar el transporte:", error.message);
+    console.error(error); 
+    return res.status(500).json({
+        message: "Ocurrió un error al intentar insertar el transporte. Por favor, intente nuevamente."
+    });
+}
+
 };

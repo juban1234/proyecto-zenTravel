@@ -16,14 +16,12 @@ if (!secretKey) {
   };
   
   export const generateRefreshToken = async (data: any) => {
-  const userId = data.id;
-  const token = jwt.sign({ data }, refreshSecret, { expiresIn: '7d' });
-  await tokenRepo.actualizarRefreshToken(userId, token);
-
-  return token;
+    const userId = data.id;
+    const token = jwt.sign({ data }, refreshSecret, { expiresIn: '7d' });
+    tokenRepo.actualizarRefreshToken(userId, token);
+    return token;
   };
 
 export const generateTokenPaypal = (): string => {
   return crypto.randomBytes(16).toString('hex'); // 32 caracteres hexadecimales
 };
-

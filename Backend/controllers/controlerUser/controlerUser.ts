@@ -16,11 +16,12 @@ export const login = async (req: Request, res: Response) => {
       // Generar ambos tokens
       const payload = { id: login.id, rol: login.rol };
       const AccessToken = generateAccessToken(payload)
-      generateRefreshToken(payload);
+      const refreshToken = generateRefreshToken(payload);
 
       return res.status(200).json({
         status: login.status,
-        AccessToken
+        AccessToken,
+        refreshToken
       });
     }
 

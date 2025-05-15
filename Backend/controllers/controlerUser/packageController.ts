@@ -4,6 +4,8 @@ import usuarioRepo from "../../repositories/usuarioRepo";
 
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
+
+
     try {
       
         console.log("📩 Datos recibidos:", req.body);

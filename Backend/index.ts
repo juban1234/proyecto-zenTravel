@@ -8,7 +8,7 @@ import Paquete from './Routes/Paquete';
 import Reservaciones from './Routes/Reservaciones'
 import { PreguntarAI } from './controllers/controllerServis/geminiController';
 import paymentRoutes from './Routes/Payment';
-
+import admin from './Routes/admin';
 
 dotenv.config();
 
@@ -22,6 +22,7 @@ app.use('/packages',Paquete)
 app.use('/reservas',Reservaciones)
 app.use('/api/payments', paymentRoutes);
 app.post('/Preguntar', PreguntarAI);
+app.use('/admin',admin)
 
 const PORT = process.env.PORT || 10101;
 

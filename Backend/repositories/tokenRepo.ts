@@ -7,6 +7,10 @@ class tokenRepo {
         return await db.execute(sql, [token, userId]);
     };
 
+    static async traerRefreshToken(data:any){
+        const sql = 'select refresh_token from usuario where id_usuario = ?';
+        return await db.execute(sql,[data.id])
+    }
 }
 
 export default tokenRepo;

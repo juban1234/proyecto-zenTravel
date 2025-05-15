@@ -6,10 +6,9 @@ import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
 class usuarioRepo {
 
   static async createUsuario( usuario:Usuario){
-
-      const sql = 'CALL CrearUsuario(?, ?, ?, ?,"cliente")';
-      const values = [usuario.nombre, usuario.email, usuario.telefono,usuario.password];
-      return db.execute(sql, values);
+    const sql = 'CALL CrearUsuario(?, ?, ?, ?)';
+    const values = [usuario.nombre, usuario.email, usuario.telefono,usuario.password];
+    return db.execute(sql, values);
   }
     
   static async buscarUsuario(login: Login) {

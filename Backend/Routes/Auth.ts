@@ -5,17 +5,16 @@ import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
 import { refreshToken } from "../middleware/refreshToken";
 import { customerSupport } from "../controllers/controlerUser/customerSupport";
-
+import { verificarRol } from "../middleware/validatorRol";
 
 const router = express.Router();
 
-// Rutas de autenticación
 router.post('/login', login); // Funcional
 router.post('/register' ,validatorParams, validator, register); // Funcional
-router.patch('/profile', verifyToken, profile); // Funcional
-router.post('/customerSupport', customerSupport);
-router.get('/infoUserDTO',verifyToken,informationUser);
-router.post('/refresToken', refreshToken)
+router.patch('/profile',verifyToken,verificarRol('cliente'), profile); // Funcional
+router.post('/customerSupport', customerSupport); // funcional
+router.get('/infoUserDTO',verifyToken,verificarRol('cliente'),informationUser); //funcional
+router.post('/refresToken', refreshToken) //funcional
 
 export default router;
 

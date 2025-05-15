@@ -75,3 +75,7 @@ export const Historial = async (req: Request, res: Response): Promise<Response> 
     return res.status(500).json({ error: 'Error en el servidor' });
   }
 };
+
+export const Cancelar = async(req: Request, res: Response) => {
+  
+}

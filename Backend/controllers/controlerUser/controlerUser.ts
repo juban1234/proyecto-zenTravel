@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import usuarioServi from "../../services/usuarioServi";
 import { Login ,Usuario } from "../../Dto/User";
-import {generateAccessToken,generateRefreshToken} from '../../Helpers/generateToken';
+import {generateAccessToken,generateRefreshToken,actualizarToken} from '../../Helpers/generateToken';
 import dotenv from "dotenv";
 import usuarioRepo from "../../repositories/usuarioRepo";
 
@@ -10,22 +10,29 @@ dotenv.config();
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const login = await usuarioServi.login(new Login(email, password));
-    
-    if (login.logged) {
-      // Generar ambos tokens
-      const payload = { id: login.id, rol: login.rol };
-      generateAccessToken(payload)
-      generateRefreshToken(payload);
 
-      return res.status(200).json({
-        status: login.status,
-      });
+    const loginResult = await usuarioServi.login(new Login(email, password));
+
+    if (!loginResult.logged) {
+      return res.status(401).json({ status: loginResult.status });
     }
 
-    return res.status(401).json({ status: login.status });
+    const payload = { id: loginResult.id, rol: loginResult.rol };
 
-  } catch (error: any) {
+    // Generar tokens
+    const accessToken = generateAccessToken(payload);
+    const refreshToken = await generateRefreshToken(payload);
+
+    // Guardar refresh token en BD
+    await actualizarToken({ id: payload.id, token: refreshToken });
+
+    return res.status(200).json({
+      status: loginResult.status,
+      accessToken,
+      refreshToken,
+    });
+
+  } catch (error) {
     console.error("❌ Error en login:", error);
     return res.status(500).json({ error: "Error en el servidor" });
   }

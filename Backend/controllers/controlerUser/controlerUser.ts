@@ -37,6 +37,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
 export const register = async (req: Request, res: Response) => {
     try {
       const {nombre,email,telefono,password } = req.body;

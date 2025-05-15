@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import usuarioRepo from "../../repositories/usuarioRepo";
-import {generateAccessToken,generateRefreshToken} from "../../Helpers/generateToken";
-import nodemailer from "nodemailer";
+import {generateAccessToken} from "../../Helpers/generateToken";
 import sendRecoveryEmail from "../../Helpers/sendRecoveryEmail";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -34,7 +33,6 @@ export const validatePassword = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Error en el servidor" });
   }
 }
-
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {

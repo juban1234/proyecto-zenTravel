@@ -3,7 +3,7 @@ import verifyToken from "../middleware/verifyToken";
 
 const router = express.Router();
 
-router.post('/crearPackage');
+router.post('/aditar',);
 
 
 export default router;

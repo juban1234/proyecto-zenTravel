@@ -6,9 +6,9 @@ class Paquetes {
         const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const values = [
+            paquete.id_usuario,
             paquete.nombrePaquete,
             paquete.descripcion,
-            paquete.precioTotal,
             paquete.imagenUrl,
             paquete.duracionDias,
             paquete.fechaInicioDisponible,

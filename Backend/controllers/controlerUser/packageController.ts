@@ -5,7 +5,7 @@ import Paquetes from "../../repositories/paqueteRepo";
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {
         console.log("📩 Datos recibidos:", req.body);
-        const id_usuario = (req as any).user.id;
+        const id_usuario = (req as any).user;
 
         if (!id_usuario) {
             return res.status(401).json({ error: "Usuario no autenticado" });
@@ -26,41 +26,26 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             nombreDestino
         } = req.body;
 
-        console.log("Datos de Paquete:", {
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicioDisponible,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino
-        });
-
-        if (!nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
+        if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
-        // ✅ Validar fechas
-        const fechaInicio = new Date(fechaInicioDisponible);
 
-        // ✅ Crear instancia de Paquete
-        const newPackage = new Package(
-            id_usuario,                     
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicio,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino
+        const dto = new Package(
+            id_usuario,
+           nombrePaquete,
+           descripcion,
+           imagenUrl,
+           duracionDias,
+           fechaInicioDisponible,
+           descuento,
+           nombreHotel,
+           nombreTransporte,
+           nombreDestino
+        
         );
 
-        // ✅ Enviar a la base de datos
-        const resultado = await Paquetes.createPackage(newPackage);
+        const resultado = await Paquetes.createPackage(dto,id_usuario);
 
         console.log("✅ Reserva creada con éxito ", resultado);
         return res.status(201).json({ status: "paquete creado con éxito" });

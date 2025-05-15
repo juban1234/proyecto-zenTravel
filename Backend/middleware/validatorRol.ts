@@ -20,6 +20,9 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
       }
 
+      (req as any).user = decoded.data.id;
+      console.log("informacion de el id del usuario",decoded.data);
+      
       next();
     } catch (error) {
       return res.status(401).json({ error: 'Token inválido o expirado' });

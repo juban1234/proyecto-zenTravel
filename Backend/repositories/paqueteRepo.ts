@@ -2,20 +2,20 @@ import db from '../configs/config';
 
 class Paquetes {
 
-    static async createPackage(paquete: any) {
+    static async createPackage(paquete: any,id_usuario:number) {
         const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const values = [
-            paquete.id_usuario,
-            paquete.nombrePaquete,
-            paquete.descripcion,
-            paquete.imagenUrl,
-            paquete.duracionDias,
-            paquete.fechaInicioDisponible,
-            paquete.descuento,
-            paquete.nombreHotel,
-            paquete.nombreTransporte,
-            paquete.nombreDestino
+            id_usuario,
+            paquete.nombrePaquete ?? null,
+            paquete.descripcion ?? null,
+            paquete.imagenUrl ?? null,
+            paquete.duracionDias ?? null,
+            paquete.fechaInicioDisponible ?? null,
+            paquete.descuento ?? null,
+            paquete.nombreHotel ?? null,
+            paquete.nombreTransporte ?? null,
+            paquete.nombreDestino ?? null
         ];
 
         try {

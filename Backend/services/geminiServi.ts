@@ -38,12 +38,27 @@ const isColombiaRelated = (text: string): boolean => {
     return colombiaKeywords.some(keyword => lowerText.includes(keyword));
 };
 
-const truncateText = (text: string, maxLength: number): string => {
+// Trunca el texto sin cortar palabras u oraciones, respetando el límite máximo
+const smartTruncateText = (text: string, maxLength: number): string => {
     if (text.length <= maxLength) {
         return text;
     }
-    return text.substring(0, maxLength - 3) + "..."; // Restamos 3 para añadir los puntos suspensivos
+
+    // Buscar el último punto dentro del límite
+    let endIndex = text.lastIndexOf('.', maxLength);
+    if (endIndex === -1) {
+        // Si no hay punto, buscar el último espacio para evitar cortar una palabra
+        endIndex = text.lastIndexOf(' ', maxLength);
+    }
+
+    // Si aún no hay corte lógico, cortar simplemente en el límite
+    if (endIndex === -1 || endIndex < maxLength * 0.5) {
+        endIndex = maxLength;
+    }
+
+    return text.substring(0, endIndex).trim() + '...';
 };
+
 
 export const getResponseFromAIZenTravel = async (Preguntar: string): Promise<string> => {
     if (!isColombiaRelated(Preguntar)) {
@@ -60,7 +75,8 @@ export const getResponseFromAIZenTravel = async (Preguntar: string): Promise<str
 
         const rawText = response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanedText = cleanResponseText(rawText);
-        const truncatedText = truncateText(cleanedText, 1500); // Llamada correcta a la función
+        const truncatedText = smartTruncateText(cleanedText, 1500);
+
 
         return truncatedText;
     } catch (error) {

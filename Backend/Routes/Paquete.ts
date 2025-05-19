@@ -10,6 +10,8 @@ import { createDestino, createHotel,createHabitacion, createTransporte } from ".
 const router = express.Router();
 
 router.get('/search',buscar); // Funcional
+
+
 router.get('/hotel/:nombre', SearchHotelByName); 
 router.get('/SearchTransport/:nombre',SearchTransporteByName); 
 router.post('/paquetes',verifyToken, createPackage);

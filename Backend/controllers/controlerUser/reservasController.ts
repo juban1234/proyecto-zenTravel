@@ -24,7 +24,7 @@ export const obtenerHistorialReservas = async (req: Request, res: Response): Pro
 };
 
 
-  export const CancelarReserva = async (req: Request, res: Response): Promise<Response> => {
+  export const CancelarReserva = async (req: Request, res:  Response): Promise<Response> => {
     try {
 
       const { id_reserva } = req.params;

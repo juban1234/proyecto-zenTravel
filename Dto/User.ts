@@ -43,7 +43,6 @@ export class Login {
 
 export class Usuario {
 
-
     private _nombre: string;
     private _email: string;
     private _telefono: string;

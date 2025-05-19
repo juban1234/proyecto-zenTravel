@@ -10,5 +10,7 @@ router.get('/destino',buscar); // Funcional
 router.get('/hotel', SearchHotelByName); // Funcional
 router.get('/Transport',SearchTransporteByName); // funcional
 router.post('/create',verifyToken,verificarRol('cliente','admin','vendedor'),createPackage); // funcional
+router.patch('/actualizar',);
+router.get('/paketes')
 
 export default router;

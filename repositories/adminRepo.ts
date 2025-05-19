@@ -29,10 +29,13 @@ class admin {
         empleado.email,
         empleado.telefono,
         empleado.password,
-        rol
-       ]
+        rol]
 
        return await db.execute(sql,value);
+    }
+
+    static async añadirDestino(){
+        const sql = `call`;
     }
 
 }

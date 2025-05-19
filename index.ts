@@ -8,7 +8,7 @@ import Paquete from './Routes/Paquete';
 import Reservaciones from './Routes/Reservaciones'
 import { PreguntarAI } from './controllers/controllerServis/geminiController';
 import paymentRoutes from './Routes/Payment';
-import admin from './Routes/admin';
+import admin from './Routes/administrar';
 
 dotenv.config();
 

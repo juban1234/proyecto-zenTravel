@@ -30,9 +30,13 @@ class Paquetes {
     static async calcularPaquete(id_paquete: number) {
         const sql = 'call calcular_precio_paquete(?)';
         const [rows]: any = await db.execute(sql, [id_paquete]);
-        return rows[0] || null;
+        return rows;
     }
 
+    static async traerPaquetes(id_paquete: number){
+        const sql = `call listarPaquetes(?)`;
+        return await db.execute(sql,[id_paquete])
+    }
 }
 
 export default Paquetes;

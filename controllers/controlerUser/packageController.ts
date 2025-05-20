@@ -67,6 +67,7 @@ export const valuePackage = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             status:"Paquete actualizado",
+            paquete
     });
     } catch (error) {
         console.error("Error al calcular el total del paquete:", error);
@@ -75,6 +76,9 @@ export const valuePackage = async (req: Request, res: Response) => {
 
 };
 
+export const listarPaquetes = async(req: Request, res: Response) => {
+    
+}
 
 
 

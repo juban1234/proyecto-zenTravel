@@ -34,8 +34,11 @@ class admin {
        return await db.execute(sql,value);
     }
 
-    static async añadirDestino(){
-        const sql = `call`;
+    static async añadirDestino(destino: any){
+        const sql = `insert into destinos (pais,departamento,nombre,descripcion) values (?,?,?,?)`;
+        const value = [
+            
+        ]
     }
 
 }

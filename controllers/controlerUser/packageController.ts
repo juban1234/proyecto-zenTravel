@@ -77,7 +77,26 @@ export const valuePackage = async (req: Request, res: Response) => {
 };
 
 export const listarPaquetes = async(req: Request, res: Response) => {
-    
+    const id_usuario = req.params.id;
+
+    if (!id_usuario) {
+        return res.status(400).json({ status: `usuario no encontrado` })
+    }
+
+    try{
+        const paquetes = await Paquetes.traerPaquetes(Number(id_usuario))
+
+        return res.status(200).json({
+            status: `paquetes en contrados`,
+            paquetes
+        })
+
+    }catch(error){
+        console.error("Error al traer los paquete del usaurio: ", error);
+        return res.status(500).json({ error: `error en el servidor al momento de buscar los paquetes del usuario` })
+    }
+
+
 }
 
 

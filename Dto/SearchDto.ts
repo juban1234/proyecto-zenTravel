@@ -56,20 +56,17 @@ export class Hotel {
     private _nombre: string;
     private _descripcion: string;
     private _ubicacion: string;
-    private _precio: number;
     private _imagenes: string[]; 
 
     constructor(
         nombre: string,
         descripcion: string,
         ubicacion: string,
-        precio: number,
         imagenes: string[]
     ) {
         this._nombre = nombre;
         this._descripcion = descripcion;
         this._ubicacion = ubicacion;
-        this._precio = precio;
         this._imagenes = imagenes;
     }
 
@@ -84,10 +81,6 @@ export class Hotel {
 
     get ubicacion(): string {
         return this._ubicacion;
-    }
-
-    get precio(): number {
-        return this._precio;
     }
 
     get imagenes(): string[] {
@@ -105,10 +98,6 @@ export class Hotel {
 
     set ubicacion(ubicacion: string) {
         this._ubicacion = ubicacion;
-    }
-
-    set precio(precio: number) {
-        this._precio = precio;
     }
 
     set imagenes(imagenes: string[]) { 
@@ -174,14 +163,12 @@ export class Destino {
     }
 }
 
-
-export class SearchTransportDto {
+export class Transporte {
     private _tipo: string;
     private _empresas: string;
     private _origen: string;
     private _destino: string;       
     private _fecha_salida:Date;   
-    private _fecha_llegada:Date;    
     private _duracion: number;
     private _precio: number;
     private _capacidad: number;
@@ -193,7 +180,6 @@ export class SearchTransportDto {
         origen: string,
         destino: string,
         fecha_salida: Date,
-        fecha_llegada: Date,
         duracion: number,
         precio: number,
         capacidad: number,
@@ -205,7 +191,6 @@ export class SearchTransportDto {
         this._origen = origen;
         this._destino = destino;
         this._fecha_salida = fecha_salida;
-        this._fecha_llegada = fecha_llegada;
         this._duracion = duracion;
         this._precio = precio;
         this._capacidad = capacidad;
@@ -248,16 +233,13 @@ export class SearchTransportDto {
     public get fecha_salida(): Date {
         return this._fecha_salida;
     }
-    public set fecha_salida(value: Date) {
-        this._fecha_salida = value;
-    }
 
-    public get fecha_llegada(): Date {
-        return this._fecha_llegada;
+    
+    public set fecha_salida(v : Date) {
+        this._fecha_salida = v;
     }
-    public set fecha_llegada(value: Date) {
-        this._fecha_llegada = value;
-    }
+    
+
 
     // Getter y Setter para _duracion
     public get duracion(): number {
@@ -290,4 +272,16 @@ export class SearchTransportDto {
     public set clase(value: string) {
         this._clase = value;
     }
+}
+
+export class Habitacion {
+
+    constructor(
+        public tipo:string,
+        public numero: string,
+        public precio: number,
+        public disponibilidad: string,
+        public id_hotel:number
+    ){}
+
 }

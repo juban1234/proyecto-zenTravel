@@ -1,7 +1,7 @@
 import express from "express";
 import { EliminarUsuarios , TraerUsuario , RolUsuario ,newEmpleados} from "../controllers/controlerAdmin/usuarios";
 import { verificarRol } from "../middleware/validatorRol";
-import { createDestino } from "../controllers/controlerAdmin/paquetes";
+import { createDestino , createHabitacion, createHotel, createTransporte } from "../controllers/controlerAdmin/paquetes";
 
 
 const router = express.Router();
@@ -14,8 +14,8 @@ router.post('/crearUsuarios',verificarRol('admin'),newEmpleados)
 
 // control de contenido del sistema
 router.post('/createDestino',createDestino);
-// router.post('/createHotel',createHotel);
-// router.post('/createHabitacion',createHabitacion);
-// router.post ('/createTransporte',createTransporte);
+router.post('/createHotel',createHotel);
+router.post('/createHabitacion',createHabitacion);
+router.post ('/createTransporte',createTransporte);
 
 export default router;

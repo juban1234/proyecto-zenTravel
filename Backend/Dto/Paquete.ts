@@ -3,7 +3,6 @@ class Package {
     private _id_usuario: number;
     private _nombrePaquete: string;
     private _descripcion: string;
-
     private _imagenUrl: string;
     private _duracionDias: number;
     private _fechaInicioDisponible: Date;

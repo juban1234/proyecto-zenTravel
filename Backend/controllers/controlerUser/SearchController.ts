@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Search from "../../Dto/SearchDto";
 import usuarioRepo from "../../repositories/usuarioRepo";
 
+
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { nombre = "", pais = "", direccion = "", descripcion = "" } = req.query as {
@@ -66,6 +67,29 @@ export const SearchTransporteByName = async (req: Request, res: Response) => {
     }
 };
 
+
+export const SearchHabitacionesbyid = async (req: Request, res: Response) => {
+    try{
+        const { id_hotel } = req.params;
+
+        if (!id_hotel || isNaN(Number(id_hotel))) {
+            return res.status(400).json({ error: "El ID del hotel es requerido y debe ser un número válido" });
+        }
+
+        const habitaciones = await usuarioRepo.buscarHabitacionesPorIdHotel(parseInt(id_hotel));
+
+        if (habitaciones.length === 0) {
+            return res.status(404).json({ message: "No se encontró ninguna habitación con ese id." });
+        }
+
+        return res.status(200).json(habitaciones);
+
+    }
+    catch (error) {
+        console.error("Error al buscar habitaciones por id de hotel:", error);
+        return res.status(500).json({ error: "Error del servidor." });
+    }
+}
 
 
 

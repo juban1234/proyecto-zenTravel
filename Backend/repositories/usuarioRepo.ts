@@ -338,6 +338,13 @@ static async CancelarReserva(id_reserva: number) {
   }
 }
 
+static async buscarHabitacionesPorIdHotel (id_hotel: number) {
+ 
+  const sql = 'SELECT * FROM Habitacion WHERE id_hotel = ?';
+  const [rows]: any = await db.execute(sql, [id_hotel]);
+  return rows;
+
+}
 
 
 }

@@ -12,8 +12,8 @@ if (!apiKey) {
 const ai = new GoogleGenAI({ apiKey });
 
 // Palabras clave generales relacionadas con Colombia para permitir la consulta
-const colombiaKeywords = [
-    "colombia", "turismo", "viajar", "actividades", "sitios", "lugares",
+
+const colombiaKeywords = ["colombia", "turismo", "viajar", "actividades", "sitios", "lugares",
     "destinos", "visitar", "explorar", "historia", "cultura", "gastronomía",
     "departamento", "región", "municipio", "atracción", "recreación",
     "especificaciones", "detalles", "información", "naturaleza", "paisaje", "reseñas",
@@ -29,7 +29,12 @@ const colombiaKeywords = [
     "plan", "presupuesto", "costo", "precio", "gasto", "viaje", "organizar",
     "alojamiento", "transporte", "comida", "actividad", "excursión", "tour",
     "cuánto cuesta", "aproximado", "estimado", "rango de precios", "gastos", "ahorrar", "planificación",
-    "itinerario", "ruta", "horarios", "reservas", "compras", "ofertas"
+    "itinerario", "ruta", "horarios", "reservas", "compras", "ofertas", "descuentos",
+    "paquete turístico", "guía", "consejos", "sugerencias", "recomendaciones",
+    "experiencias", "autenticidad", "cultura local", "interacción cultural", "comunidad",
+    "interacción", "inmersión cultural", "vivencias", "tradiciones locales", "gastronomía local",
+    "productos típicos", "artesanos", "ferias", "mercados", "exposiciones",
+
 ];
 
 // Verifica si la pregunta contiene palabras clave relacionadas con Colombia

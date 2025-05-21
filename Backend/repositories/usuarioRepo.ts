@@ -346,7 +346,18 @@ static async buscarHabitacionesPorIdHotel (id_hotel: number) {
 
 }
 
-
+static async eliminarPaquete(id_paquete: number) {
+  const sql = 'DELETE FROM paquete WHERE id_paquete = ?';
+  const values = [id_paquete];
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al eliminar paquete:", error);
+    throw error;
+  }
+  
+}
 }
 
 export default usuarioRepo;

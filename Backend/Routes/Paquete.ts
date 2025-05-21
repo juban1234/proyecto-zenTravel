@@ -6,6 +6,7 @@ import { reserva } from "../controllers/controllerServis/ReservaControler";
 import {  obtenerHistorialReservas, CancelarReserva } from "../controllers/controlerUser/reservasController";
 import { createDestino, createHotel,createHabitacion, createTransporte } from "../controllers/controlerUser/insertController";
 import { SearchHabitacionesbyid } from "../controllers/controlerUser/SearchController";
+import { deletePaquete } from "../controllers/controlerUser/DeleteController";
 
 
 const router = express.Router();
@@ -23,4 +24,5 @@ router.post('/createHabitacion',createHabitacion);
 router.post ('/createTransporte',createTransporte);
 router.patch('/reservas/:id_reserva', CancelarReserva);
 router.get('/SearchHabitaciones/:id_hotel',SearchHabitacionesbyid);
+router.delete('/deletePaquete/:id_paquete',deletePaquete);
 export default router;

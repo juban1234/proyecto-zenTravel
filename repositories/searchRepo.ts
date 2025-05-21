@@ -9,10 +9,10 @@ class searchRepo {
         return rows;
     }
 
-    static async buscarHotelPorNombre() {
-        const sql = 'SELECT * FROM Hotel WHERE nombre LIKE ?';
-        const [rows]: any = await db.execute(sql);
-        return rows;
+    static async buscarHotelPorNombre(ha: String) {
+        const sql = `call buscar_habitacion(?)`;
+        const [rows]: any = await db.execute(sql,[ha]);
+        return rows[0]
     }
 
     static async buscartransportePorNombre() {

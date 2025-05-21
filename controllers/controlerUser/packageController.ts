@@ -99,5 +99,7 @@ export const listarPaquetes = async(req: Request, res: Response) => {
 
 }
 
-
+export const actualizarPaquete = async(req: Request, res: Response) => {
+    
+}
 

@@ -52,5 +52,31 @@ class reservaRepo {
         }
     }
 
+    static async CancelarReserva(id_reserva: number) {
+
+    const checkSql = 'SELECT estado FROM reservas WHERE id_reservas = ?';
+    const [result]: any = await db.execute(checkSql, [id_reserva]);
+
+    if (result.length === 0) {
+        return null; 
+    }
+
+    const estado = result[0].estado;
+    if (estado !== 'activa') {
+        return null; 
+    }
+    
+    const sql = 'UPDATE reservas SET estado = ? WHERE id_reservas = ?';
+    const values = ['cancelada', id_reserva];
+
+    try {
+        const [updateResult]: any = await db.execute(sql, values);
+        return updateResult;
+    } catch (error) {
+        console.error("Error al cancelar reserva:", error);
+        throw error;
+    }
+    }
+
 }
 export default reservaRepo;

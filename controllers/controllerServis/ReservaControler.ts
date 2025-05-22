@@ -75,3 +75,27 @@ export const Historial = async (req: Request, res: Response): Promise<Response> 
     return res.status(500).json({ error: 'Error en el servidor' });
   }
 };
+
+export const Cancelar = async (req: Request, res: Response) => {
+      try {
+
+      const { id_reserva } = req.params;
+      if (id_reserva && isNaN(Number(id_reserva))){
+        return res.status(400).json({ error: 'El id_reserva es requerido y debe ser un número válido' });
+      
+      }
+
+      const reserva = await reservaRepo.CancelarReserva(parseInt(id_reserva));
+      if (!reserva) {
+        return res.status(404).json({ message: 'No se encontró la reserva con el id proporcionado' });
+      }
+
+        return res.status(200).json({ message: 'Reserva cancelada exitosamente' });
+    
+      } catch (error) {
+
+      console.error('Error al cancelar reserva:', error);
+      return res.status(500).json({ error: 'Error en el servidor' });
+    
+    }
+}

@@ -87,3 +87,33 @@ export const deleteDestino = async (req: Request, res: Response): Promise<Respon
     }
 
  }
+
+ export const deleteTransporte = async (req: Request, res: Response): Promise<Response> => {
+        
+    try {
+       
+        const id_transporte = Number(req.params.id_transporte);
+
+        console.log("Datos recibidos:", {id_transporte});
+
+        if (!id_transporte || isNaN(id_transporte)) {
+            return res.status(400).json({ error: "ID del transporte no proporcionado o inválido" });
+        }
+
+        const resultado = await usuarioRepo.eliminarTransporte(id_transporte);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: "Transporte no encontrado o ya eliminado" });
+        }
+
+        console.log("Transporte  eliminado con éxito:", resultado);
+
+        return res.status(200).json({ status: "Transporte eliminado con éxito" });
+
+    } catch (error: any) {
+        console.error("Error al eliminar Transporte:", error);
+        return res.status(500).json({ error: "Ocurrió un error al eliminar el transporte" });
+    }
+ }
+
+ 

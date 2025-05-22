@@ -382,6 +382,18 @@ static async eliminarHotel(id_hotel: number) {
     throw error;
   }
 }
+
+static async eliminarTransporte(id_transporte: number) {
+ const sql = 'DELETE FROM transporte WHERE id_transporte = ?';
+  const values = [id_transporte];
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al eliminar transporte:", error);
+    throw error;
+  }
+}
 }
 
 export default usuarioRepo;

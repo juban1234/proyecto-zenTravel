@@ -79,8 +79,24 @@ class admin {
     }
 
     static async añadirHabitacion( habit: Habitacion){
-
+        const sql = `call agregar_habitacion_hotel(?,?,?,?,?)`
+        const values = [
+            habit.tipo,
+            habit.numero,
+            habit.precio,
+            habit.nombre_hotel
+        ]
+        return await db.execute(sql,values);
     }
 }
 
 export default admin;
+
+
+/**
+ * tipo varchar(50) 
+numero varchar(10) 
+precio decimal(10,2) 
+disponible varchar(45) 
+id_hotel
+ */

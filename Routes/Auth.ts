@@ -13,7 +13,7 @@ router.post('/login', login); // Funcional
 router.post('/register' ,validatorParams, validator, register); // Funcional
 router.patch('/profile',verifyToken,profile); // Funcional
 router.post('/customerSupport', customerSupport); // funcional
-router.get('/infoUserDTO',verifyToken,verificarRol('cliente'),informationUser); //funcional
+router.get('/infoUserDTO',verificarRol('cliente'),verifyToken,informationUser); //funcional
 router.post('/refresToken', refreshToken) //funcional
 
 export default router;

@@ -281,7 +281,7 @@ export class Habitacion {
         public numero: string,
         public precio: number,
         public disponibilidad: string,
-        public id_hotel:number
+        public nombre_hotel:string
     ){}
 
 }

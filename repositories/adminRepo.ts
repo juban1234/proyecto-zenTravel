@@ -91,12 +91,3 @@ class admin {
 }
 
 export default admin;
-
-
-/**
- * tipo varchar(50) 
-numero varchar(10) 
-precio decimal(10,2) 
-disponible varchar(45) 
-id_hotel
- */

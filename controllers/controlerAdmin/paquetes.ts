@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import admin from "../../repositories/adminRepo";
-import { Destino, Hotel , Transporte } from "../../Dto/SearchDto";
+import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 
 export const createDestino = async(req:Request , res:Response) => {
         try {
@@ -38,8 +38,10 @@ export const createDestino = async(req:Request , res:Response) => {
 }
 
 export const createHotel = async (req: Request, res: Response): Promise<Response> => {
+    
+    const { nombre, descripcion, ubicacion, imagenes } = req.body;
+
     try {
-        const { nombre, descripcion, ubicacion, imagenes } = req.body;
 
         if (!nombre?.trim() || !descripcion?.trim() || !ubicacion?.trim()|| imagenes.length === 0) {
             return res.status(400).json({ message: "Todos los campos son requeridos " });
@@ -68,13 +70,49 @@ export const createTransporte = async (req: Request , res:Response) => {
         })
     }
 
-    const transporte = await admin.añadirTransporte(new Transporte(
-        empresa,tipo,origen,destino,
-        salida,duracion,presio,cantidad,destino
-    ))
+    try{
+
+        const transporte = await admin.añadirTransporte(new Transporte(
+            empresa,tipo,origen,destino,
+            salida,duracion,presio,cantidad,destino
+        ))
+
+        return res.status(200).json({
+            status: `se añadio con exito el transporte`,
+            transporte
+        })
+
+    }catch(error){
+        console.error(`se produjo un error al momento de ingresar el nuevo viaje`,error);
+        return res.status(500).json({
+            status: `error en el servidor al momento agregar una nuevo viaje`
+        })
+    }
+    
 
 }
 
 export const createHabitacion = async(req: Request , res:Response) => {
+    const {tipo,numero,precio,nombre_hotel} = req.body;
 
+    try {
+        
+        const habitacion = await admin.añadirHabitacion(new Habitacion(
+            tipo,
+            numero,
+            precio,
+            nombre_hotel
+        ))
+
+        return res.status(200).json({
+            status: `habitacion agregada correctamente`,
+            habitacion
+        })
+
+    } catch (error) {
+        console.log(`error en el servidor al momento de agregar una habitacion `,error);
+        return res.status(500).json({
+            status:`error en el servidor al momento de agregar una habitacion`
+        })
+    }
 }

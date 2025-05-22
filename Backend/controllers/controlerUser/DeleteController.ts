@@ -27,3 +27,31 @@ export const deletePaquete = async (req: Request, res: Response): Promise<Respon
         return res.status(500).json({ error: "Ocurrió un error al eliminar el paquete" });
     }
 }
+
+export const deleteDestino = async (req: Request, res: Response): Promise<Response> => {
+
+     try {
+       
+        const id_destino = Number(req.params.id_destino);
+
+        console.log("Datos recibidos:", {id_destino});
+
+        if (!id_destino || isNaN(id_destino)) {
+            return res.status(400).json({ error: "ID de destino no proporcionado o inválido" });
+        }
+
+        const resultado = await usuarioRepo.eliminarDestino(id_destino);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: "Destino no encontrado o ya eliminado" });
+        }
+
+        console.log("Destino eliminado con éxito:", resultado);
+
+        return res.status(200).json({ status: "Destino eliminado con éxito" });
+
+    } catch (error: any) {
+        console.error("Error al eliminar destino:", error);
+        return res.status(500).json({ error: "Ocurrió un error al eliminar el destino" });
+    }
+}

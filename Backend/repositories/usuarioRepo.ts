@@ -358,6 +358,19 @@ static async eliminarPaquete(id_paquete: number) {
   }
   
 }
+
+static async eliminarDestino(id_destino: number) {
+const sql = 'DELETE FROM destinos WHERE id_destino = ?';
+  const values = [id_destino];
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al eliminar destino:", error);
+    throw error;
+  }
+}
+
 }
 
 export default usuarioRepo;

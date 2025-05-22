@@ -116,4 +116,32 @@ export const deleteDestino = async (req: Request, res: Response): Promise<Respon
     }
  }
 
- 
+ export const deleteHabitacion = async (req: Request, res: Response): Promise<Response> => {
+
+    try {
+       
+        const id_habitacion = Number(req.params.id_habitacion);
+
+        console.log("Datos recibidos:", {id_habitacion});
+
+        if (!id_habitacion || isNaN(id_habitacion)) {
+            return res.status(400).json({ error: "ID de la habitación no proporcionado o inválido" });
+        }
+
+        const resultado = await usuarioRepo.eliminarHotel(id_habitacion);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: "Habitación no encontrada o ya eliminada" });
+        }
+
+        console.log("Habitación eliminada con éxito:", resultado);
+
+        return res.status(200).json({ status: "Habitación eliminada con éxito" });
+
+    } catch (error: any) {
+        console.error("Error al eliminar la habitación:", error);
+        return res.status(500).json({ error: "Ocurrió un error al eliminar la habitación" });
+    }
+
+
+}

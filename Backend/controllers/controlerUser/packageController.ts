@@ -97,6 +97,54 @@ export const valuePackage = async (req: Request, res: Response) => {
 
 };
 
+export const actualizarPaquete = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { id_paquete } = req.params;
+        const {
+            nombrePaquete,
+            descripcion,
+            imagenUrl,
+            duracionDias,
+            fechaInicio,
+            descuento
+        } = req.body;
+
+        if (
+            !id_paquete ||
+            !nombrePaquete ||
+            !descripcion ||
+            !imagenUrl ||
+            !duracionDias ||
+            !fechaInicio ||
+            !descuento
+        ) {
+            return res.status(400).json({ error: "Todos los campos son requeridos." });
+        }
+
+        const paqueteActualizado = {
+            id_paquete: Number(id_paquete),
+            nombrePaquete,
+            descripcion,
+            imagenUrl,
+            duracionDias,
+            fechaInicio,
+            descuento
+        };
+
+        const resultado = await usuarioRepo.actualizarPaquete(paqueteActualizado);
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: "Paquete no encontrado o no actualizado." });
+        }
+
+        return res.status(200).json({ status: "Paquete actualizado con éxito" });
+    } catch (error) {
+        console.error("Error al actualizar el paquete:", error);
+        return res.status(500).json({ error: "Ocurrió un error al actualizar el paquete" });
+    }
+}
+
+
 
 
 

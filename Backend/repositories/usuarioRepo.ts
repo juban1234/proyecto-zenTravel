@@ -12,6 +12,7 @@ import { destino } from '../Dto/destino';
 import { Hotel } from "../Dto/hotelDto"; 
 import { HabitacionDTO } from '../Dto/HabitacionDTO';
 import { TransporteDTO } from '../Dto/TransporteDTO';
+import { console } from 'inspector';
 
 class usuarioRepo {
 
@@ -393,6 +394,48 @@ static async eliminarTransporte(id_transporte: number) {
     console.error("Error al eliminar transporte:", error);
     throw error;
   }
+}
+
+static async eliminarHabitacion(id_habitacion: number) {
+  const sql = 'DELETE FROM habitacion WHERE id_habitacion = ?';
+  const values = [id_habitacion];
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al eliminar habitación:", error);
+    throw error;
+  }
+}
+
+static async actualizarPaquete(paquete: any) {
+    const sql = `
+        UPDATE paquete 
+        SET 
+            nombrePaquete = ?, 
+            descripcion = ?, 
+            imagenUrl = ?, 
+            duracionDias = ?, 
+            fechaInicio = ?, 
+            descuento = ?
+        WHERE id_paquete = ?
+    `;
+    const values = [
+        paquete.nombrePaquete,
+        paquete.descripcion,
+        paquete.imagenUrl,
+        paquete.duracionDias,
+        paquete.fechaInicio,
+        paquete.descuento,
+        paquete.id_paquete
+    ];
+    try {
+        const [result]: any = await db.execute(sql, values);
+        return result;
+    } catch (error) {
+        console.error("Error al actualizar paquete:", error);
+        throw error;
+    }
 }
 }
 

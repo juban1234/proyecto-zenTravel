@@ -371,6 +371,17 @@ const sql = 'DELETE FROM destinos WHERE id_destino = ?';
   }
 }
 
+static async eliminarHotel(id_hotel: number) {
+  const sql = 'DELETE FROM hotel WHERE id_hotel = ?';
+  const values = [id_hotel];
+  try {
+    const [result]: any = await db.execute(sql, values);
+    return result;
+  } catch (error) {
+    console.error("Error al eliminar hotel:", error);
+    throw error;
+  }
+}
 }
 
 export default usuarioRepo;

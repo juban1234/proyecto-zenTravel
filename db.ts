@@ -114,4 +114,5 @@ export const getHotelesPorDepartamento = async (departamento: string): Promise<a
     } finally {
         if (connection) connection.release();
     }
+    
 };

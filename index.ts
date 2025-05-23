@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/Auth', Auth)
+app.use('/Auth', Auth) // completamente funcional
 app.use('/Password',Validator);
 app.use('/packages',Paquete)
 app.use('/reservas',Reservaciones)

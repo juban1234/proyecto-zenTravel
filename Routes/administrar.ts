@@ -20,9 +20,9 @@ router.post('/createHabitacion',verificarRol("admin",'vendedor'),createHabitacio
 router.post ('/createTransporte',verificarRol("admin",'vendedor'),createTransporte);
 
 // eliminar contenido del sistema
-router.delete('/deletePaquete/:id_paquete',deletePaquete);
-router.delete('/deleteDestino/:id_destino',deleteDestino);
-router.delete('/deleteHotel/:id_hotel',deleteHotel);
-router.delete('/deleteTransporte/:id_transporte',deleteTransporte);
+router.delete('/deletePaquete/:id_paquete',verificarRol('admin'),deletePaquete);
+router.delete('/deleteDestino/:id_destino',verificarRol('admin'),deleteDestino);
+router.delete('/deleteHotel/:id_hotel',verificarRol('admin'),deleteHotel);
+router.delete('/deleteTransporte/:id_transporte',verificarRol('admin'),deleteTransporte);
 
 export default router;

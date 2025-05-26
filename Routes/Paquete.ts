@@ -10,7 +10,6 @@ router.get('/destino',buscar); // Funcional
 router.get('/hotel/:nombre', SearchHotelByName); // Funcional
 router.get('/Transport',SearchTransporteByName); // funcional
 router.post('/create',verifyToken,verificarRol('cliente','admin','vendedor'),createPackage); // funcional
-router.patch('/actualizar',);
 router.get('/paketes/:id',listarPaquetes)
 router.post('/calcularPrecio',valuePackage)
 

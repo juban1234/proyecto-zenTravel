@@ -1,28 +1,26 @@
-import { Request, Response } from "express";
-import { getResponseFromAIZenTravel } from "../../services/geminiServi";
+import { Request, Response } from 'express';
+import { queryDatabaseFirst } from '../../services/geminiServi';
+import { askGeminiWebFallback } from '../utils/gemini.api';
 
-export const PreguntarAI = async (req: Request, res: Response): Promise<void> => {
-    const { Preguntar } = req.body;
+export const handleGeminiQuery = async (req: Request, res: Response) => {
+  const { message } = req.body;
 
-    if (!Preguntar) {
-        res.status(400).json({ error: "La pregunta no puede estar vacía." });
-        return;
+  if (!message) {
+    return res.status(400).json({ error: 'Mensaje requerido' });
+  }
+
+  try {
+    const dbResponse = await queryDatabaseFirst(message);
+
+    if (dbResponse?.length) {
+      return res.json({ source: 'database', data: dbResponse });
     }
 
-    try {
-        // Llama a la función del servicio que contiene toda la lógica de IA y DB
-        const respuesta = await getResponseFromAIZenTravel(Preguntar);
+    const geminiResponse = await askGeminiWebFallback(message);
+    return res.json({ source: 'gemini-web', data: geminiResponse });
 
-        // Si la respuesta del servicio es el mensaje específico de "solo Colombia", envíalo con 200 OK
-        if (respuesta === "Lo siento, solo puedo responder preguntas relacionadas con turismo, historia, actividades, cultura, gastronomía y detalles de Colombia y sus departamentos.") {
-            res.status(200).json({ respuesta });
-        } else {
-            // De lo contrario, envía la respuesta de la IA normalmente
-            res.status(200).json({ respuesta });
-        }
-
-    } catch (error: any) { // Captura cualquier error lanzado desde el servicio
-        console.error("Error en el controlador PreguntarAI:", error); // Esto ayuda a depurar en la consola
-        res.status(500).json({ error: error.message || "Error al obtener la respuesta de la IA." });
-    }
+  } catch (error) {
+    console.error('Error procesando consulta con Gemini:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };

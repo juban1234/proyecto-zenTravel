@@ -3,6 +3,7 @@ import { EliminarUsuarios , TraerUsuario , RolUsuario ,newEmpleados} from "../co
 import { verificarRol } from "../middleware/validatorRol";
 import { createDestino , createHabitacion, createHotel, createTransporte } from "../controllers/controlerAdmin/paquetes";
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
+import { validatorParams } from "../middleware/register-validator";
 
 
 const router = express.Router();
@@ -11,7 +12,7 @@ const router = express.Router();
 router.patch('/aditar', verificarRol("admin"),RolUsuario); //funcional
 router.delete('/EliminarUsuarios/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
 router.get('/usuarios',verificarRol('admin','vendedor'),TraerUsuario)
-router.post('/crearUsuarios',verificarRol('admin'),newEmpleados)
+router.post('/crearUsuarios',validatorParams,verificarRol('admin'),newEmpleados)
 
 // control de contenido del sistema
 router.post('/createDestino',verificarRol("admin",'vendedor'),createDestino);

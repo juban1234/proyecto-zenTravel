@@ -5,7 +5,6 @@ import usuarioRepo from "../../repositories/usuarioRepo";
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
 
-
     try {
       
         console.log("📩 Datos recibidos:", req.body);
@@ -19,7 +18,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         
         console.log("ID de usuario autenticado:", id_usuario);
 
-   
         const {
             nombrePaquete,
             descripcion,
@@ -49,9 +47,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         }
 
         const fechaInicio = new Date(fechaInicioDisponible);
-       
 
-     
         const newPackage = new Package(
             id_usuario,                     
             nombrePaquete,
@@ -65,7 +61,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             nombreDestino
         );
 
-       
         const resultado = await usuarioRepo.createPackage(newPackage);
 
         console.log("✅ Reserva creada con éxito ", resultado);
@@ -85,7 +80,6 @@ export const valuePackage = async (req: Request, res: Response) => {
         }
 
         const paquete = await usuarioRepo.getPackageById(Number(id_paquete));
-
         return res.status(200).json({
             status:"Paquete actualizado",
     });

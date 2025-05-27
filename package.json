@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node index.ts",
+    "cop": "nodemon dist/index.js",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -35,6 +36,7 @@
     "@types/node": "^20.17.46",
     "@types/nodemailer": "^6.4.17",
     "@types/paypal-rest-sdk": "^1.7.9",
+    "nodemon": "^3.1.10",
     "secure-random": "^1.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"

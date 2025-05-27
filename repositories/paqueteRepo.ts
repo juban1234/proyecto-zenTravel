@@ -33,9 +33,23 @@ class Paquetes {
         return rows;
     }
 
-    static async traerPaquetes(id_paquete: number){
-        const sql = `call listarPaquetes(?)`;
+    static async traerPaquetes_usuario(id_paquete: number){
+        const sql = `
+        	select
+                nombrePaquete,
+                descripcion,
+                precioTotal,
+                fechaInicio,
+                duracionDias
+                from paquete where id_usuario = ?;
+        `;
         return await db.execute(sql,[id_paquete])
+    }
+
+    static async traerPaquetes(){
+        const sql = `call listarPaquetes()`
+        const [rows]: any = await db.execute(sql)
+        return rows [0]
     }
 }
 

@@ -77,14 +77,32 @@ export const valuePackage = async (req: Request, res: Response) => {
 };
 
 export const listarPaquetes = async(req: Request, res: Response) => {
-    const id_usuario = req.params.id;
+    
+    try{
+        const paquetes = await Paquetes.traerPaquetes()
+
+        return res.status(200).json({
+            status: `paquetes encontrados`,
+            paquetes
+        })
+
+    }catch(error){
+        console.error("Error al traer los paquete del usaurio: ", error);
+        return res.status(500).json({ error: `error en el servidor al momento de buscar los paquetes del usuario` })
+    }
+
+
+}
+
+export const traerPaquetes_usuario = async(req: Request, res: Response) => {
+    const id_usuario = (req as any).user ;
 
     if (!id_usuario) {
         return res.status(400).json({ status: `usuario no encontrado` })
     }
 
     try{
-        const paquetes = await Paquetes.traerPaquetes(Number(id_usuario))
+        const paquetes = await Paquetes.traerPaquetes_usuario(Number(id_usuario))
 
         return res.status(200).json({
             status: `paquetes en contrados`,
@@ -95,8 +113,7 @@ export const listarPaquetes = async(req: Request, res: Response) => {
         console.error("Error al traer los paquete del usaurio: ", error);
         return res.status(500).json({ error: `error en el servidor al momento de buscar los paquetes del usuario` })
     }
-
-
+   
 }
 
 export const actualizarPaquete = async(req: Request, res: Response) => {

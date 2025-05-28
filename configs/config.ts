@@ -16,9 +16,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD, // ❗ cuidado que tenías mal escrito esto antes (usabas `process.env.password`)
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT) || 3306,
-  ssl: {
-    ca: fs.readFileSync(caPath)
-  }
+  ssl: process.env.DB_SSL_CA
 }).promise();
 
 db.on('connection', (connection) => {

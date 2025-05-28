@@ -1,27 +1,28 @@
+import fs from 'fs';
+import path from 'path';
 import mysql from 'mysql2';
 
 require('dotenv').config();
 
+const caPath = path.resolve(__dirname, '../../certs/DigiCertGlobalRootCA.pem');
+
+console.log("Ruta del certificado:", caPath);
+console.log("Existe el archivo:", fs.existsSync(caPath));
+
 
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    connectionLimit: 50,  // Aumentado para manejar más conexiones simultáneas.
-    queueLimit: 100,      // Limitar las conexiones en espera.
-  });
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD, // ❗ cuidado que tenías mal escrito esto antes (usabas `process.env.password`)
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT) || 3306,
+  ssl: {
+    ca: fs.readFileSync(caPath)
+  }
+}).promise();
 
 db.on('connection', (connection) => {
-    console.log(`Nueva conexión a la base de datos: ${connection.threadId}`);
+  console.log(`Nueva conexión a la base de datos: ${connection.threadId}`);
 });
 
-// Opcional: Manejo de errores
-db.on('error', (err) => {
-    console.error(`Error en la conexión: ${err}`);
-    // Aquí puedes agregar una lógica de reconexión, si es necesario.
-});
-
-export default db.promise();
-
-
+export default db;

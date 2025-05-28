@@ -59,9 +59,7 @@ class admin {
     }
 
     static async añadirTransporte(trans: Transporte) {
-        const sql = `inser into transporte(tipo,empresa,origen,destino,fecha_salida,
-        duracion,precio,capacidad,clase)
-        values(?,?,?,?,?,?,?,?,?)`;
+        const sql = `insert into transporte(tipo,empresa,origen,destino,fecha_salida,duracion,precio,capacidad,clase)values(?,?,?,?,?,?,?,?,?)`;
 
         const values = [
             trans.tipo,
@@ -79,7 +77,7 @@ class admin {
     }
 
     static async añadirHabitacion(habit: Habitacion) {
-        const sql = `call agregar_habitacion_hotel(?,?,?,?,?)`
+        const sql = `call agregar_habitacion_hotel(?,?,?,?)`
         const values = [
             habit.tipo,
             habit.numero,

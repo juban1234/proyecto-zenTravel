@@ -11,7 +11,7 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT) || 3306,
   ssl: {
-    ca: fs.readFileSync(path.resolve(__dirname, '../../certs/DigiCertGlobalRootCA.pem'))
+    ca: fs.readFileSync(path.resolve(__dirname, './certs/DigiCertGlobalRootCA.pem'))
   }
 }).promise();
 

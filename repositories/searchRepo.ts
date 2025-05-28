@@ -3,9 +3,8 @@ import db from '../configs/config';
 class searchRepo {
 
     static async buscarDestino() {
-        const query = `SELECT * FROM Destinos`;
+        const query = `SELECT * FROM DESTINOS`;
         const [rows]: any = await db.execute(query);
-
         return rows[0];
     }
 

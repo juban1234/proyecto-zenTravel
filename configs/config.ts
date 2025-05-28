@@ -4,7 +4,7 @@ import mysql from 'mysql2';
 
 require('dotenv').config();
 
-const caPath = path.resolve(__dirname, '../../certs/DigiCertGlobalRootCA.pem');
+const caPath = path.resolve(__dirname, '../certs/DigiCertGlobalRootCA.pem');
 
 console.log("Ruta del certificado:", caPath);
 console.log("Existe el archivo:", fs.existsSync(caPath));

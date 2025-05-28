@@ -5,7 +5,6 @@ import { createDestino , createHabitacion, createHotel, createTransporte } from 
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
 import { validatorParams } from "../middleware/register-validator";
 
-
 const router = express.Router();
 
 // control de usuarios del sistema

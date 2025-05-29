@@ -5,7 +5,7 @@ class searchRepo {
     static async buscarDestino() {
         const query = `SELECT * FROM DESTINOS`;
         const [rows]: any = await db.execute(query);
-        return rows[0];
+        return rows;
     }
 
     static async buscarHotelPorNombre(ha: String) {
@@ -17,7 +17,7 @@ class searchRepo {
     static async buscartransportePorNombre() {
         const sql = 'SELECT * FROM Transporte';
         const [rows]: any = await db.execute(sql);
-        return rows[0];
+        return rows;
     }
 
 }

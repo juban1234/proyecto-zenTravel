@@ -1,6 +1,6 @@
 import { Request, Response } from "express";    
 import searchRepo from "../../repositories/searchRepo";
-import { Result } from "express-validator";
+
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -54,7 +54,7 @@ export const buscar_habitacion = async(req: Request, res: Response) => {
     try {
         const result = await searchRepo.traerHabitaciones(nombreHotel);
 
-        if (result) {
+        if (!result) {
             return res.status(404).json({ message: "No se encontró ningúna habitacion de hotel ." });
         }
 

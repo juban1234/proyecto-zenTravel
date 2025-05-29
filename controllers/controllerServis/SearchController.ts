@@ -1,5 +1,6 @@
 import { Request, Response } from "express";    
 import searchRepo from "../../repositories/searchRepo";
+import { Result } from "express-validator";
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -13,17 +14,16 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
 
 export const SearchHotelByName = async (req: Request, res: Response) => {
     
-    const nombre = req.params.nombre;
 
     try {
-        const hoteles = await searchRepo.buscarHotelPorNombre(nombre);
+        const hoteles = await searchRepo.buscarHotelPorNombre();
 
         if (!hoteles) {
             return res.status(404).json({ message: "No se encontró ningúna habitacion de hotel ." });
         }
 
         return res.status(200).json({
-            status: `habitaciones encontradas del hotel: ${nombre}`,
+            status: `hoteles encontrados`,
             hoteles
         });
     } catch (error) {
@@ -48,6 +48,26 @@ export const SearchTransporteByName = async (req: Request, res: Response) => {
     }
 };
 
+export const buscar_habitacion = async(req: Request, res: Response) => {
+    const nombreHotel = req.params.hotel;
+
+    try {
+        const result = await searchRepo.traerHabitaciones(nombreHotel);
+
+        if (result) {
+            return res.status(404).json({ message: "No se encontró ningúna habitacion de hotel ." });
+        }
+
+        return res.status(200).json({
+            status: `habitaciones del hotel: ${nombreHotel} encontrados`,
+            result
+        });
+
+    } catch (error) {
+        console.error("Error al buscar habitacionel del hotel: ", error);
+        return res.status(500).json({ error: "Error del servidor al momento de buscar habitaciones de hotel." });
+    }
+}
 
 
 

@@ -4,7 +4,7 @@ import Package from '../Dto/Paquete';
 class Paquetes {
 
     static async createPackage(p: Package,id_usuario:number) {
-        const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`;
 
         const values = [
             id_usuario,

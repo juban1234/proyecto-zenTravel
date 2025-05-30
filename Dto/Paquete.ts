@@ -1,8 +1,6 @@
 class Package {
-  private _id_paquete:number
   private _nombrePaquete: string
   private _descripcion: string
-  private _precioTotal: number
   private _imagenUrl: string
   private _duracionDias: number
   private _fechaInicioDisponible: Date
@@ -18,7 +16,6 @@ class Package {
   private _updated_at?: Date
 
   constructor(
-    id_paquete: number,
     nombrePaquete: string,
     descripcion: string,
     imagenUrl: string,
@@ -32,12 +29,9 @@ class Package {
     categoria: string,
     incluye: string,
     noIncluye: string,
-    precioTotal?: number,
   ) {
-    this._id_paquete = id_paquete
     this._nombrePaquete = nombrePaquete
     this._descripcion = descripcion
-    this._precioTotal = precioTotal || 0
     this._imagenUrl = imagenUrl
     this._duracionDias = duracionDias
     this._fechaInicioDisponible = fechaInicioDisponible
@@ -60,9 +54,6 @@ class Package {
     return this._descripcion
   }
 
-  get precioTotal(): number {
-    return this._precioTotal
-  }
 
   get imagenUrl(): string {
     return this._imagenUrl
@@ -116,20 +107,12 @@ class Package {
     return this._updated_at
   }
 
-  set id_paquete(value:number){
-    this._id_paquete = value
-  }
-
   set nombrePaquete(value: string) {
     this._nombrePaquete = value
   }
 
   set descripcion(value: string) {
     this._descripcion = value
-  }
-
-  set precioTotal(value: number) {
-    this._precioTotal = value
   }
 
   set imagenUrl(value: string) {

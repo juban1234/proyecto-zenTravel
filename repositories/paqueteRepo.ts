@@ -4,7 +4,7 @@ import Package from '../Dto/Paquete';
 class Paquetes {
 
     static async createPackage(p: Package,id_usuario:number) {
-        const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`;
+        const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?,?,?)`;
 
         const values = [
             id_usuario,
@@ -13,6 +13,7 @@ class Paquetes {
             p.imagenUrl,
             p.duracionDias,
             p.fechaInicioDisponible,
+            p.fechaFinDisponible,
             p.descuento,
             p.nombreHotel,
             p.nombreTransporte,
@@ -59,7 +60,7 @@ class Paquetes {
         return rows [0]
     }
 
-    static async actualizar_package(P: Package){
+    static async actualizar_package(P: Package, id_usuario: number){
             // Construir query de actualización dinámicamente
         const updates: string[] = []
         const values: any[] = []
@@ -112,10 +113,6 @@ class Paquetes {
         updates.push("noIncluye = ?")
         values.push(Array.isArray(P.noIncluye) ? P.noIncluye.join(", ") : P.noIncluye)
         }
-        if (P.precioTotal !== undefined) {
-        updates.push("precioTotal = ?")
-        values.push(Number(P.precioTotal))
-        }
 
         if (updates.length === 0) {
             return "no se a actualizado ningun campo"
@@ -123,7 +120,7 @@ class Paquetes {
 
         // Agregar timestamp de actualización
         updates.push("updated_at = CURRENT_TIMESTAMP")
-        values.push(P.id_paquete) // Para el WHERE
+        values.push(id_usuario) // Para el WHERE
 
         const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`
 

@@ -14,20 +14,19 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         console.log("ID de usuario autenticado:", id_usuario);
 
         const {
-            id_paquete,
             nombrePaquete,
             descripcion,
             imagenUrl,
             duracionDias,
             fechaInicioDisponible,
+            fechaFinDisponible,
             descuento,
             nombreHotel,
             nombreTransporte,
             nombreDestino,
             categoria,
             incluye,
-            noIncluye,
-            precioTotal
+            noIncluye
         } = req.body
 
         if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
@@ -36,20 +35,19 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
 
 
     const dto = new Package (
-      id_paquete,
       nombrePaquete,
       descripcion,
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
+      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,
       nombreDestino,
       categoria,
       incluye,
-      noIncluye,
-      precioTotal
+      noIncluye
     )
 
         const resultado = await Paquetes.createPackage(dto,id_usuario);
@@ -132,32 +130,31 @@ export const actualizarPaquete = async (req: Request, res: Response) => {
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
+      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,
       nombreDestino,
       categoria,
       incluye,
-      noIncluye,
-      precioTotal
-    } = req.body
+      noIncluye
+      } = req.body
 
     const dto = new Package (
-      id_paquete,
       nombrePaquete,
       descripcion,
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
+      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,
       nombreDestino,
       categoria,
       incluye,
-      noIncluye,
-      precioTotal
-    )
+      noIncluye
+      )
 
 
     if (!id_paquete || isNaN(Number(id_paquete))) {
@@ -168,7 +165,7 @@ export const actualizarPaquete = async (req: Request, res: Response) => {
     }
 
 
-    const result = await Paquetes.actualizar_package(dto)
+    const result = await Paquetes.actualizar_package(dto,id_paquete)
 
     return res.status(200).json({
       success: true,

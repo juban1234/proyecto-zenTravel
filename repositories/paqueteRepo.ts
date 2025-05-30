@@ -120,11 +120,13 @@ class Paquetes {
 
                 // Agregar timestamp de actualización
         updates.push("updated_at = CURRENT_TIMESTAMP")
-        values.push(id_usuario) // Para el WHERE
+         // Para el WHERE
 
         const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`
 
-        const [rows]: any = await db.execute(sql)
+        const paquete = id_usuario;
+
+        const [rows]: any = await db.execute(sql,paquete)
 
         return rows
     }

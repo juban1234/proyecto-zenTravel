@@ -22,6 +22,9 @@ class Paquetes {
             p.noIncluye?? null
         ];
 
+        console.log("valores para enviados",values);
+        
+
         try {
             const [result]: any = await db.execute(sql, values);
             return result;

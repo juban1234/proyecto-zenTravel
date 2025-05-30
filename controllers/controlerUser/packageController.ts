@@ -156,15 +156,6 @@ export const actualizarPaquete = async (req: Request, res: Response) => {
       noIncluye
       )
 
-
-    if (!id_paquete || isNaN(Number(id_paquete))) {
-      return res.status(400).json({
-        success: false,
-        message: "ID de paquete inválido",
-      })
-    }
-
-
     const result = await Paquetes.actualizar_package(dto,id_paquete)
 
     return res.status(200).json({

@@ -100,7 +100,7 @@ export const listarPaquetes = async(req: Request, res: Response) => {
 }
 
 export const traerPaquetes_usuario = async(req: Request, res: Response) => {
-    const id_usuario = (req as any).user ;
+    const id_usuario = (req as any).user.id ;
 
     if (!id_usuario) {
         return res.status(400).json({ status: `usuario no encontrado` })

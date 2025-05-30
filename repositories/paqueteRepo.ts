@@ -16,7 +16,7 @@ class Paquetes {
             p.descuento,
             p.nombreHotel,
             p.nombreTransporte,
-            p.nombreDestino?? null,
+            p.nombreDestino,
             p.categoria?? null,
             p.incluye?? null,
             p.noIncluye?? null

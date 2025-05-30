@@ -118,13 +118,11 @@ class Paquetes {
             return "no se a actualizado ningun campo"
         }
 
-        const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`
-
-        // Agregar timestamp de actualización
+                // Agregar timestamp de actualización
         updates.push("updated_at = CURRENT_TIMESTAMP")
         values.push(id_usuario) // Para el WHERE
 
-        
+        const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`
 
         const [rows]: any = await db.execute(sql)
 

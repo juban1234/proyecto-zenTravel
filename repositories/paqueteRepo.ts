@@ -51,7 +51,9 @@ class Paquetes {
                 duracionDias
                 from paquete where id_usuario = ?;
         `;
-        return await db.execute(sql,[id_paquete])
+
+        const [rows]: any = await db.execute(sql,[id_paquete])
+        return rows;
     }
 
     static async traerPaquetes(){
@@ -118,10 +120,10 @@ class Paquetes {
     }
 
     updates.push("updated_at = CURRENT_TIMESTAMP");
-    values.push(id_usuario); // 👈 se agrega al final
+    values.push(id_usuario); 
 
     const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`;
-    const [rows]: any = await db.execute(sql, values); // 👈 pasar array
+    const [rows]: any = await db.execute(sql, values);
 
     return rows;
 }

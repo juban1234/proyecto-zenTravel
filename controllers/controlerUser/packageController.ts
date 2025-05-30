@@ -123,8 +123,10 @@ export const traerPaquetes_usuario = async(req: Request, res: Response) => {
 
 export const actualizarPaquete = async (req: Request, res: Response) => {
   try {
+
+    const id_paquete = Number(req.params.id)
+
     const {
-      id_paquete,
       nombrePaquete,
       descripcion,
       imagenUrl,

@@ -43,13 +43,7 @@ class Paquetes {
 
     static async traerPaquetes_usuario(id_paquete: number){
         const sql = `
-        	select
-                nombrePaquete,
-                descripcion,
-                precioTotal,
-                fechaInicio,
-                duracionDias
-                from paquete where id_usuario = ?;
+        	select * from paquete where id_usuario = ?;
         `;
 
         const [rows]: any = await db.execute(sql,[id_paquete])

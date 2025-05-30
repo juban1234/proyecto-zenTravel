@@ -1,6 +1,6 @@
 import express from "express";
 import { buscar ,SearchHotelByName,SearchTransporteByName,buscar_habitacion} from "../controllers/controllerServis/SearchController";
-import { createPackage ,valuePackage,listarPaquetes, traerPaquetes_usuario} from "../controllers/controlerUser/packageController";
+import { createPackage ,valuePackage,listarPaquetes, traerPaquetes_usuario, actualizarPaquete} from "../controllers/controlerUser/packageController";
 import verifyToken from "../middleware/verifyToken";
 import { verificarRol } from "../middleware/validatorRol";
 
@@ -14,5 +14,14 @@ router.post('/create',verifyToken,verificarRol('cliente','admin','vendedor'),cre
 router.get('/paquetes',listarPaquetes)
 router.get('/paquete',verifyToken,traerPaquetes_usuario)
 router.post('/calcularPrecio',valuePackage)
+
+// 📦 Rutas públicas para paquetes
+router.get("/paquetes", listarPaquetes) // Listar todos los paquetes
+
+// 📦 Rutas protegidas para paquetes (requieren autenticación)
+router.post("/paquetes",verificarRol("cliente", "admin", "vendedor"), verifyToken, createPackage) // Crear paquete
+router.post("/paquetes/calcular", verifyToken, verificarRol("cliente", "admin", "vendedor"), valuePackage) // Calcular precio
+router.get("/paquetes/usuario", verifyToken, traerPaquetes_usuario) // Listar paquetes por usuario
+router.put("/paquetes/:id", verificarRol("cliente", "admin", "vendedor") ,verifyToken, actualizarPaquete) // Actualizar paquete
 
 export default router;

@@ -24,7 +24,7 @@ app.use('/api/payments', paymentRoutes);
 app.post('/Preguntar', PreguntarAI);
 app.use('/admin',admin)
 
-const PORT = process.env.DB_PORT || 3306;
+const PORT = process.env.DB_PORT || 10101;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

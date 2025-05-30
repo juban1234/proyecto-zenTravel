@@ -13,8 +13,8 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         
         console.log("ID de usuario autenticado:", id_usuario);
 
-   
         const {
+            id_paquete,
             nombrePaquete,
             descripcion,
             imagenUrl,
@@ -23,27 +23,34 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             descuento,
             nombreHotel,
             nombreTransporte,
-            nombreDestino
-        } = req.body;
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye,
+            precioTotal
+        } = req.body
 
         if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
 
-        const dto = new Package(
-            id_usuario,
-           nombrePaquete,
-           descripcion,
-           imagenUrl,
-           duracionDias,
-           fechaInicioDisponible,
-           descuento,
-           nombreHotel,
-           nombreTransporte,
-           nombreDestino
-        
-        );
+    const dto = new Package (
+      id_paquete,
+      nombrePaquete,
+      descripcion,
+      imagenUrl,
+      duracionDias,
+      fechaInicioDisponible,
+      descuento,
+      nombreHotel,
+      nombreTransporte,
+      nombreDestino,
+      categoria,
+      incluye,
+      noIncluye,
+      precioTotal
+    )
 
         const resultado = await Paquetes.createPackage(dto,id_usuario);
 
@@ -116,7 +123,64 @@ export const traerPaquetes_usuario = async(req: Request, res: Response) => {
    
 }
 
-export const actualizarPaquete = async(req: Request, res: Response) => {
-    
+export const actualizarPaquete = async (req: Request, res: Response) => {
+  try {
+    const {
+      id_paquete,
+      nombrePaquete,
+      descripcion,
+      imagenUrl,
+      duracionDias,
+      fechaInicioDisponible,
+      descuento,
+      nombreHotel,
+      nombreTransporte,
+      nombreDestino,
+      categoria,
+      incluye,
+      noIncluye,
+      precioTotal
+    } = req.body
+
+    const dto = new Package (
+      id_paquete,
+      nombrePaquete,
+      descripcion,
+      imagenUrl,
+      duracionDias,
+      fechaInicioDisponible,
+      descuento,
+      nombreHotel,
+      nombreTransporte,
+      nombreDestino,
+      categoria,
+      incluye,
+      noIncluye,
+      precioTotal
+    )
+
+
+    if (!id_paquete || isNaN(Number(id_paquete))) {
+      return res.status(400).json({
+        success: false,
+        message: "ID de paquete inválido",
+      })
+    }
+
+
+    const result = await Paquetes.actualizar_package(dto)
+
+    return res.status(200).json({
+      success: true,
+      message: "Paquete actualizado exitosamente",
+      result
+    })
+  } catch (error: any) {
+    console.error("❌ Error al actualizar paquete:", error)
+    return res.status(500).json({
+      success: false,
+      message: "Error al actualizar el paquete"
+    })
+  }
 }
 

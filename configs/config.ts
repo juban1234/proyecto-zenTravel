@@ -13,7 +13,6 @@ const db = mysql.createPool({
   ssl: {
     ca: fs.readFileSync(path.resolve(__dirname, '../../certs/DigiCertGlobalRootCA.crt.pem'))
   },
-  multipleStatements: true
 
 }).promise();
 

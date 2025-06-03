@@ -5,8 +5,7 @@ class Paquetes {
 
 static async createPackage(p: Package, id_usuario: number) {
     const sql = `
-        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @id_paquete);
-        SELECT @id_paquete AS id;
+        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
     const values = [
@@ -27,8 +26,7 @@ static async createPackage(p: Package, id_usuario: number) {
 
     try {
         const [resultSets]: any = await db.query(sql, values);
-        const id_paquete = resultSets[1][0].id;
-        return id_paquete;
+        return resultSets;
     } catch (error) {
         console.error("❌ Error al crear paquete:", error);
         throw error;

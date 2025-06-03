@@ -4,10 +4,7 @@ import Package from '../Dto/Paquete';
 class Paquetes {
 
 static async createPackage(p: Package, id_usuario: number) {
-    const sql = `
-        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-    `;
-
+   const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [
         id_usuario,
         p.nombrePaquete,
@@ -24,13 +21,10 @@ static async createPackage(p: Package, id_usuario: number) {
         p.noIncluye ?? null
     ];
 
-    try {
-        const [resultSets]: any = await db.query(sql, values);
-        return resultSets;
-    } catch (error) {
-        console.error("❌ Error al crear paquete:", error);
-        throw error;
-    }
+    const [rows]: any = await db.execute(sql, values);
+    const id_paquete = rows[0][0].id_paquete;
+    return id_paquete;
+
 }
 
 

@@ -33,6 +33,9 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
+        const incluyeStr = JSON.stringify(incluye ?? []);
+        const noIncluyeStr = JSON.stringify(noIncluye ?? []);
+
 
     const dto = new Package (
       nombrePaquete,
@@ -46,8 +49,8 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
       nombreTransporte,
       nombreDestino,
       categoria,
-      incluye,
-      noIncluye
+      incluyeStr,
+      noIncluyeStr
     )
 
     const resultado = await Paquetes.createPackage(dto, id_usuario);
@@ -56,7 +59,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         status: "Paquete creado con éxito", 
         idPaquete: resultado 
     });
-    
+
     } catch (error: any) {
         console.error("Error al crear el paquete:", error.message || error);
         return res.status(500).json({ error: "Error en el servidor" });

@@ -4,7 +4,11 @@ import Package from '../Dto/Paquete';
 class Paquetes {
 
 static async createPackage(p: Package, id_usuario: number) {
-   const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const incluyeStr = JSON.stringify(p.incluye ?? []);
+    const noIncluyeStr = JSON.stringify(p.noIncluye ?? []);
+
+   const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [
         id_usuario,
         p.nombrePaquete,
@@ -17,8 +21,8 @@ static async createPackage(p: Package, id_usuario: number) {
         p.nombreTransporte,
         p.nombreDestino,
         p.categoria ?? null,
-        p.incluye ?? null,
-        p.noIncluye ?? null
+        incluyeStr,
+        noIncluyeStr ?? null
     ];
 
     const [rows]: any = await db.execute(sql, values);

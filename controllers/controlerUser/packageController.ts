@@ -11,8 +11,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             return res.status(401).json({ error: "Usuario no autenticado" });
         }
         
-        console.log("ID de usuario autenticado:", id_usuario);
-
         const {
             nombrePaquete,
             descripcion,
@@ -33,10 +31,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 
-        const incluyeStr = JSON.stringify(incluye ?? []);
-        const noIncluyeStr = JSON.stringify(noIncluye ?? []);
-
-
     const dto = new Package (
       nombrePaquete,
       descripcion,
@@ -49,8 +43,8 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
       nombreTransporte,
       nombreDestino,
       categoria,
-      incluyeStr,
-      noIncluyeStr
+      incluye,
+      noIncluye
     )
 
     const resultado = await Paquetes.createPackage(dto, id_usuario);

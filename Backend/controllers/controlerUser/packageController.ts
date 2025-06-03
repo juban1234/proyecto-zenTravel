@@ -1,74 +1,126 @@
 import { Request, Response } from "express";
 import Package from "../../Dto/Paquete";
 import usuarioRepo from "../../repositories/usuarioRepo";
+import cloudinary from '../../configs/cloudinary';
+import upload from '../../configs/multer';
+import fs from 'fs';
+import { promisify } from 'util';
 
+const uploadSingle = promisify(upload.single('imagen'));
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
-
     try {
-      
-        console.log("📩 Datos recibidos:", req.body);
+        await uploadSingle(req, res);
 
-      
-        const id_usuario = (req as any).user.id;
-
+        const id_usuario = (req as any).user?.id;
         if (!id_usuario) {
-            return res.status(401).json({ error: "Usuario no autenticado" });
+            return res.status(401).json({ error: 'Usuario no autenticado' });
         }
-        
-        console.log("ID de usuario autenticado:", id_usuario);
 
         const {
             nombrePaquete,
             descripcion,
-            imagenUrl,
             duracionDias,
             fechaInicioDisponible,
             descuento,
             nombreHotel,
             nombreTransporte,
-            nombreDestino
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
         } = req.body;
 
-        console.log("Datos de Paquete:", {
+        if (!req.file) {
+            return res.status(400).json({ error: 'La imagen es requerida' });
+        }
+
+        const resultado = await cloudinary.uploader.upload(req.file.path);
+        const imagenUrl = resultado.secure_url;
+        fs.unlinkSync(req.file.path);
+
+        const campos = {
             nombrePaquete,
             descripcion,
-            imagenUrl,
             duracionDias,
             fechaInicioDisponible,
             descuento,
             nombreHotel,
             nombreTransporte,
-            nombreDestino
-        });
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
+        };
 
-        if (!nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible  || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino) {
-            return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
+        for (const [campo, valor] of Object.entries(campos)) {
+            if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+                return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
+            }
         }
 
+        const duracion = parseInt(duracionDias);
+        const desc = parseFloat(descuento);
         const fechaInicio = new Date(fechaInicioDisponible);
 
-        const newPackage = new Package(
-            id_usuario,                     
+
+        if (isNaN(duracion) || duracion <= 0) {
+            return res.status(400).json({ error: 'duracionDias debe ser un número entero positivo' });
+        }
+
+        if (isNaN(desc) || desc < 0 || desc > 100) {
+            return res.status(400).json({ error: 'descuento debe ser un número entre 0 y 100' });
+        }
+
+        if (isNaN(fechaInicio.getTime())) {
+            return res.status(400).json({ error: 'fechaInicioDisponible no es una fecha válida' });
+        }
+
+
+        const dto = new Package(
             nombrePaquete,
             descripcion,
             imagenUrl,
-            duracionDias,
+            duracion,
             fechaInicio,
-            descuento,
+            desc,
             nombreHotel,
             nombreTransporte,
-            nombreDestino
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
         );
 
-        const resultado = await usuarioRepo.createPackage(newPackage);
+        const resultadoDB = await usuarioRepo.createPackage(dto, id_usuario);
 
-        console.log("✅ Reserva creada con éxito ", resultado);
-        return res.status(201).json({ status: "paquete creado con éxito" });
-    } catch (error: any) {
-        console.error("Error al crear el paquete:", error.message || error);
-        return res.status(500).json({ error: "Error en el servidor" });
-    }
+        const paqueteCreado = {
+            idPaquete: resultadoDB.insertId || resultadoDB.id_paquete || null,
+            id_usuario,
+            nombrePaquete,
+            descripcion,
+            imagenUrl,
+            duracionDias: duracion,
+            fechaInicioDisponible: fechaInicio,
+            descuento: desc,
+            nombreHotel,
+            nombreTransporte,
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
+        };
+
+        return res.status(201).json({
+            status: 'Paquete creado con éxito',
+            data: paqueteCreado
+        });
+
+   } catch (error: any) {
+    console.error('❌ Error al crear el paquete:', error.message || error);
+    return res.status(500).json({ error: error.message || 'Error en el servidor' });
+}
+
 };
 
 export const valuePackage = async (req: Request, res: Response) => {

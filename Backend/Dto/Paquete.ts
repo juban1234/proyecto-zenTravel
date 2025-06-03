@@ -1,5 +1,4 @@
 class Package {
-
     private _id_usuario: number;
     private _nombrePaquete: string;
     private _descripcion: string;
@@ -10,9 +9,11 @@ class Package {
     private _nombreHotel: string;
     private _nombreTransporte: string;
     private _nombreDestino: string;
+    private _categoria: string;
+    private _incluye: string;
+    private _noIncluye: string;
 
     constructor(
-        id_usuario: number,
         nombrePaquete: string,
         descripcion: string,
         imagenUrl: string,
@@ -21,9 +22,13 @@ class Package {
         descuento: number,
         nombreHotel: string,
         nombreTransporte: string,
-        nombreDestino: string
+        nombreDestino: string,
+        categoria: string,
+        incluye: string,
+        noIncluye: string
     ) {
-        this._id_usuario = id_usuario;
+        // id_usuario se inyectará aparte
+        this._id_usuario = 0;
         this._nombrePaquete = nombrePaquete;
         this._descripcion = descripcion;
         this._imagenUrl = imagenUrl;
@@ -33,15 +38,15 @@ class Package {
         this._nombreHotel = nombreHotel;
         this._nombreTransporte = nombreTransporte;
         this._nombreDestino = nombreDestino;
+        this._categoria = categoria;
+        this._incluye = incluye;
+        this._noIncluye = noIncluye;
     }
 
-    // Getters and Setters for id_usuario
+    // Getters
     get id_usuario(): number {
         return this._id_usuario;
     }
-   
-
-    // Getters
 
     get nombrePaquete(): string {
         return this._nombrePaquete;
@@ -63,7 +68,6 @@ class Package {
         return this._fechaInicioDisponible;
     }
 
-
     get descuento(): number {
         return this._descuento;
     }
@@ -80,48 +84,73 @@ class Package {
         return this._nombreDestino;
     }
 
+    get categoria(): string {
+        return this._categoria;
+    }
+
+    get incluye(): string {
+        return this._incluye;
+    }
+
+    get noIncluye(): string {
+        return this._noIncluye;
+    }
+
     // Setters
-    set id_usuario(id_usuario: number) {
-        this._id_usuario = id_usuario;
+    set id_usuario(id: number) {
+        this._id_usuario = id;
     }
 
-    set nombrePaquete(nombrePaquete: string) {
-        this._nombrePaquete = nombrePaquete;
+    set nombrePaquete(valor: string) {
+        this._nombrePaquete = valor;
     }
 
-    set descripcion(descripcion: string) {
-        this._descripcion = descripcion;
+    set descripcion(valor: string) {
+        this._descripcion = valor;
+    }
+
+    set imagenUrl(valor: string) {
+        this._imagenUrl = valor;
+    }
+
+    set duracionDias(valor: number) {
+        this._duracionDias = valor;
+    }
+
+    set fechaInicioDisponible(valor: Date) {
+        this._fechaInicioDisponible = valor;
     }
 
 
-    set imagenUrl(imagenUrl: string) {
-        this._imagenUrl = imagenUrl;
+    set descuento(valor: number) {
+        this._descuento = valor;
     }
 
-    set duracionDias(duracionDias: number) {
-        this._duracionDias = duracionDias;
+    set nombreHotel(valor: string) {
+        this._nombreHotel = valor;
     }
 
-    set fechaInicioDisponible(fechaInicioDisponible: Date) {
-        this._fechaInicioDisponible = fechaInicioDisponible;
+    set nombreTransporte(valor: string) {
+        this._nombreTransporte = valor;
     }
 
-
-    set descuento(descuento: number) {
-        this._descuento = descuento;
+    set nombreDestino(valor: string) {
+        this._nombreDestino = valor;
     }
 
-    set nombreHotel(nombreHotel: string) {
-        this._nombreHotel = nombreHotel;
+    set categoria(valor: string) {
+        this._categoria = valor;
     }
 
-    set nombreTransporte(nombreTransporte: string) {
-        this._nombreTransporte = nombreTransporte;
+    set incluye(valor: string) {
+        this._incluye = valor;
     }
 
-    set nombreDestino(nombreDestino: string) {
-        this._nombreDestino = nombreDestino;
+    set noIncluye(valor: string) {
+        this._noIncluye = valor;
     }
 }
 
 export default Package;
+
+

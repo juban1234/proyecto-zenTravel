@@ -7,6 +7,7 @@ import {  obtenerHistorialReservas, CancelarReserva } from "../controllers/contr
 import { createDestino, createHotel,createHabitacion, createTransporte } from "../controllers/controlerUser/insertController";
 import { SearchHabitacionesbyid } from "../controllers/controlerUser/SearchController";
 import { deletePaquete,deleteDestino,deleteHotel,deleteTransporte,deleteHabitacion } from "../controllers/controlerUser/DeleteController";
+import { Marketing } from "../controllers/controlerUser/Marketing";
 
 
 const router = express.Router();
@@ -30,5 +31,6 @@ router.delete('/deleteHotel/:id_hotel',deleteHotel);
 router.delete('/deleteTransporte/:id_transporte',deleteTransporte);
 router.delete('/deleteHabitacion/:id_habitacion',deleteHabitacion);
 router.patch('/actualizarPaquete/:id_paquete',actualizarPaquete);
+router.post('/Marketing',Marketing)
 
 export default router;

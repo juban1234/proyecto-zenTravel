@@ -14,6 +14,7 @@ import { HabitacionDTO } from '../Dto/HabitacionDTO';
 import { TransporteDTO } from '../Dto/TransporteDTO';
 import { console } from 'inspector';
 
+
 class usuarioRepo {
 
   static async createUsuario( usuario:Usuario){
@@ -142,31 +143,38 @@ static async buscartransportePorNombre(nombre: string) {
 }
 
 
-static async createPackage(paquete: Package) { 
-  const sql = `
-      CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-  const values = [
-      paquete.id_usuario,
-      paquete.nombrePaquete,           
-      paquete.descripcion,                        
-      paquete.imagenUrl,              
-      paquete.duracionDias,          
-      paquete.fechaInicioDisponible, 
-      paquete.descuento,               
-      paquete.nombreHotel,             
-      paquete.nombreTransporte,       
-      paquete.nombreDestino
-  ];
-  
-  try {
-      const [result]: any = await db.execute(sql, values);
-      return result;  
-  } catch (error) {
-      console.error("Error al crear paquete:", error);
-      throw error;  
+static async createPackage(paquete: Package, id_usuario: number) {
+    const sql = `
+        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+        id_usuario,
+        paquete.nombrePaquete,
+        paquete.descripcion,
+        paquete.imagenUrl,
+        paquete.duracionDias,
+        paquete.fechaInicioDisponible,
+        paquete.descuento,
+        paquete.nombreHotel,
+        paquete.nombreTransporte,
+        paquete.nombreDestino,
+        paquete.categoria,
+        paquete.incluye,
+        paquete.noIncluye
+    ];
+
+    console.log("📦 Enviando a la base de datos:", values);
+
+    try {
+        const [result]: any = await db.execute(sql, values);
+        return result;
+    } catch (error) {
+        console.error("❌ Error al crear paquete:", error);
+        throw new Error("No se pudo crear el paquete en la base de datos");
     }
-  }
+}
+
+
 
   static async createSupportRequest(solicitud: SupportRequestDTO) {
     const sql = `
@@ -437,7 +445,31 @@ static async actualizarPaquete(paquete: any) {
         throw error;
     }
 }
+
+static async createMarketing(data: { nombre: string; email: string; mensaje: string }) {
+    const { nombre, email, mensaje } = data;
+    const query = `
+        INSERT INTO marketing (nombre, email, mensaje)
+        VALUES (?, ?, ?)
+    `;
+    const values = [nombre, email, mensaje];
+
+    try {
+        const [result]: any = await db.execute(query, values);
+        console.log("Resultado de la inserción:", result);
+        return { id: result.insertId, nombre, email, mensaje };
+    } catch (error: any) {
+        console.error("Error al intentar guardar los datos:", error);
+        
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new Error("Ya existe una suscripción con este email");
+        }
+    
+        throw new Error(error.message || "No se pudo guardar la suscripción");
+    }
 }
 
+
+}
 export default usuarioRepo;
 

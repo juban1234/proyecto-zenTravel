@@ -50,10 +50,13 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
       noIncluye
     )
 
-        const resultado = await Paquetes.createPackage(dto,id_usuario);
+    const resultado = await Paquetes.createPackage(dto, id_usuario);
 
-        console.log("✅ Reserva creada con éxito ", resultado);
-        return res.status(201).json({ status: "paquete creado con éxito" });
+    return res.status(201).json({ 
+        status: "Paquete creado con éxito", 
+        idPaquete: resultado 
+    });
+    
     } catch (error: any) {
         console.error("Error al crear el paquete:", error.message || error);
         return res.status(500).json({ error: "Error en el servidor" });

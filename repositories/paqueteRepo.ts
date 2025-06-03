@@ -3,36 +3,38 @@ import Package from '../Dto/Paquete';
 
 class Paquetes {
 
-    static async createPackage(p: Package,id_usuario:number) {
-        const sql = `CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?,?)`;
+static async createPackage(p: Package, id_usuario: number) {
+    const sql = `
+        CALL crear_paquete_con_nombres(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @id_paquete);
+        SELECT @id_paquete AS id;
+    `;
 
-        const values = [
-            id_usuario,
-            p.nombrePaquete,
-            p.descripcion,
-            p.imagenUrl,
-            p.duracionDias,
-            p.fechaInicioDisponible,
-            p.descuento,
-            p.nombreHotel,
-            p.nombreTransporte,
-            p.nombreDestino,
-            p.categoria?? null,
-            p.incluye?? null,
-            p.noIncluye?? null
-        ];
+    const values = [
+        id_usuario,
+        p.nombrePaquete,
+        p.descripcion,
+        p.imagenUrl,
+        p.duracionDias,
+        p.fechaInicioDisponible,
+        p.descuento,
+        p.nombreHotel,
+        p.nombreTransporte,
+        p.nombreDestino,
+        p.categoria ?? null,
+        p.incluye ?? null,
+        p.noIncluye ?? null
+    ];
 
-        console.log("valores para enviados",values);
-        
-
-        try {
-            const [result]: any = await db.execute(sql, values);
-            return result;
-        } catch (error) {
-            console.error("Error al crear paquete:", error);
-            throw error;
-        }
+    try {
+        const [resultSets]: any = await db.query(sql, values);
+        const id_paquete = resultSets[1][0].id;
+        return id_paquete;
+    } catch (error) {
+        console.error("❌ Error al crear paquete:", error);
+        throw error;
     }
+}
+
 
     static async calcularPaquete(id_paquete: number) {
         const sql = 'call calcular_precio_paquete(?)';

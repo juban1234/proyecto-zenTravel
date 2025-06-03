@@ -5,7 +5,6 @@ import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
 import { refreshToken } from "../middleware/refreshToken";
 import { customerSupport } from "../controllers/controlerUser/customerSupport";
-import { verificarRol } from "../middleware/validatorRol";
 
 const router = express.Router();
 

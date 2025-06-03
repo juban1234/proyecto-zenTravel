@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { queryDatabaseFirst } from '../../services/geminiServi';
 import { askGeminiWebFallback } from '../utils/gemini.api';
 
-export const handleGeminiQuery = async (req: Request, res: Response) => {
+export const PreguntarAI = async (req: Request, res: Response) => {
   const { message } = req.body;
 
   if (!message) {

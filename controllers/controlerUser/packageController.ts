@@ -29,7 +29,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             noIncluye
         } = req.body
 
-        if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !fechaFinDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino || !categoria || !incluye || !noIncluye) {
+        if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino || !categoria || !incluye || !noIncluye) {
             return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
         }
 

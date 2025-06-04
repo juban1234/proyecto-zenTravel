@@ -14,14 +14,17 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
     try {
       const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as any;
 
-      const rolUsuario = decoded.data;
+      const rolUsuario = decoded.rol;
+      const idUsuario = decoded.id;
 
-      if (!rolesPermitidos.includes(rolUsuario.rol)) {
+      if (!rolesPermitidos.includes(rolUsuario)) {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
       }
 
-      (req as any).user = rolUsuario.id;
-      console.log("informacion de el id del usuario",decoded.data);
+      // Guardar info del usuario en la request
+      (req as any).user = { id: idUsuario, rol: rolUsuario };
+
+      console.log("Token decodificado:", decoded);
       
       next();
     } catch (error) {

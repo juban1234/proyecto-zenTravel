@@ -4,8 +4,6 @@ import jwt from 'jsonwebtoken';
 export const verificarRol = (...rolesPermitidos: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
-    
 
     if (!authHeader) {
       return res.status(401).json({ error: 'Token no proporcionado' });
@@ -14,17 +12,19 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as { id: number; rol: string };
+      const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as any;
 
-      console.log("rol: ",decoded.rol );
-      
+      const rolUsuario = decoded.data;
 
-      if (!rolesPermitidos.includes(decoded.rol)) {
+      if (!rolesPermitidos.includes(rolUsuario.rol)) {
+        console.log(rolUsuario);
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
+        
       }
 
-      (req as any).user = decoded.id;
-      console.log("✅ Token decodificado:", decoded);
+
+      (req as any).user = rolUsuario; // ✅ guardamos el objeto con id y rol
+      console.log("✅ Token decodificado:", rolUsuario);
 
       next();
     } catch (error) {

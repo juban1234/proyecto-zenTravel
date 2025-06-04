@@ -5,7 +5,7 @@ import nodemailer from "nodemailer";
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const id_usuario = (req as any).user;
+        const id_usuario = (req as any).user?.id;
 
         console.log("📩 Datos recibidos:", req.body);
         

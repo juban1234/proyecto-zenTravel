@@ -48,7 +48,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
       noIncluye
     )
 
-    const resultado = await Paquetes.createPackage(dto,cantidad, id_usuario);
+    const resultado = await Paquetes.createPackage(dto, id_usuario,cantidad);
 
     return res.status(201).json({ 
         status: "Paquete creado con éxito", 

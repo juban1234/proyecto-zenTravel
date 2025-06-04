@@ -12,11 +12,11 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
     }
 };
 
-export const SearchHotelByName = async (req: Request, res: Response) => {
+export const SearchHotel = async (req: Request, res: Response) => {
     
 
     try {
-        const hoteles = await searchRepo.buscarHotelPorNombre();
+        const hoteles = await searchRepo.buscarHoteles();
 
         if (!hoteles) {
             return res.status(404).json({ message: "No se encontró ningúna habitacion de hotel ." });

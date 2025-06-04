@@ -21,7 +21,7 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
             nombrePaquete,
             descripcion,
             duracionDias,
-            fechaInicioDisponible,
+            fechaInicioDisponible,  
             descuento,
             nombreHotel,
             nombreTransporte,
@@ -75,7 +75,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         if (isNaN(fechaInicio.getTime())) {
             return res.status(400).json({ error: 'fechaInicioDisponible no es una fecha válida' });
         }
-
 
         const dto = new Package(
             nombrePaquete,

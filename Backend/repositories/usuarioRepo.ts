@@ -446,28 +446,42 @@ static async actualizarPaquete(paquete: any) {
     }
 }
 
-static async createMarketing(data: { nombre: string; email: string; mensaje: string }) {
-    const { nombre, email, mensaje } = data;
+static async createMarketing(data: {
+    nombre: string;
+    email: string;
+    mensaje: string;
+    imagenurl: string;
+}) {
+    const { nombre, email, mensaje, imagenurl } = data;
+
     const query = `
-        INSERT INTO marketing (nombre, email, mensaje)
-        VALUES (?, ?, ?)
+        INSERT INTO marketing (nombre, email, mensaje, imagen_url)
+        VALUES (?, ?, ?, ?)
     `;
-    const values = [nombre, email, mensaje];
+    const values = [nombre, email, mensaje, imagenurl];
 
     try {
         const [result]: any = await db.execute(query, values);
         console.log("Resultado de la inserción:", result);
-        return { id: result.insertId, nombre, email, mensaje };
+        return {
+            id: result.insertId,
+            nombre,
+            email,
+            mensaje,
+            imagenurl
+        };
     } catch (error: any) {
         console.error("Error al intentar guardar los datos:", error);
-        
+
         if (error.code === 'ER_DUP_ENTRY') {
             throw new Error("Ya existe una suscripción con este email");
         }
-    
+
         throw new Error(error.message || "No se pudo guardar la suscripción");
     }
 }
+
+
 
 
 }

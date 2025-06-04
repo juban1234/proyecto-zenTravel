@@ -7,9 +7,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
     try {
         const id_usuario = (req as any).user.id;
 
-        console.log("📩 Datos recibidos:", req.body);
-        
-
         if (!id_usuario) {
             return res.status(401).json({ error: "Usuario no autenticado" });
         }

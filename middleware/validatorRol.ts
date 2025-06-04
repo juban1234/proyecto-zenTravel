@@ -14,7 +14,7 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
     try {
       const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as any;
 
-      const rolUsuario = decoded.data.rol;
+      const rolUsuario = decoded.data;
 
       if (!rolesPermitidos.includes(rolUsuario)) {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });

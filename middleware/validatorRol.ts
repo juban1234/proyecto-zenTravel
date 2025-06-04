@@ -3,13 +3,11 @@ import jwt from 'jsonwebtoken';
 
 export const verificarRol = (...rolesPermitidos: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    const token = req.header('Authorization')?.split(" ")[1];
 
-    if (!authHeader) {
+    if (!token) {
       return res.status(401).json({ error: 'Token no proporcionado' });
     }
-
-    const token = authHeader.split(' ')[1];
 
     try {
       const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as any;

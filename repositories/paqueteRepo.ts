@@ -117,7 +117,7 @@ static async createPackage(p: Package, id_usuario: number) {
     const [rows]: any = await db.execute(sql, values);
 
     return rows;
-}
+    }
 
 }
 

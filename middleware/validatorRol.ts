@@ -16,7 +16,7 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
 
       const rolUsuario = decoded.data;
 
-      if (!rolesPermitidos.includes(rolUsuario)) {
+      if (!rolesPermitidos.includes(rolUsuario.rol)) {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
       }
 

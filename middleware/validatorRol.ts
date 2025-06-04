@@ -17,6 +17,8 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
       const rolUsuario = decoded.rol;
       const idUsuario = decoded.id;
 
+      console.log("Token decodificado:", idUsuario);
+
       if (!rolesPermitidos.includes(rolUsuario)) {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
       }

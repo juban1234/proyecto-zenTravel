@@ -3,29 +3,24 @@ import jwt from 'jsonwebtoken';
 
 export const verificarRol = (...rolesPermitidos: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const token = req.header('Authorization')?.split(" ")[1];
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader) {
       return res.status(401).json({ error: 'Token no proporcionado' });
     }
 
+    const token = authHeader.split(' ')[1];
+
     try {
-      const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as any;
+      const decoded = jwt.verify(token, process.env.KEY_TOKEN as string) as { id: number; rol: string };
 
-      const rolUsuario = decoded.rol;
-      const idUsuario = decoded.id;
-
-      console.log("Token decodificado:", idUsuario);
-
-      if (!rolesPermitidos.includes(rolUsuario)) {
+      if (!rolesPermitidos.includes(decoded.rol)) {
         return res.status(403).json({ error: 'Acceso denegado: rol no autorizado' });
       }
 
-      // Guardar info del usuario en la request
-      (req as any).user = { id: idUsuario, rol: rolUsuario };
+      (req as any).user = { id: decoded.id, rol: decoded.rol };
+      console.log("✅ Token decodificado:", decoded);
 
-      console.log("Token decodificado:", decoded);
-      
       next();
     } catch (error) {
       return res.status(401).json({ error: 'Token inválido o expirado' });

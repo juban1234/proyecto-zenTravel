@@ -26,9 +26,7 @@ class Paquetes {
             cantidad
         ];
 
-        console.log(values);
         
-
         const [rows]: any = await db.execute(sql, values);
         const id_paquete = rows[0][0].id_paquete;
         return id_paquete;

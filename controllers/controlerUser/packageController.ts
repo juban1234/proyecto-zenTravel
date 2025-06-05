@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Package from "../../Dto/Paquete";
 import Paquetes from "../../repositories/paqueteRepo";
 import nodemailer from "nodemailer";
-import cloudinary from '../../configs/cloudinary';
+import cloudinary from "../../configs/cloudinary"; 
 import upload from '../../configs/multer';
 import fs from 'fs';
 import { promisify } from 'util';
@@ -10,33 +10,86 @@ import { promisify } from 'util';
 const uploadSingle = promisify(upload.single('imagen'));
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
+
+    await uploadSingle(req, res);
+
     try {
-        const id_usuario = (req as any).user.id;
+    const id_usuario = (req as any).user.id;
 
-        if (!id_usuario) {
-            return res.status(401).json({ error: "Usuario no autenticado" });
-        }
-        
-        const {
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicioDisponible,
-            fechaFinDisponible,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino,
-            categoria,
-            incluye,
-            noIncluye,
-            cantidad
-        } = req.body
+    if (!id_usuario) {
+        return res.status(401).json({ error: "Usuario no autenticado" });
+    }
+    
+    const {
+        nombrePaquete,
+        descripcion,
+        duracionDias,
+        fechaInicioDisponible,
+        fechaFinDisponible,
+        descuento,
+        nombreHotel,
+        nombreTransporte,
+        nombreDestino,
+        categoria,
+        incluye,
+        noIncluye,
+        cantidad
+    } = req.body
 
-        if ( !id_usuario || !nombrePaquete || !descripcion || !imagenUrl || !duracionDias || !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || !nombreDestino || !categoria || !incluye || !noIncluye) {
-            return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
+    if ( !id_usuario || !nombrePaquete || !descripcion || !duracionDias ||
+            !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || 
+            !nombreDestino || !categoria || !incluye || !noIncluye)
+        {
+
+        return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'La imagen es requerida' });
+    }
+
+    const imagen = await cloudinary.uploader.upload(req.file.path);
+    const imagenUrl = imagen.secure_url;
+    fs.unlinkSync(req.file.path);
+
+    const campos = {
+        nombrePaquete,
+        descripcion,
+        duracionDias,
+        fechaInicioDisponible,
+        descuento,
+        nombreHotel,
+        nombreTransporte,
+        nombreDestino,
+        categoria,
+        incluye,
+        noIncluye,
+        cantidad
+    };
+
+    for (const [campo, valor] of Object.entries(campos)) {
+        if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+            return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
         }
+    }
+
+    const duracion = parseInt(duracionDias);
+    const desc = parseFloat(descuento);
+    const fechaInicio = new Date(fechaInicioDisponible);
+
+
+    if (isNaN(duracion) || duracion <= 0) {
+        return res.status(400).json({ error: 'duracionDias debe ser un número entero positivo' });
+    }
+
+    if (isNaN(desc) || desc < 0 || desc > 100) {
+        return res.status(400).json({ error: 'descuento debe ser un número entre 0 y 100' });
+    }
+
+    if (isNaN(fechaInicio.getTime())) {
+        return res.status(400).json({ error: 'fechaInicioDisponible no es una fecha válida' });
+    }
+
 
     const dto = new Package (
       nombrePaquete,

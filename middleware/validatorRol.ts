@@ -22,11 +22,7 @@ export const verificarRol = (...rolesPermitidos: string[]) => {
         
       }
 
-
-      (req as any).user = rolUsuario; // ✅ guardamos el objeto con id y rol
-      console.log("✅ Token decodificado:", rolUsuario);
-      console.log("✅ Decoded:", decoded);
-      
+      (req as any).user = rolUsuario; 
 
       next();
     } catch (error) {

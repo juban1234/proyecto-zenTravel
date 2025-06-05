@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import Package from "../../Dto/Paquete";
 import Paquetes from "../../repositories/paqueteRepo";
 import nodemailer from "nodemailer";
+import cloudinary from '../../configs/cloudinary';
+import upload from '../../configs/multer';
+import fs from 'fs';
+import { promisify } from 'util';
+
+const uploadSingle = promisify(upload.single('imagen'));
 
 export const createPackage = async (req: Request, res: Response): Promise<Response> => {
     try {

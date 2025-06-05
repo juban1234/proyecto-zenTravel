@@ -25,7 +25,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         descripcion,
         duracionDias,
         fechaInicioDisponible,
-        fechaFinDisponible,
         descuento,
         nombreHotel,
         nombreTransporte,
@@ -35,14 +34,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
         noIncluye,
         cantidad
     } = req.body
-
-    if ( !id_usuario || !nombrePaquete || !descripcion || !duracionDias ||
-            !fechaInicioDisponible || !descuento || !nombreHotel || !nombreTransporte || 
-            !nombreDestino || !categoria || !incluye || !noIncluye)
-        {
-
-        return res.status(400).json({ error: "Uno o más campos están vacíos o indefinidos" });
-    }
 
     if (!req.file) {
         return res.status(400).json({ error: 'La imagen es requerida' });
@@ -97,7 +88,6 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
-      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,
@@ -192,7 +182,6 @@ export const actualizarPaquete = async (req: Request, res: Response) => {
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
-      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,
@@ -208,7 +197,6 @@ export const actualizarPaquete = async (req: Request, res: Response) => {
       imagenUrl,
       duracionDias,
       fechaInicioDisponible,
-      fechaFinDisponible,
       descuento,
       nombreHotel,
       nombreTransporte,

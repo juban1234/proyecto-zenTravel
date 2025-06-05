@@ -4,7 +4,6 @@ class Package {
   private _imagenUrl: string
   private _duracionDias: number
   private _fechaInicioDisponible: Date
-  private _fechaFinDisponible: Date | null
   private _descuento: number
   private _nombreHotel: string
   private _nombreTransporte: string
@@ -21,7 +20,6 @@ class Package {
     imagenUrl: string,
     duracionDias: number,
     fechaInicioDisponible: Date,
-    fechaFinDisponible: Date | null,
     descuento: number,
     nombreHotel: string,
     nombreTransporte: string,
@@ -35,7 +33,6 @@ class Package {
     this._imagenUrl = imagenUrl
     this._duracionDias = duracionDias
     this._fechaInicioDisponible = fechaInicioDisponible
-    this._fechaFinDisponible = fechaFinDisponible
     this._descuento = descuento
     this._nombreHotel = nombreHotel
     this._nombreTransporte = nombreTransporte
@@ -65,10 +62,6 @@ class Package {
 
   get fechaInicioDisponible(): Date {
     return this._fechaInicioDisponible
-  }
-
-  get fechaFinDisponible(): Date | null {
-    return this._fechaFinDisponible
   }
 
   get descuento(): number {
@@ -125,10 +118,6 @@ class Package {
 
   set fechaInicioDisponible(value: Date) {
     this._fechaInicioDisponible = value
-  }
-
-  set fechaFinDisponible(value: Date | null) {
-    this._fechaFinDisponible = value
   }
 
   set descuento(value: number) {

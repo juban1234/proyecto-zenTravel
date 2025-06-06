@@ -18,6 +18,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const payload = { id: loginResult.id, rol: loginResult.rol };
+    const Rol = loginResult.rol;
 
     // Generar tokens
     const accessToken = generateAccessToken(payload);
@@ -28,6 +29,7 @@ export const login = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       status: loginResult.status,
+      Rol,
       accessToken,
       refreshToken,
     });

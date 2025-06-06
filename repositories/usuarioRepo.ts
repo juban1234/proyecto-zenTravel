@@ -18,10 +18,6 @@ class usuarioRepo {
 
     if (rows.length > 0) {
       const usuario = rows[0][0];
-      
-
-      console.log("🔍 Usuario encontrado:", usuario); 
-
 
       if (!usuario.password) {
         throw new Error("El usuario no tiene contraseña almacenada");

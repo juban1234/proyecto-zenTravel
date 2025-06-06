@@ -43,16 +43,16 @@ export const login = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
     try {
       const {nombre,email,telefono,password } = req.body;
-  
-      console.log("📩 Recibiendo datos del usuario:", req.body);
 
       const registerUser = await usuarioServi.register(
         new Usuario (nombre,email,telefono,password )
       );
   
-      console.log("✅ Usuario registrado con éxito ",registerUser);
-  
-      return res.status(201).json({ status: "register ok" });
+      return res.status(201).json({ 
+        status: "register ok" ,
+        registerUser
+      });
+
     } catch (error: any) {
       console.error("❌ Error al registrar usuario:", error);
   
@@ -67,15 +67,11 @@ export const register = async (req: Request, res: Response) => {
 export const informationUser = async (req: Request, res: Response) => {
   try {
     const id_usuario = (req as any).user.id;
-      
-    console.log("Buscando información del usuario con ID:", id_usuario);
 
     const userInfo = await usuarioRepo.getUserById(id_usuario);
     if (!userInfo) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
-
-    console.log("Información del usuario encontrada:", userInfo);
 
     return res.status(200).json(userInfo);
   } catch (error: any) {

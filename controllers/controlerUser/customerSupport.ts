@@ -17,14 +17,10 @@ export const customerSupport = async (req: Request, res: Response): Promise<Resp
             return res.status(400).json({ error: "El formato del correo electrónico no es válido" });
         }
 
-
         const solicitud = new SupportRequestDTO(nombre, email, asunto, mensaje);
-
-
         const resultado = await usuarioRepo.createSupportRequest(solicitud);
 
-        console.log("✅ Solicitud de atención al cliente creada con éxito:", resultado);
-        return res.status(201).json({ status: "Solicitud enviada con éxito" });
+        return res.status(201).json({ status: "Solicitud enviada con éxito" , resultado});
     } catch (error: any) {
         console.error("Error al procesar la solicitud de atención al cliente:", error.message || error);
         return res.status(500).json({ error: "Error en el servidor" });

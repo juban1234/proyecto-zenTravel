@@ -12,7 +12,7 @@ router.get('/Transport',SearchTransporteByName); // funcional
 router.get('/RoomReservation',buscar_habitacion)
 
 // 📦 Rutas públicas para paquetes
-router.get("/Package", listarPaquetes) // Listar todos los paquetes
+router.get("/", listarPaquetes) // Listar todos los paquetes
 
 // 📦 Rutas protegidas para paquetes (requieren autenticación)
 router.post("/Create/Package",verificarRol("cliente", "admin", "vendedor"), createPackage) // Crear paquete

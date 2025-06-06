@@ -6,19 +6,19 @@ import { verificarRol } from "../middleware/validatorRol";
 
 const router = express.Router();
 
-router.get('/destino',buscar); // Funcional
-router.get('/hotel', SearchHotel); // Funcional
+router.get('/Destiny',buscar); // Funcional
+router.get('/Hotel', SearchHotel); // Funcional
 router.get('/Transport',SearchTransporteByName); // funcional
-router.get('/habitacion/:hotel',buscar_habitacion)
+router.get('/RoomReservation',buscar_habitacion)
 
 // 📦 Rutas públicas para paquetes
-router.get("/paquetes", listarPaquetes) // Listar todos los paquetes
+router.get("/Package", listarPaquetes) // Listar todos los paquetes
 
 // 📦 Rutas protegidas para paquetes (requieren autenticación)
-router.post("/paquetes/create",verificarRol("cliente", "admin", "vendedor"), createPackage) // Crear paquete
-router.post("/paquetes/calcular",verificarRol("cliente", "admin", "vendedor"), valuePackage) // Calcular precio
-router.get("/paquetes/usuario", verifyToken, traerPaquetes_usuario) // Listar paquetes por usuario
-router.put("/paquetes/:id", verificarRol("cliente", "admin", "vendedor") ,actualizarPaquete) // Actualizar paquete
+router.post("/Create/Package",verificarRol("cliente", "admin", "vendedor"), createPackage) // Crear paquete
+router.post("/Calculate/Package",verificarRol("cliente", "admin", "vendedor"), valuePackage) // Calcular precio
+router.get("/User/Package", verifyToken, traerPaquetes_usuario) // Listar paquetes por usuario
+router.put("/IDPackage", verificarRol("cliente", "admin", "vendedor") ,actualizarPaquete) // Actualizar paquete
 
 // rutas para el marketing
 router.post('/Marketing',verificarRol("admin","vendedor"),Marketing)

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import { getResponseFromAIZenTravel } from "../../services/geminiServi";
 
-export const PreguntarAI = async (req: Request, res: Response) => {
+export const ZenIA = async (req: Request, res: Response) => {
   try {
-    const { pregunta } = req.body;
+    const { ZenIA } = req.body;
 
-    if (!pregunta) {
+    if (!ZenIA) {
       return res.status(400).json({ error: "Se requiere una pregunta en el cuerpo de la solicitud." });
     }
 
-    const respuesta = await getResponseFromAIZenTravel(pregunta);
+    const respuesta = await getResponseFromAIZenTravel(ZenIA);
     res.status(200).json({ respuesta });
 
   } catch (error: any) {

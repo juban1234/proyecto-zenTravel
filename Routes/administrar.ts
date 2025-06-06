@@ -8,21 +8,21 @@ import { validatorParams } from "../middleware/register-validator";
 const router = express.Router();
 
 // control de usuarios del sistema
-router.patch('/aditar', verificarRol("admin"),RolUsuario); //funcional
-router.delete('/EliminarUsuarios/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
-router.get('/usuarios',verificarRol('admin','vendedor'),TraerUsuario)
-router.post('/crearUsuarios',validatorParams,verificarRol('admin'),newEmpleados)
+router.patch('/Edite', verificarRol("admin"),RolUsuario); //funcional
+router.delete('/UserDelete/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
+router.get('/Users',verificarRol('admin','vendedor'),TraerUsuario)
+router.post('/CreateUsers',validatorParams,verificarRol('admin'),newEmpleados)
 
 // control de contenido del sistema
-router.post('/createDestino',verificarRol("admin",'vendedor'),createDestino);
-router.post('/createHotel',verificarRol("admin",'vendedor'),createHotel);
-router.post('/createHabitacion',verificarRol("admin",'vendedor'),createHabitacion);
-router.post ('/createTransporte',verificarRol("admin",'vendedor'),createTransporte);
+router.post('/CreateDestiny',verificarRol("admin",'vendedor'),createDestino);
+router.post('/CreateHotel',verificarRol("admin",'vendedor'),createHotel);
+router.post('/CreateRoom',verificarRol("admin",'vendedor'),createHabitacion);
+router.post ('/CreateTransport',verificarRol("admin",'vendedor'),createTransporte);
 
 // eliminar contenido del sistema
-router.delete('/deletePaquete/:id_paquete',verificarRol('admin'),deletePaquete);
-router.delete('/deleteDestino/:id_destino',verificarRol('admin'),deleteDestino);
+router.delete('/deletePackage/:id_paquete',verificarRol('admin'),deletePaquete);
+router.delete('/deleteDestiny/:id_destino',verificarRol('admin'),deleteDestino);
 router.delete('/deleteHotel/:id_hotel',verificarRol('admin'),deleteHotel);
-router.delete('/deleteTransporte/:id_transporte',verificarRol('admin'),deleteTransporte);
+router.delete('/deleteTransport/:id_transporte',verificarRol('admin'),deleteTransporte);
 
 export default router;

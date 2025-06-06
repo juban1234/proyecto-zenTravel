@@ -1,8 +1,8 @@
 import express from "express";
-import { PreguntarAI } from "../controllers/controllerServis/geminiController";
+import { ZenIA } from "../controllers/controllerServis/geminiController";
 
 const router = express.Router();
 
-router.post("/Preguntar", PreguntarAI);
+router.post("/ZenIA", ZenIA);
 
 export default router;

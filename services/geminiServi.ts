@@ -58,8 +58,8 @@ const cleanResponseText = (text: string): string => {
   return withoutAsterisks.replace(/(?:\r\n|\r|\n)/g, '\n').trim();
 };
 
-export const getResponseFromAIZenTravel = async (Preguntar: string): Promise<string> => {
-  if (!isColombiaRelated(Preguntar)) {
+export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string> => {
+  if (!isColombiaRelated(ZenIA)) {
     return "Lo siento, solo puedo responder preguntas relacionadas con el turismo y la cultura de Colombia.";
   }
 

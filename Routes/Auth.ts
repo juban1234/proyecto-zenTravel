@@ -8,12 +8,12 @@ import { customerSupport } from "../controllers/controlerUser/customerSupport";
 
 const router = express.Router();
 
-router.post('/login', login); // Funcional
-router.post('/register' ,validatorParams, validator, register); // Funcional
-router.patch('/profile',verifyToken,profile); // Funcional
-router.post('/customerSupport', customerSupport); // funcional
-router.get('/infoUserDTO',verifyToken,informationUser); //funcional
-router.post('/refresToken', refreshToken) //funcional
+router.post('/Login', login); // Funcional
+router.post('/Register' ,validatorParams, validator, register); // Funcional
+router.patch('/Profile',verifyToken,profile); // Funcional
+router.post('/CustomerSupport', customerSupport); // funcional
+router.get('/InfoUserDTO',verifyToken,informationUser); //funcional
+router.post('/RefreshToken', refreshToken) //funcional
 
 export default router;
 

@@ -30,17 +30,17 @@ export const createPayment = async (req: Request, res: Response) => {
           item_list: {
             items: [
               {
-                name: name,  
-                sku: '001',  
-                price: price, 
+                name: name,
+                sku: '001',
+                price: price,
                 currency: 'USD',
-                quantity: quantity, 
+                quantity: quantity,
               },
             ],
           },
           amount: {
             currency: 'USD',
-            total: (price * quantity).toFixed(2),  
+            total: (price * quantity).toFixed(2),
           },
           description: 'Pago de prueba con PayPal',
         },

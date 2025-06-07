@@ -14,9 +14,13 @@ class searchRepo {
         return rows
     }
 
-    static async buscartransportePorNombre() {
-        const sql = 'SELECT * FROM Transporte';
-        const [rows]: any = await db.execute(sql);
+    static async buscartransportePorNombre(origen:string, destino:string) {
+        const sql = 'SELECT * FROM Transporte where origen = ? and destino = ?';
+        const values = [
+            origen,
+            destino
+        ]
+        const [rows]: any = await db.execute(sql,values);
         return rows;
     }
 

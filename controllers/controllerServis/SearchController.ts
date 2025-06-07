@@ -1,5 +1,6 @@
 import { Request, Response } from "express";    
 import searchRepo from "../../repositories/searchRepo";
+import { param } from "express-validator";
 
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
@@ -35,7 +36,10 @@ export const SearchHotel = async (req: Request, res: Response) => {
 export const SearchTransporteByName = async (req: Request, res: Response) => {
     try {
 
-        const transport = await searchRepo.buscartransportePorNombre();
+        const {origen,destino} = req.params;
+
+
+        const transport = await searchRepo.buscartransportePorNombre(origen,destino);
 
         if (transport.length === 0) {
             return res.status(404).json({ message: "No se encontró ningún Transporte " });

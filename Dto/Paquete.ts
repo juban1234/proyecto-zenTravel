@@ -6,7 +6,7 @@ class Package {
   private _fechaInicioDisponible: Date
   private _descuento: number
   private _nombreHotel: string
-  private _nombreTransporte: string
+  private _nombreTransporte: number
   private _nombreDestino: string
   private _categoria: string
   private _incluye: string
@@ -22,7 +22,7 @@ class Package {
     fechaInicioDisponible: Date,
     descuento: number,
     nombreHotel: string,
-    nombreTransporte: string,
+    nombreTransporte: number,
     nombreDestino: string,
     categoria: string,
     incluye: string,
@@ -72,7 +72,7 @@ class Package {
     return this._nombreHotel
   }
 
-  get nombreTransporte(): string {
+  get nombreTransporte(): number {
     return this._nombreTransporte
   }
 
@@ -128,7 +128,7 @@ class Package {
     this._nombreHotel = value
   }
 
-  set nombreTransporte(value: string) {
+  set nombreTransporte(value: number) {
     this._nombreTransporte = value
   }
 

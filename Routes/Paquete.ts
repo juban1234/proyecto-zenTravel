@@ -18,7 +18,7 @@ router.get("/", listarPaquetes) // Listar todos los paquetes
 router.post("/Create/Package",verificarRol("cliente", "admin", "vendedor"), createPackage) // Crear paquete
 router.post("/Calculate/Package",verificarRol("cliente", "admin", "vendedor"), valuePackage) // Calcular precio
 router.get("/User/Package", verifyToken, traerPaquetes_usuario) // Listar paquetes por usuario
-router.put("/IDPackage", verificarRol("cliente", "admin", "vendedor") ,actualizarPaquete) // Actualizar paquete
+router.put("/IDPackage/:id", verificarRol("cliente", "admin", "vendedor") ,actualizarPaquete) // Actualizar paquete
 
 // rutas para el marketing
 router.post('/Marketing',verificarRol("admin","vendedor"),Marketing)

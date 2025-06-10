@@ -21,7 +21,7 @@ app.use('/Password',Validator);
 app.use('/packages',Paquete)
 app.use('/reservas',Reservaciones)
 app.use('/api/payments', paymentRoutes);
-app.post('/ZenIA', ZenIA);
+app.use('/IA', ZenIA);
 app.use('/admin',admin)
 
 const PORT = process.env.DB_PORT || 10101;

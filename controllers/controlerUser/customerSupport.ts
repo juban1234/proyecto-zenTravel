@@ -21,6 +21,7 @@ export const customerSupport = async (req: Request, res: Response): Promise<Resp
         const resultado = await usuarioRepo.createSupportRequest(solicitud);
 
         return res.status(201).json({ status: "Solicitud enviada con éxito" , resultado});
+
     } catch (error: any) {
         console.error("Error al procesar la solicitud de atención al cliente:", error.message || error);
         return res.status(500).json({ error: "Error en el servidor" });

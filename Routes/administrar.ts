@@ -8,7 +8,7 @@ import { validatorParams } from "../middleware/register-validator";
 const router = express.Router();
 
 // control de usuarios del sistema
-router.patch('/Edite', verificarRol("admin"),RolUsuario); //funcional
+router.patch('User/EditeRol', verificarRol("admin"),RolUsuario); //funcional
 router.delete('/UserDelete/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
 router.get('/Users',verificarRol('admin','vendedor'),TraerUsuario)
 router.post('/CreateUsers',validatorParams,verificarRol('admin'),newEmpleados)

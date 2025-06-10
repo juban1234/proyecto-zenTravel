@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendRecoveryEmail = async (to: string, token: string) => {
-  const recoveryLink = `http://localhost:5173/reset-password/${token}`;
+  const recoveryLink = `https://zentravel.vercel.app/reset-password/${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
@@ -248,5 +248,17 @@ const sendRecoveryEmail = async (to: string, token: string) => {
 
   await transporter.sendMail(mailOptions);
 };
+
+export const emailRol = async(to:string , asunto:string , datos:any)=>{
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject: asunto,
+    html: `
+      datos enviados para solicitar el cambio de rol para el usuario ${datos.nombre}
+    `
+  }
+  await transporter.sendMail(mailOptions)
+}
 
 export default sendRecoveryEmail;

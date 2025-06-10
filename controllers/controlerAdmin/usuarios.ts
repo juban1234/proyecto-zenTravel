@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import admin from "../../repositories/adminRepo";
 import { Usuario } from "../../Dto/User";
 import generateHash from "../../Helpers/generateHash";
+import generarContrasena from "../../Helpers/generarContraseña";
 
 
 export const EliminarUsuarios = async(req:Request , res:Response) => {
@@ -67,9 +68,10 @@ export const RolUsuario = async(req:Request , res:Response) => {
 }
 
 export const newEmpleados = async(req:Request , res:Response) => {
-    const {nombre,email,telefono,password,rol} = req.body;
+    const {nombre,email,telefono,rol} = req.body;
 
     const rolesPermitidos = ['vendedor','soporte','admin']
+    const password = generarContrasena()
 
     if (!nombre || !email || !telefono || !password) {
         return res.status(401).json({status: `faltan campos por ingresar`})

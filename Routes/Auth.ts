@@ -1,5 +1,5 @@
 import express from "express";
-import { informationUser, login, register } from "../controllers/controlerUser/controlerUser";
+import { informationUser, login, register, SolicitarCambioRol } from "../controllers/controlerUser/controlerUser";
 import verifyToken from "../middleware/verifyToken";
 import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
@@ -14,6 +14,7 @@ router.patch('/Profile',verifyToken,profile); // Funcional
 router.post('/CustomerSupport', customerSupport); // funcional
 router.get('/InfoUserDTO',verifyToken,informationUser); //funcional
 router.post('/RefreshToken', refreshToken) //funcional
+router.post('/cambio_rol',SolicitarCambioRol) // solicitar cambio de rol del usuario
 
 export default router;
 

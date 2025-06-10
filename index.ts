@@ -6,7 +6,7 @@ import Auth from './Routes/Auth';
 import Validator from './Routes/Validator';
 import Paquete from './Routes/Paquete';
 import Reservaciones from './Routes/Reservaciones'
-import { ZenIA } from './controllers/controllerServis/geminiController';
+import ZenIA from './Routes/geminiRoutes';
 import paymentRoutes from './Routes/Payment';
 import admin from './Routes/administrar';
 

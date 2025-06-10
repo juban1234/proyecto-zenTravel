@@ -1,22 +1,10 @@
-#dependencias del servidor
+#estas son las dependencias utilizadas
+bcryptjs
+dotenv
+espress
+mysql2
 
-express: Framework para crear el servidor backend.
+comados de instalacion dependencias
+si llaestan solo npm install
 
-mysql2: Cliente para conectar Node.js con MySQL.
-
-bcryptjs: Para encriptar y comparar contraseñas.
-
-jsonwebtoken: Para generar y validar tokens JWT.
-
-dotenv: Para manejar variables de entorno.
-
-comandos de instalacion por si acaso
-npm install
-
-npm install express mysql2 bcryptjs jsonwebtoken dotenv
-npm install --save-dev typescript ts-node ts-node-dev @types/node @types/express @types/jsonwebtoken
-
-
-comando para la copit¿lacion de ts
-
-tsc -w
+npm install @types/bcryptjs@^2.4.3 dotenv@^16.4.7 express@^4.21.2  mysql2@^3.14.0

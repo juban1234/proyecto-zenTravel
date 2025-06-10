@@ -10,6 +10,7 @@ import { MarketingDTO } from "../../Dto/MarketingDTO";
 const uploadSingle = promisify(upload.single('imagen'));
 
 export const Marketing = async (req: Request, res: Response): Promise<Response> => {
+    
     try {
         await uploadSingle(req, res);
 
@@ -54,7 +55,7 @@ export const Marketing = async (req: Request, res: Response): Promise<Response> 
                 <p>Gracias por ponerte en contacto con nosotros. Te informaremos pronto sobre nuestras promociones y servicios.</p>
                 <p><strong>¡Gracias por elegirnos!</strong></p>
                 <p><img src="${dto.imagenUrl}" alt="Promoción de Marketing" style="max-width: 100%; height: auto;" /></p>
-            `
+            `   
         };
 
         await transporter.sendMail(mailOptions);

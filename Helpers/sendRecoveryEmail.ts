@@ -255,7 +255,9 @@ export const emailRol = async(to:string , asunto:string , datos:any)=>{
     to,
     subject: asunto,
     html: `
-      datos enviados para solicitar el cambio de rol para el usuario ${datos.nombre}
+      datos enviados para solicitar el cambio de usuario a ${datos.rol} para el usuario ${datos.nombre}
+      - email: ${datos.email}
+      - telefono: ${datos.telefono}
     `
   }
   await transporter.sendMail(mailOptions)

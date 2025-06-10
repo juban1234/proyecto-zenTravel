@@ -98,6 +98,7 @@ export const newEmpleados = async(req:Request , res:Response) => {
 
     return res.status(200).json({
         status: `el usuario a sido creado`,
+        password
     })
     
     } catch (error) {

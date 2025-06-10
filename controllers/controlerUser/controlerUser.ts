@@ -83,13 +83,14 @@ export const informationUser = async (req: Request, res: Response) => {
 
 export const SolicitarCambioRol = async (req: Request, res: Response) => {
 
-  const {nombre,email,telefono,asunto} = req.body
+  const {nombre,email,telefono,asunto,rol} = req.body
   try {
 
     const dto = {
       nombre,
       email,
-      telefono
+      telefono,
+      rol
     }
 
     await emailRol(email,asunto,dto)

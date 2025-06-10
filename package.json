@@ -36,11 +36,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-<<<<<<<< HEAD:Backend/package.json
     "@types/node": "^20.12.7",
-========
-    "@types/node": "^20.17.46",
->>>>>>>> origin:package.json
     "@types/nodemailer": "^6.4.17",
     "@types/paypal-rest-sdk": "^1.7.9",
     "nodemon": "^3.1.10",

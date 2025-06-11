@@ -4,10 +4,10 @@ import { reserva,actualizar, Historial , Cancelar } from "../controllers/control
 
 const router = express.Router();
 
-router.post('/Reserva', verifyToken, reserva); // funcional
-router.patch('/Actualizar',verifyToken, actualizar) // funcional
+router.post('/Reservations', verifyToken, reserva); // funcional
+router.patch('/Update',verifyToken, actualizar) // funcional
 router.get('/Historial',verifyToken, Historial); // funcional
-router.patch('/reservas/:id_reserva', Cancelar); 
+router.patch('/reservations/:id_reserva', Cancelar); 
 
 
 export default router;

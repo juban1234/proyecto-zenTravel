@@ -31,10 +31,11 @@ export const EliminarUsuarios = async(req:Request , res:Response) => {
 }
 
 export const TraerUsuario = async(req:Request , res:Response) => {
-
+    const Rol = req.params.Rol
     try {
         
-        const user = await admin.TraerUser();
+        const user = await admin.TraerUser(Rol);
+        
         return res.status(200).json({
             status: "ok usuario ",
             user

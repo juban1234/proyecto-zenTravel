@@ -5,7 +5,7 @@ import upload from '../../configs/multer';
 import fs from 'fs';
 import { promisify } from 'util';
 
-
+const uploadSingle = promisify(upload.single('imagen'));
 
 export const Editdestino = async (req: Request, res: Response) => {
   try {
@@ -59,9 +59,6 @@ export const Editdestino = async (req: Request, res: Response) => {
     });
   }
 }
-
-
-const uploadSingle = promisify(upload.single('imagen'));
 
 export const EditarHotel = async (req: Request, res: Response) => {
 
@@ -122,5 +119,4 @@ export const EditarHotel = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Error en el servidor" });
   }
 }
-
 

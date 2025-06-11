@@ -10,7 +10,7 @@ const router = express.Router();
 // control de usuarios del sistema
 router.patch('User/EditeRol', verificarRol("admin"),RolUsuario); //funcional
 router.delete('/UserDelete/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
-router.get('/Users',verificarRol('admin','vendedor'),TraerUsuario)
+router.get('/Users/:Rol',verificarRol('Admin','Empleado'),TraerUsuario)
 router.post('/CreateUsers',validatorParams,verificarRol('admin'),newEmpleados)
 
 // control de contenido del sistema

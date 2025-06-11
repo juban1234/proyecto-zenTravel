@@ -58,62 +58,62 @@ export const deleteDestino = async (req: Request, res: Response): Promise<Respon
    
 }
 
- export const deleteHotel = async (req: Request, res: Response): Promise<Response> => {
+export const deleteHotel = async (req: Request, res: Response): Promise<Response> => {
 
-    
-     try {
-       
-        const id_hotel = Number(req.params.id_hotel);
 
-        console.log("Datos recibidos:", {id_hotel});
-
-        if (!id_hotel || isNaN(id_hotel)) {
-            return res.status(400).json({ error: "ID del hotel no proporcionado o inválido" });
-        }
-
-        const resultado = await admin.eliminarHotel(id_hotel);
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({ error: "Hotel no encontrado o ya eliminado" });
-        }
-
-        console.log("Hotel eliminado con éxito:", resultado);
-
-        return res.status(200).json({ status: "Hotel eliminado con éxito" });
-
-    } catch (error: any) {
-        console.error("Error al eliminar Hotel:", error);
-        return res.status(500).json({ error: "Ocurrió un error al eliminar el Hotel" });
-    }
-
- }
-
- export const deleteTransporte = async (req: Request, res: Response): Promise<Response> => {
-        
     try {
-       
-        const id_transporte = Number(req.params.id_transporte);
+    
+    const id_hotel = Number(req.params.id_hotel);
 
-        console.log("Datos recibidos:", {id_transporte});
+    console.log("Datos recibidos:", {id_hotel});
 
-        if (!id_transporte || isNaN(id_transporte)) {
-            return res.status(400).json({ error: "ID del transporte no proporcionado o inválido" });
-        }
-
-        const resultado = await admin.eliminarTransporte(id_transporte);
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({ error: "Transporte no encontrado o ya eliminado" });
-        }
-
-        console.log("Transporte  eliminado con éxito:", resultado);
-
-        return res.status(200).json({ status: "Transporte eliminado con éxito" });
-
-    } catch (error: any) {
-        console.error("Error al eliminar Transporte:", error);
-        return res.status(500).json({ error: "Ocurrió un error al eliminar el transporte" });
+    if (!id_hotel || isNaN(id_hotel)) {
+        return res.status(400).json({ error: "ID del hotel no proporcionado o inválido" });
     }
- }
+
+    const resultado = await admin.eliminarHotel(id_hotel);
+
+    if (resultado.affectedRows === 0) {
+        return res.status(404).json({ error: "Hotel no encontrado o ya eliminado" });
+    }
+
+    console.log("Hotel eliminado con éxito:", resultado);
+
+    return res.status(200).json({ status: "Hotel eliminado con éxito" });
+
+} catch (error: any) {
+    console.error("Error al eliminar Hotel:", error);
+    return res.status(500).json({ error: "Ocurrió un error al eliminar el Hotel" });
+}
+
+}
+
+export const deleteTransporte = async (req: Request, res: Response): Promise<Response> => {
+    
+try {
+    
+    const id_transporte = Number(req.params.id_transporte);
+
+    console.log("Datos recibidos:", {id_transporte});
+
+    if (!id_transporte || isNaN(id_transporte)) {
+        return res.status(400).json({ error: "ID del transporte no proporcionado o inválido" });
+    }
+
+    const resultado = await admin.eliminarTransporte(id_transporte);
+
+    if (resultado.affectedRows === 0) {
+        return res.status(404).json({ error: "Transporte no encontrado o ya eliminado" });
+    }
+
+    console.log("Transporte  eliminado con éxito:", resultado);
+
+    return res.status(200).json({ status: "Transporte eliminado con éxito" });
+
+} catch (error: any) {
+    console.error("Error al eliminar Transporte:", error);
+    return res.status(500).json({ error: "Ocurrió un error al eliminar el transporte" });
+}
+}
 
  

@@ -1,6 +1,7 @@
 import express from "express";
 import { buscar ,SearchHotel,SearchTransporteByName,buscar_habitacion} from "../controllers/controllerServis/SearchController";
 import { createPackage ,valuePackage,listarPaquetes, traerPaquetes_usuario, actualizarPaquete, Marketing} from "../controllers/controlerUser/packageController";
+import { Editdestino,EditarHotel } from "../controllers/controllerServis/EditController";
 import verifyToken from "../middleware/verifyToken";
 import { verificarRol } from "../middleware/validatorRol";
 
@@ -22,5 +23,15 @@ router.put("/IDPackage/:id", verificarRol("cliente", "admin", "vendedor") ,actua
 
 // rutas para el marketing
 router.post('/Marketing',verificarRol("admin","vendedor"),Marketing)
+
+
+//Rutas para editar 
+router.put('/EditarDestino/:id_destino', Editdestino);
+router.put('/EditarHotel/:id_hotel',EditarHotel);
+ 
+
+
+
+
 
 export default router;

@@ -151,6 +151,33 @@ static async editarHotel(
   return result.affectedRows > 0 ? { ...datos, id_hotel } : null;
 }
 
+static async EditarHabitacion(id_habitacion: number, datos: {tipo:string; numero: number; precio: number;disponible:boolean; imagenes: string[] }) {
+  const sql = `
+    UPDATE habitacion 
+    SET 
+      tipo = ?,
+      numero = ?, 
+      precio = ?, 
+      disponible = ?, 
+      imagenes = ?
+    WHERE id_habitacion = ?
+  `;
+
+  const values = [
+    datos.tipo,
+    datos.numero,
+    datos.precio,
+    datos.disponible,
+    JSON.stringify(datos.imagenes),
+    id_habitacion
+  ];
+
+  const [result]: any = await db.execute(sql, values);
+  return result.affectedRows > 0 ? { ...datos, id_habitacion } : null;
+
+
+}
+
 }
 export default usuarioRepo;
 

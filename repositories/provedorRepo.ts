@@ -1,4 +1,4 @@
-import db from '../configs/config';
+mport db from '../configs/config';
 import Destino from '../Dto/destino';
 import Package from '../Dto/Paquete';
 

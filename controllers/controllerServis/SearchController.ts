@@ -53,17 +53,17 @@ export const SearchTransporteByName = async (req: Request, res: Response) => {
 };
 
 export const buscar_habitacion = async(req: Request, res: Response) => {
-    const nombreHotel = req.params.hotel;
+   const {hotel,ciudad} = req.params;
 
     try {
-        const result = await searchRepo.traerHabitaciones(nombreHotel);
+        const result = await searchRepo.traerHabitaciones(hotel,ciudad);
 
         if (!result) {
             return res.status(404).json({ message: "No se encontró ningúna habitacion de hotel ." });
         }
 
         return res.status(200).json({
-            status: `habitaciones del hotel: ${nombreHotel} encontrados`,
+            status: `habitaciones del hotel: ${hotel} encontrados`,
             result
         });
 

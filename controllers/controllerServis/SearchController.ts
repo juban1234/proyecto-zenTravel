@@ -15,7 +15,6 @@ export const buscar = async (req: Request, res: Response): Promise<Response> => 
 
 export const SearchHotel = async (req: Request, res: Response) => {
     
-
     try {
         const hoteles = await searchRepo.buscarHoteles();
 

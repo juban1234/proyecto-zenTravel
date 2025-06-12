@@ -1,8 +1,4 @@
-<<<<<<< HEAD:bakend/conexion Mysql/Dto/SearchDto.ts
-class SearchDto {
-=======
 export class SearchDto {
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:Dto/SearchDto.ts
     private _nombre: string;
     private _pais: string;
     private _direccion: string;
@@ -56,9 +52,6 @@ export class SearchDto {
     }
 }
 
-<<<<<<< HEAD:bakend/conexion Mysql/Dto/SearchDto.ts
-export default SearchDto;
-=======
 export class Hotel {
     private _nombre: string;
     private _descripcion: string;
@@ -291,4 +284,3 @@ export class Habitacion {
     ){}
 
 }
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:Dto/SearchDto.ts

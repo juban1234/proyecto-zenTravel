@@ -1,20 +1,11 @@
 import { Request, Response } from "express";
 import usuarioRepo from "../../repositories/usuarioRepo";
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controlerUser/ValidatoPassword.ts
-import {generateAccessToken,generateRefreshToken} from "../../Helpers/generateToken";
-import nodemailer from "nodemailer";
-=======
 import {generateAccessToken} from "../../Helpers/generateToken";
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controlerUser/ValidatoPassword.ts
 import sendRecoveryEmail from "../../Helpers/sendRecoveryEmail";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import generateHash from "../../Helpers/generateHash";
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controlerUser/ValidatoPassword.ts
-import Login from "../../Dto/loginDto";
-=======
 import { Login } from "../../Dto/User";
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controlerUser/ValidatoPassword.ts
 
 dotenv.config();
 
@@ -43,10 +34,6 @@ export const validatePassword = async (req: Request, res: Response) => {
   }
 }
 
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controlerUser/ValidatoPassword.ts
-
-=======
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controlerUser/ValidatoPassword.ts
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { token } = req.query;

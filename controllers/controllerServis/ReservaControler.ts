@@ -1,8 +1,4 @@
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controllerServis/ReservaControler.ts
-import usuarioRepo from "../../repositories/usuarioRepo";
-=======
 import reservaRepo from "../../repositories/reservasRepo";
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controllerServis/ReservaControler.ts
 import  Reservas  from "../../Dto/reservasDto";
 import { Request, Response } from "express";
 
@@ -13,11 +9,7 @@ export const reserva = async (req: Request, res: Response) => {
   
       console.log("📩 Recibiendo datos de la reserva:", { id_usuario, cedula, id_paquete });
   
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controllerServis/ReservaControler.ts
-      const HacerReserva = await usuarioRepo.crearReserva(
-=======
       const HacerReserva = await reservaRepo.crearReserva(
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controllerServis/ReservaControler.ts
         new Reservas( cedula, id_usuario, id_paquete)
       );
 
@@ -30,12 +22,6 @@ export const reserva = async (req: Request, res: Response) => {
     }
 };
 
-<<<<<<< HEAD:bakend/conexion Mysql/controllers/controllerServis/ReservaControler.ts
-
-export const actReserva = async(req: Request, res:Response) => {
-
-};
-=======
 export const actualizar = async(req: Request, res:Response) => {
     try {
       const id_usuario = (req as any).user?.id;
@@ -113,4 +99,3 @@ export const Cancelar = async (req: Request, res: Response) => {
     
     }
 }
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:controllers/controllerServis/ReservaControler.ts

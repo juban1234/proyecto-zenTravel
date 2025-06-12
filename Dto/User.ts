@@ -100,8 +100,3 @@ export class Usuario {
 
 }
 
-<<<<<<< HEAD:bakend/conexion Mysql/Dto/registroDto.ts
-export default Usuario;
-
-=======
->>>>>>> 2c0628f48a0854d72e82f6550a3208e910a80be6:Dto/User.ts

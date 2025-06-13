@@ -249,18 +249,19 @@ const sendRecoveryEmail = async (to: string, token: string) => {
   await transporter.sendMail(mailOptions);
 };
 
-export const emailRol = async(to:string , asunto:string , datos:any)=>{
+export const emailRol = async(re:string , asunto:string , datos:any) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
+    from: process.env.EMAIL_USER, // El correo del sistema envía
+    to: datos.email, // El usuario recibe
     subject: asunto,
     html: `
-      datos enviados para solicitar el cambio de usuario a ${datos.rol} para el usuario ${datos.nombre} <br>
-      - email: ${datos.email}
-      - telefono: ${datos.telefono}
+      Hola ${datos.nombre},<br>
+      Hemos recibido tu solicitud para cambiar tu rol a: <strong>${datos.rol}</strong>.<br>
+      Te contactaremos pronto para confirmar.
     `
-  }
-  await transporter.sendMail(mailOptions)
+  };
+  await transporter.sendMail(mailOptions);
 }
+
 
 export default sendRecoveryEmail;

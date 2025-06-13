@@ -135,6 +135,12 @@ class admin {
             throw error;
         }
     }
+
+    static async SoporteRepo(){
+        const sql = `select * from solicitudes_atencion where estado = "NoDisp"`
+        const [rows]:any = await db.execute(sql)
+        return rows[0]
+    }
 }
 
 export default admin;

@@ -25,4 +25,8 @@ router.delete('/deleteDestiny/:id_destino',verificarRol('Admin'),deleteDestino);
 router.delete('/deleteHotel/:id_hotel',verificarRol('Admin'),deleteHotel);
 router.delete('/deleteTransport/:id_transporte',verificarRol('Admin'),deleteTransporte);
 
+//soporte del sistema
+
+router.get('/Report/Soporte')
+
 export default router;

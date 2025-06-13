@@ -3,13 +3,14 @@ import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 
 export const createDestino = async(req:Request , res:Response) => {
-        try {
-        const { pais, departamento, nombre, descripcion } = req.body;
+    
+    const { pais, departamento, nombre, descripcion } = req.body;
+    
+    try {
 
         if (!pais || !departamento || !nombre || !descripcion) {
             return res.status(400).json({ message: "Todos los campos son requeridos." });
         }
-
 
         const nuevoDestino = new Destino(pais, departamento, nombre, descripcion);
 

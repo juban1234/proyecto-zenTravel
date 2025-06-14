@@ -249,7 +249,7 @@ const sendRecoveryEmail = async (to: string, token: string) => {
   await transporter.sendMail(mailOptions);
 };
 
-export const emailRol = async(re:string , asunto:string , datos:any) => {
+export const emailRol = async(asunto:string , datos:any) => {
   const mailOptions = {
     from: process.env.EMAIL_USER, // El correo del sistema envía
     to: datos.email, // El usuario recibe

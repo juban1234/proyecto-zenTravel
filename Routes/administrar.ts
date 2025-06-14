@@ -4,6 +4,7 @@ import { verificarRol } from "../middleware/validatorRol";
 import { createDestino , createHabitacion, createHotel, createTransporte } from "../controllers/controlerAdmin/paquetes";
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
 import { validatorParams } from "../middleware/register-validator";
+import { reporte } from "../controllers/controlerAdmin/soporteController";
 
 const router = express.Router();
 
@@ -27,6 +28,7 @@ router.delete('/deleteTransport/:id_transporte',verificarRol('Admin'),deleteTran
 
 //soporte del sistema
 
-router.get('/Report/Soporte')
+router.get('/Report/Soporte', reporte)
+router.patch('/Report/Act/:id')
 
 export default router;

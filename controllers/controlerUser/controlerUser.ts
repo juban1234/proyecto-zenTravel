@@ -93,7 +93,7 @@ export const SolicitarCambioRol = async (req: Request, res: Response) => {
       rol
     }
 
-    await emailRol(email,asunto,dto)
+    await emailRol(asunto,dto)
 
     return res.status(200).json({ 
       message: "Correo de recuperación enviado" 

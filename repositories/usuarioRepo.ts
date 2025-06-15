@@ -40,7 +40,7 @@ class usuarioRepo {
   static async buscarUsuarioPorEmail(email: string) {
     const [rows]: any = await db.execute('CALL loginUsuario(?)', [email]);
     console.log(rows);
-    return rows[0].email;
+    return rows[0];
   }
 
   static async cambiarContraseña(login: Login) {

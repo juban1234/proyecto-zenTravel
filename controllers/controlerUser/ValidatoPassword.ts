@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import generateHash from "../../Helpers/generateHash";
 import { Login } from "../../Dto/User";
+import Email from "../../Helpers/sendRecoveryEmail";
 
 dotenv.config();
 
@@ -22,15 +23,13 @@ export const validatePassword = async (req: Request, res: Response) => {
 
     // Usamos generateAccessToken con duración de 15 minutos (opcionalmente configurable)
     const token = generateAccessToken({ email }, 15); 
-    console.log("🔑 Token generado para recuperación:", token);
 
-    await sendRecoveryEmail(email, token);
+    await Email.RecoveryEmail(email, token);
 
     return res.status(200).json({ message: "Correo de recuperación enviado" });
     
   } catch (error: any) {
-    console.error("❌ Error en validatePassword:", error);
-    return res.status(500).json({ error: "Error en el servidor" });
+    return res.status(500).json({ error: "Error en el servidor al momento de enviar el correo de recuperacion contraseña" });
   }
 }
 

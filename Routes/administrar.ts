@@ -27,7 +27,6 @@ router.delete('/deleteHotel/:id_hotel',verificarRol('Admin'),deleteHotel);
 router.delete('/deleteTransport/:id_transporte',verificarRol('Admin'),deleteTransporte);
 
 //soporte del sistema
-
 router.get('/Report/Soporte', reporte)
 router.patch('/Report/Act/:id')
 

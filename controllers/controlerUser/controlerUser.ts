@@ -4,7 +4,8 @@ import { Login ,Usuario } from "../../Dto/User";
 import {generateAccessToken,generateRefreshToken,actualizarToken} from '../../Helpers/generateToken';
 import dotenv from "dotenv";
 import usuarioRepo from "../../repositories/usuarioRepo";
-import { emailRol } from "../../Helpers/sendRecoveryEmail";
+import Email from "../../Helpers/sendRecoveryEmail";
+ "../../Helpers/sendRecoveryEmail";
 
 dotenv.config();
 
@@ -93,7 +94,7 @@ export const SolicitarCambioRol = async (req: Request, res: Response) => {
       rol
     }
 
-    await emailRol(asunto,dto)
+    await Email.emailRol(asunto,dto)
 
     return res.status(200).json({ 
       message: "Correo de recuperación enviado" 

@@ -20,11 +20,10 @@ export const validatePassword = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "El usuario no existe" });
     }
 
-    const data = user.email
     // Usamos generateAccessToken con duración de 15 minutos (opcionalmente configurable)
     const token = generateAccessToken({ user }, 15); 
 
-    await RecoveryEmail(data, token);
+    await RecoveryEmail(user, token);
 
     return res.status(200).json({ message: "Correo de recuperación enviado" });
     

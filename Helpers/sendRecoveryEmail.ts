@@ -8,11 +8,11 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const RecoveryEmail = async (to: string, token: string) => {
+export const RecoveryEmail = async (to: any, token: string) => {
   const recoveryLink = `https://zentravel.vercel.app/reset-password/${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to,
+    to: to.email,
     subject: '🔐 Recuperación de contraseña - ZenTravel',
     html: `
       <!DOCTYPE html>

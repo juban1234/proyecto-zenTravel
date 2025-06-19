@@ -112,24 +112,28 @@ export const createPackage = async (req: Request, res: Response): Promise<Respon
 
 export const valuePackage = async (req: Request, res: Response) => {
     try {
-        const { id_paquete } = req.body;  
+        const { id_paquete, duracionDias } = req.body;  
 
         if (!id_paquete || isNaN(Number(id_paquete))) {
             return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
         }
 
-        const paquete = await Paquetes.calcularPaquete(Number(id_paquete));
+        if (!duracionDias || isNaN(Number(duracionDias)) || Number(duracionDias) <= 0) {
+            return res.status(400).json({ error: "duracionDias es requerido y debe ser un número positivo" });
+        }
+
+        const paquete = await Paquetes.calcularPaquete(Number(id_paquete), Number(duracionDias));
 
         return res.status(200).json({
             status:"Paquete actualizado",
             paquete
-    });
+        });
     } catch (error) {
         console.error("Error al calcular el total del paquete:", error);
         return res.status(500).json({ error: "Error en el servidor" });
     }
-
 };
+
 
 export const listarPaquetes = async(req: Request, res: Response) => {
     

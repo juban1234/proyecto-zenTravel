@@ -10,19 +10,19 @@ const router = express.Router();
 router.get('/Destiny',buscar); // Funcional
 router.get('/Hotel', SearchHotel); // Funcional
 router.get('/Transport/:origen/:destino',SearchTransporteByName); // funcional
-router.get('/RoomReservation',buscar_habitacion)
+router.get('/RoomReservation/:hotel/:ciudad',buscar_habitacion)
 
 // 📦 Rutas públicas para paquetes
 router.get("/", listarPaquetes) // Listar todos los paquetes
 
 // 📦 Rutas protegidas para paquetes (requieren autenticación)
-router.post("/Create/Package",verificarRol("cliente", "admin", "vendedor"), createPackage) // Crear paquete
-router.post("/Calculate/Package",verificarRol("cliente", "admin", "vendedor"), valuePackage) // Calcular precio
+router.post("/Create/Package",verificarRol("cliente", 'Admin', "Empleado"), createPackage) // Crear paquete
+router.post("/Calculate/Package",verificarRol("cliente", 'Admin', "Empleado"), valuePackage) // Calcular precio
 router.get("/User/Package", verifyToken, traerPaquetes_usuario) // Listar paquetes por usuario
-router.put("/IDPackage/:id", verificarRol("cliente", "admin", "vendedor") ,actualizarPaquete) // Actualizar paquete
+router.put("/IDPackage/:id", verificarRol("cliente", 'Admin', "Empleado") ,actualizarPaquete) // Actualizar paquete
 
 // rutas para el marketing
-router.post('/Marketing',verificarRol("admin","vendedor"),Marketing)
+router.post('/Marketing',verificarRol('Admin', "Empleado"),Marketing)
 
 
 //Rutas para editar 

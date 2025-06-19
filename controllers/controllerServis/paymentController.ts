@@ -2,10 +2,6 @@ import { Request, Response } from 'express';
 import paypalServices from '../../services/paypalServi';
 import { generateTokenPaypal } from '../../Helpers/generateToken';
 
-
-// crear el pago del paquete
-
-
 export const createPayment = async (req: Request, res: Response) => {
     const customToken = generateTokenPaypal(); // Generar token único
   
@@ -21,8 +17,8 @@ export const createPayment = async (req: Request, res: Response) => {
       intent: 'sale',
       payer: { payment_method: 'paypal' },
       redirect_urls: {
-        return_url: 'http://localhost:10101/api/payments/success',
-        cancel_url: 'http://localhost:10101/api/payments/cancel',
+        return_url: 'https://proyecto-zentravel.onrender.com/api/payments/success',
+        cancel_url: 'https://proyecto-zentravel.onrender.com/api/payments/cancel',
       },
       transactions: [
         {
@@ -57,9 +53,6 @@ export const createPayment = async (req: Request, res: Response) => {
     }
   });
 };
-
-// Verificar el pago
-
 
 export const successPayment = async (req: Request, res: Response) => {
     const paymentId = req.query.paymentId as string;

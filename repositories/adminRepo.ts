@@ -1,13 +1,13 @@
-import { strict } from 'assert';
 import db from '../configs/config';
 import { Usuario } from '../Dto/User';
 import { Destino, Habitacion, Hotel, Transporte } from '../Dto/SearchDto';
 
 class admin {
 
-    static async TraerUser() {
-        const sql = `select * from usuario`;
-        const [rows]: any = await db.execute(sql);
+    static async TraerUser(tipoUsuario: string) {
+        const sql = `select * from usuario where rol = ?`;
+        const value = tipoUsuario;
+        const [rows]: any = await db.execute(sql,[value]);
         return await rows || null;
     }
 
@@ -135,6 +135,7 @@ class admin {
             throw error;
         }
     }
+
 }
 
 export default admin;

@@ -14,7 +14,6 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         const decoded = jwt.verify(token, process.env.KEY_TOKEN!) as { data: { id: number } };
        // Nuevo
         (req as any).user = decoded.data;
-        console.log("Token decodificado:", decoded.data);
         
         next();
     } catch (error) {

@@ -8,8 +8,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendRecoveryEmail = async (to: string, token: string) => {
-  const recoveryLink = `http://localhost:5173/reset-password/${token}`;
+export const RecoveryEmail = async (to: any, token: string) => {
+  const recoveryLink = `https://zentravel.vercel.app/reset-password/${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
@@ -107,7 +107,7 @@ const sendRecoveryEmail = async (to: string, token: string) => {
                 <tr>
                   <td style="text-align: center; padding: 30px 0;">
                     <a href="${recoveryLink}" 
-                       style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); color: white; padding: 18px 36px; text-decoration: none; border-radius: 16px; font-weight: 600; font-size: 18px; box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);">
+                      style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); color: white; padding: 18px 36px; text-decoration: none; border-radius: 16px; font-weight: 600; font-size: 18px; box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);">
                       🔑 Restablecer mi contraseña
                     </a>
                   </td>
@@ -246,7 +246,23 @@ const sendRecoveryEmail = async (to: string, token: string) => {
     `
   };
 
+  try {
   await transporter.sendMail(mailOptions);
-};
+  } catch (error) {
+    console.error("Error al enviar correo:", error);
+  }
+}
 
-export default sendRecoveryEmail;
+export const emailRol = async (asunto:string , datos:any) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER, // El correo del sistema envía
+    to: datos.email, // El usuario recibe
+    subject: asunto,
+    html: `
+      Hola ${datos.nombre},<br>
+      Hemos recibido tu solicitud para cambiar tu rol a: <strong>${datos.rol}</strong>.<br>
+      Te contactaremos pronto para confirmar.
+    `
+  };
+  await transporter.sendMail(mailOptions);
+}

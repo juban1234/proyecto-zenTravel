@@ -5,6 +5,11 @@ import upload from '../../configs/multer';
 import fs from 'fs';
 import { promisify } from 'util';
 
+<<<<<<< HEAD
+=======
+const uploadSingle = promisify(upload.single('imagen'));
+
+>>>>>>> origin
 export const Editdestino = async (req: Request, res: Response) => {
   try {
     const id_destino = Number(req.params.id_destino);
@@ -58,8 +63,11 @@ export const Editdestino = async (req: Request, res: Response) => {
   }
 }
 
+<<<<<<< HEAD
 
 const uploadSingle = promisify(upload.single('imagen'));
+=======
+>>>>>>> origin
 export const EditarHotel = async (req: Request, res: Response) => {
 
   try {
@@ -120,6 +128,7 @@ export const EditarHotel = async (req: Request, res: Response) => {
   }
 }
 
+<<<<<<< HEAD
 const uploadMultiple = promisify(upload.array('imagenes', 5));
 
 export const EditarHabitacion = async (req: Request, res: Response) => {
@@ -201,3 +210,5 @@ export const EditarHabitacion = async (req: Request, res: Response) => {
 
 
 
+=======
+>>>>>>> origin

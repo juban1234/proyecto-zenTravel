@@ -4,6 +4,8 @@ import { Login ,Usuario } from "../../Dto/User";
 import {generateAccessToken,generateRefreshToken,actualizarToken} from '../../Helpers/generateToken';
 import dotenv from "dotenv";
 import usuarioRepo from "../../repositories/usuarioRepo";
+import { emailRol } from "../../Helpers/sendRecoveryEmail";
+
 
 dotenv.config();
 
@@ -79,5 +81,31 @@ export const informationUser = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
+export const SolicitarCambioRol = async (req: Request, res: Response) => {
+
+  const {nombre,email,telefono,asunto,rol} = req.body
+  try {
+
+    const dto = {
+      nombre,
+      email,
+      telefono,
+      rol
+    }
+
+    await emailRol(asunto,dto)
+
+    return res.status(200).json({ 
+      message: "Correo de recuperación enviado" 
+    })
+
+  } catch (error) {
+    console.error("❌ Error en enviar el correo:", error);
+    return res.status(500).json({ error: "Error en el servidor al momento de enviar el imeil" });
+  }
+
+}
+
 
 

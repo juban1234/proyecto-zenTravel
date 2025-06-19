@@ -2,6 +2,7 @@ import db from '../configs/config';
 import bcrypt from "bcryptjs";
 import {ProfileDto,Login,Usuario} from '../Dto/User';
 import { SupportRequestDTO } from '../Dto/SupportRequestDTO';
+import { log } from 'console';
 
 class usuarioRepo {
 
@@ -39,7 +40,10 @@ class usuarioRepo {
   
   static async buscarUsuarioPorEmail(email: string) {
     const [rows]: any = await db.execute('CALL loginUsuario(?)', [email]);
-    return rows[0]?.[0] || null;
+    const datos = rows[0][0]
+    console.log(datos);
+    
+    return datos.email;
   }
 
   static async cambiarContraseña(login: Login) {

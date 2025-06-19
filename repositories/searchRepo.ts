@@ -24,10 +24,14 @@ class searchRepo {
         return rows;
     }
 
-    static async traerHabitaciones(ha: String){
-        const sql = `call buscar_habitacion(?)`
-        const [rows]: any = await db.execute(sql,[ha]);
-        return rows;   
+    static async traerHabitaciones(hotel: String,ciudad:string){
+        const sql = `call buscar_habitacion(?,?)`
+        const values = [
+            hotel,
+            ciudad
+        ]
+        const [rows]: any = await db.execute(sql,values);
+        return rows[0];   
     }
 }
 

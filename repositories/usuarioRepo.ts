@@ -104,57 +104,5 @@ class usuarioRepo {
     }
   }
 
-  static async editardestino(
-  id_destino: number,
-  datos: { pais: string; departamento: string; nombre: string; descripcion: string }
-) {
-  const sql = `
-    UPDATE destinos 
-    SET 
-      pais = ?, 
-      departamento = ?, 
-      nombre = ?, 
-      descripcion = ?
-    WHERE id_destino = ?
-  `;
-  const values = [
-
-    datos.pais,
-    datos.departamento,
-    datos.nombre,
-    datos.descripcion,
-    id_destino
-  ];
-  const [result]: any = await db.execute(sql, values);
-  return result.affectedRows > 0 ? { ...datos, id_destino } : null;
-}
-
-static async editarHotel(
-  id_hotel: number,
-  datos: { nombre: string; descripcion: string; ubicacion: string; imagenes: string[] }
-) {
-  const sql = `
-    UPDATE hotel 
-    SET 
-      nombre = ?, 
-      descripcion = ?, 
-      ubicacion = ?, 
-      imagenes = ?
-    WHERE id_hotel = ?
-  `;
-
-  const values = [
-    datos.nombre,
-    datos.descripcion,
-    datos.ubicacion,
-    JSON.stringify(datos.imagenes),
-    id_hotel
-  ];
-
-  const [result]: any = await db.execute(sql, values);
-  return result.affectedRows > 0 ? { ...datos, id_hotel } : null;
-}
-
 }
 export default usuarioRepo;
-

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";    
 import searchRepo from "../../repositories/searchRepo";
-import { param } from "express-validator";
 
 
 export const buscar = async (req: Request, res: Response): Promise<Response> => {
@@ -31,6 +30,24 @@ export const SearchHotel = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Error del servidor." });
     }
 };
+
+export const SearchTranport = async(req: Request, res: Response) => {
+    try {
+        
+        const result = await searchRepo.buscartransporte()
+        if(!result) {
+            res.status(400).json({ status: `no se encontro ninigun tranporte disponible` })
+        }
+
+        return res.status(300).json({
+            status: `tranportes encontrados`,
+            result
+        })
+
+    } catch (error) {
+        
+    }
+}
 
 export const SearchTransporteByName = async (req: Request, res: Response) => {
     try {

@@ -140,7 +140,7 @@ export class PackageController{
 
     };
 
-    static async listarPaquetes ( res: Response) {
+    static async listarPaquetes ( req: Request,res: Response) {
         
         try{
             const paquetes = await Paquetes.traerPaquetes()

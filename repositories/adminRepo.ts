@@ -218,6 +218,11 @@ class admin {
     return result.affectedRows > 0 ;
     }
 
+    static async infoDashbord(): Promise<any[][]> {
+        const [rows] = await db.query("CALL obtenerDashboard()");
+        return rows as any[][];
+    }
+
 }
 
 export default admin;

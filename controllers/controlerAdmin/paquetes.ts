@@ -1,4 +1,8 @@
 import { Request, Response } from "express";
+import cloudinary from "../../configs/cloudinary"; 
+import upload from '../../configs/multer';
+import fs from 'fs';
+import { promisify } from 'util';
 import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 
@@ -37,29 +41,51 @@ export const createDestino = async(req:Request , res:Response) => {
     }
 
 }
-
+const uploadMultiple = promisify(upload.single('imagen'));
 export const createHotel = async (req: Request, res: Response): Promise<Response> => {
-    
-    const { nombre, descripcion, ubicacion, imagenes, estrellas } = req.body;
+  try {
+    await uploadMultiple(req, res);
 
-    try {
+    const nombre = req.body.nombre?.trim();
+    const descripcion = req.body.descripcion?.trim();
+    const ubicacion = req.body.ubicacion?.trim();
+    const estrellas = Number(req.body.estrellas);
 
-        if (!nombre?.trim() || !descripcion?.trim() || !ubicacion?.trim()|| imagenes.length === 0) {
-            return res.status(400).json({ message: "Todos los campos son requeridos " });
-        }
-        const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellas);
-
-        const resultado = await admin.añadirHotel(nuevoHotel);
-
-
-        return res.status(201).json({
-            message: "Hotel creado exitosamente.",
-            data: resultado,
-        });
-    } catch (error) {
-        console.error("Error al crear el hotel:", error);
-        return res.status(500).json({ message: "Ocurrió un error al intentar crear el hotel. Por favor, intente nuevamente." });
+    if (!nombre || !descripcion || !ubicacion || isNaN(estrellas)) {
+      return res.status(400).json({ message: "Todos los campos son requeridos" });
     }
+
+    if (estrellas < 1 || estrellas > 5) {
+      return res.status(400).json({ message: "El número de estrellas debe estar entre 1 y 5" });
+    }
+
+    if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
+      return res.status(400).json({ message: "Se requiere al menos una imagen" });
+    }
+
+    const archivos = req.files as Express.Multer.File[];
+
+    const imagenes: string[] = [];
+
+    for (const archivo of archivos) {
+      const resultado = await cloudinary.uploader.upload(archivo.path);
+      imagenes.push(resultado.secure_url);
+      fs.unlinkSync(archivo.path); 
+    }
+
+    const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellas);
+
+    const resultado = await admin.añadirHotel(nuevoHotel);
+
+    return res.status(201).json({
+      message: "Hotel creado exitosamente.",
+      data: resultado,
+    });
+
+  } catch (error: any) {
+    console.error("Error al crear el hotel:", error.message || error);
+    return res.status(500).json({ message: "Ocurrió un error al intentar crear el hotel. Por favor, intente nuevamente." });
+  }
 };
 
 export const createTransporte = async (req: Request , res:Response) => {

@@ -47,7 +47,7 @@ export const createHotel = async (req: Request, res: Response): Promise<Response
         if (!nombre?.trim() || !descripcion?.trim() || !ubicacion?.trim()|| imagenes.length === 0) {
             return res.status(400).json({ message: "Todos los campos son requeridos " });
         }
-        const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes);
+        const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellas);
 
         const resultado = await admin.añadirHotel(nuevoHotel);
 

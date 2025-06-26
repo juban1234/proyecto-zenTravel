@@ -1,5 +1,5 @@
 import express from "express";
-import { EliminarUsuarios , TraerUsuario , RolUsuario ,newEmpleados} from "../controllers/controlerAdmin/usuarios";
+import { EliminarUsuarios , TraerUsuario , RolUsuario ,newEmpleados,Dashboard} from "../controllers/controlerAdmin/usuarios";
 import { verificarRol } from "../middleware/validatorRol";
 import { createDestino , createHabitacion, createHotel, createTransporte } from "../controllers/controlerAdmin/paquetes";
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
@@ -31,6 +31,6 @@ router.get('/Report/Soporte', reporte)
 router.patch('/Report/Act/:id')
 
 //dasbord
-router.get('/Info/Dashboard')
+router.get('/Info/Dashboard',Dashboard)
 
 export default router;

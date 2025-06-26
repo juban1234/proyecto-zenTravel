@@ -40,7 +40,7 @@ export const createDestino = async(req:Request , res:Response) => {
 
 export const createHotel = async (req: Request, res: Response): Promise<Response> => {
     
-    const { nombre, descripcion, ubicacion, imagenes } = req.body;
+    const { nombre, descripcion, ubicacion, imagenes, estrellas } = req.body;
 
     try {
 

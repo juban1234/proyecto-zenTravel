@@ -57,17 +57,22 @@ export class Hotel {
     private _descripcion: string;
     private _ubicacion: string;
     private _imagenes: string[]; 
+    private _estrellas: number;
+    
 
     constructor(
         nombre: string,
         descripcion: string,
         ubicacion: string,
-        imagenes: string[]
+        imagenes: string[],
+        estrellas: number = 5
+        
     ) {
         this._nombre = nombre;
         this._descripcion = descripcion;
         this._ubicacion = ubicacion;
         this._imagenes = imagenes;
+        this._estrellas = estrellas;
     }
 
     // Getters
@@ -86,6 +91,9 @@ export class Hotel {
     get imagenes(): string[] {
         return this._imagenes;
     }
+    get estrellas(): number {
+        return this._estrellas;
+    }
 
     // Setters
     set nombre(nombre: string) {
@@ -102,6 +110,9 @@ export class Hotel {
 
     set imagenes(imagenes: string[]) { 
         this._imagenes = imagenes;
+    }
+    set estrellas(estrellas: number) {
+        this._estrellas = estrellas;
     }
 }
 

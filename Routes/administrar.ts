@@ -30,4 +30,7 @@ router.delete('/deleteTransport/:id_transporte',verificarRol('Admin'),deleteTran
 router.get('/Report/Soporte', reporte)
 router.patch('/Report/Act/:id')
 
+//dasbord
+router.get('/Info/Dashboard')
+
 export default router;

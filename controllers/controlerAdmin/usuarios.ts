@@ -72,7 +72,7 @@ export const RolUsuario = async(req:Request , res:Response) => {
 export const newEmpleados = async(req:Request , res:Response) => {
     const {nombre,email,telefono,rol} = req.body;
 
-    const rolesPermitidos = ['vendedor','soporte','admin']
+    const rolesPermitidos = ['cliente','Empleado','Admin']
     const password = generarContrasena()
 
     if (!nombre || !email || !telefono || !password) {

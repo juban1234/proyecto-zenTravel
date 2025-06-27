@@ -56,7 +56,7 @@ const buscarDestinoEnBD = async (pregunta: string): Promise<string | null> => {
     const [paquetesResult] = await db.query<any[][]>("CALL listarPaquetes()");
     const paquetes = paquetesResult[0];
     if (paquetes && paquetes.length > 0) {
-      return paquetes.map((p: any) => `🎁 ${p.nombrePaquete}: ${p.descripcion}`).join("\n\n");
+      return paquetes.map((p: any) => `🎁 ${p.nombrePaquete}: ${p.descripcion} : ${p.precioTotal}: ${p.imagenURL}: ${p.fechaInicio}:${p.duracionDias}: ${p.estado}`).join("\n\n");
     }
   }
 

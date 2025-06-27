@@ -35,36 +35,47 @@ Evita el uso de asteriscos o formatos innecesarios. Sé claro, útil y directo.
 `.trim();
 
 // 🔎 Primero intenta responder desde la base de datos
-const buscarDestinoEnBD = async (pregunta: string): Promise<string | null> => {
+const buscarDestinoEnBD = async (pregunta: string): Promise<any[] | string | null> => {
   const preguntaNormalizada = pregunta.toLowerCase();
 
   if (preguntaNormalizada.includes("destinos") || preguntaNormalizada.includes("lugares")) {
     const [destinos] = await db.query<RowDataPacket[]>("SELECT nombre, descripcion FROM destinos");
     if (destinos.length > 0) {
-      return destinos.map((r: any) => `🌎 ${r.nombre}: ${r.descripcion}`).join("\n\n");
+      return destinos.map((r) => `🌎 ${r.nombre}: ${r.descripcion}`).join("\n\n");
     }
   }
 
   if (preguntaNormalizada.includes("hotel") || preguntaNormalizada.includes("alojamiento")) {
     const [hoteles] = await db.query<RowDataPacket[]>("SELECT nombre, ciudad FROM hotel");
     if (hoteles.length > 0) {
-      return hoteles.map((h: any) => `🏨 ${h.nombre} en ${h.ciudad}`).join("\n");
+      return hoteles.map((h) => `🏨 ${h.nombre} en ${h.ciudad}`).join("\n");
     }
   }
 
   if (preguntaNormalizada.includes("paquete") || preguntaNormalizada.includes("promoción")) {
     const [paquetesResult] = await db.query<any[][]>("CALL listarPaquetes()");
     const paquetes = paquetesResult[0];
+
     if (paquetes && paquetes.length > 0) {
-      return paquetes.map((p: any) => `🎁 ${p.nombrePaquete}: ${p.descripcion} : ${p.precioTotal}: ${p.imagenURL}: ${p.fechaInicio}:${p.duracionDias}: ${p.estado}`).join("\n\n");
+      return paquetes.map((p: any) => ({
+        nombre: p.nombrePaquete,
+        descripcion: p.descripcion,
+        precio: parseFloat(p.precioTotal),
+        imagenUrl: p.imagenURL,
+        fechaInicio: p.fechaInicio,
+        duracionDias: p.duracionDias,
+        estado: p.estado,
+        calificacion: p.calificacion || 8.5, // por defecto si no viene en BD
+      }));
     }
   }
 
   return null;
 };
 
+
 // 🔮 Si no hay resultados en la BD, usa la IA
-export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string> => {
+export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string | any[]> => {
   const resultadoBD = await buscarDestinoEnBD(ZenIA);
   if (resultadoBD) return resultadoBD;
 
@@ -77,6 +88,7 @@ export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string>
           parts: [
             {
               text: `${prompt}\n\nPregunta del usuario: ${ZenIA}`,
+              
             },
           ],
         },

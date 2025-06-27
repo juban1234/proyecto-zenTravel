@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 
+
 export const createDestino = async(req:Request , res:Response) => {
     
     const { pais, departamento, nombre, descripcion } = req.body;
@@ -41,52 +42,55 @@ export const createDestino = async(req:Request , res:Response) => {
     }
 
 }
-const uploadMultiple = promisify(upload.single('imagen'));
+
+const uploadMultiple = promisify(upload.array('imagenes')); 
+
 export const createHotel = async (req: Request, res: Response): Promise<Response> => {
   try {
     await uploadMultiple(req, res);
 
-    const nombre = req.body.nombre?.trim();
-    const descripcion = req.body.descripcion?.trim();
-    const ubicacion = req.body.ubicacion?.trim();
-    const estrellas = Number(req.body.estrellas);
+    const { nombre, descripcion, ubicacion, estrellas, ciudad } = req.body;
 
-    if (!nombre || !descripcion || !ubicacion || isNaN(estrellas)) {
-      return res.status(400).json({ message: "Todos los campos son requeridos" });
-    }
-
-    if (estrellas < 1 || estrellas > 5) {
-      return res.status(400).json({ message: "El número de estrellas debe estar entre 1 y 5" });
-    }
-
-    if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
-      return res.status(400).json({ message: "Se requiere al menos una imagen" });
+    if (!nombre || !descripcion || !ubicacion || !ciudad || !estrellas) {
+      return res.status(400).json({ error: "Todos los campos son requeridos." });
     }
 
     const archivos = req.files as Express.Multer.File[];
 
+    if (!archivos || archivos.length === 0) {
+      return res.status(400).json({ error: 'Al menos una imagen es requerida.' });
+    }
+
     const imagenes: string[] = [];
 
     for (const archivo of archivos) {
-      const resultado = await cloudinary.uploader.upload(archivo.path);
-      imagenes.push(resultado.secure_url);
-      fs.unlinkSync(archivo.path); 
+      const subida = await cloudinary.uploader.upload(archivo.path);
+      imagenes.push(subida.secure_url);
+      fs.unlinkSync(archivo.path);
     }
 
-    const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellas);
+    const estrellasNum = Number(estrellas);
+
+    if (isNaN(estrellasNum) || estrellasNum < 1 || estrellasNum > 5) {
+      return res.status(400).json({ error: "El campo 'estrellas' debe ser un número entre 1 y 5." });
+    }
+ 
+    const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellasNum, ciudad);
 
     const resultado = await admin.añadirHotel(nuevoHotel);
 
     return res.status(201).json({
-      message: "Hotel creado exitosamente.",
+      message: "Hotel creado con éxito.",
       data: resultado,
     });
 
   } catch (error: any) {
     console.error("Error al crear el hotel:", error.message || error);
-    return res.status(500).json({ message: "Ocurrió un error al intentar crear el hotel. Por favor, intente nuevamente." });
+    return res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
+
 
 export const createTransporte = async (req: Request , res:Response) => {
     const { tipo ,empresa ,origen ,destino ,salida ,duracion ,presio ,cantidad ,clase } = req.body;

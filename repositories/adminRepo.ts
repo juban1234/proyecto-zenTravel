@@ -47,16 +47,20 @@ class admin {
         return await db.execute(sql, value)
     }
 
-    static async añadirHotel(hotel: Hotel) {
-        const sql = `insert into hotel (nombre,descripcion,ubicacion,imagenes) values (?,?,?,?)`;
-        const values = [
-            hotel.nombre,
-            hotel.descripcion,
-            hotel.ubicacion,
-            hotel.imagenes
-        ]
-        return await db.execute(sql, values)
-    }
+  static async añadirHotel(hotel: Hotel) {
+  const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion, imagenes,estrellas, ciudad) VALUES (?, ?, ?, ?, ?, ?)`;
+  const values = [
+    hotel.nombre,
+    hotel.descripcion,
+    hotel.ubicacion,
+    hotel.imagenes,
+    hotel.estrellas,
+    hotel.ciudad
+  ];
+  const [result] = await db.execute(sql, values);
+  return result;
+}
+
 
     static async añadirTransporte(trans: Transporte) {
         const sql = `insert into transporte(tipo,empresa,origen,destino,fecha_salida,duracion,precio,capacidad,clase)values(?,?,?,?,?,?,?,?,?)`;

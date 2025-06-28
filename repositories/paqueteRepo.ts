@@ -33,11 +33,12 @@ class Paquetes {
 
     }
 
-    static async calcularPaquete(id_paquete: number) {
-        const sql = 'call calcular_precio_paquete(?)';
-        const [rows]: any = await db.execute(sql, [id_paquete]);
-        return rows;
-    }
+    static async calcularPaquete(id_paquete: number, duracionDias: number) {
+    const sql = 'CALL calcular_precio_paquete(?, ?)';
+    const [rows]: any = await db.execute(sql, [id_paquete, duracionDias]);
+    return rows;
+}
+
 
     static async traerPaquetes_usuario(id_paquete: number){
         const sql = `

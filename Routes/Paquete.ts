@@ -30,10 +30,5 @@ router.post('/Marketing',verificarRol('Admin', "Empleado"),PackageController.Mar
 router.put('/EditarDestino/:id_destino', EditController.Editdestino);
 router.put('/EditarHotel/:id_hotel',EditController.EditarHotel);
 
- 
-
-
-
-
 
 export default router;

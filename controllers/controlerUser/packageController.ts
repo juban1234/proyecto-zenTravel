@@ -121,13 +121,13 @@ export class PackageController{
 
     static async valuePackage (req: Request, res: Response) {
         try {
-            const { id_paquete } = req.body;  
+            const { id_paquete, estancia } = req.body;  
 
             if (!id_paquete || isNaN(Number(id_paquete))) {
                 return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
             }
 
-            const paquete = await Paquetes.calcularPaquete(Number(id_paquete));
+            const paquete = await Paquetes.calcularPaquete(id_paquete,estancia);
 
             return res.status(200).json({
                 status:"Paquete actualizado",
@@ -181,54 +181,54 @@ export class PackageController{
     }
 
     static async actualizarPaquete (req: Request, res: Response) {
-    try {
+        try {
 
-        const id_paquete = Number(req.params.id)
+            const id_paquete = Number(req.params.id)
 
-        const {
-        nombrePaquete,
-        descripcion,
-        imagenUrl,
-        duracionDias,
-        fechaInicioDisponible,
-        descuento,
-        nombreHotel,
-        nombreTransporte,
-        nombreDestino,
-        categoria,
-        incluye,
-        noIncluye
-        } = req.body
+            const {
+            nombrePaquete,
+            descripcion,
+            imagenUrl,
+            duracionDias,
+            fechaInicioDisponible,
+            descuento,
+            nombreHotel,
+            nombreTransporte,
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
+            } = req.body
 
-        const dto = new Package (
-        nombrePaquete,
-        descripcion,
-        imagenUrl,
-        duracionDias,
-        fechaInicioDisponible,
-        descuento,
-        nombreHotel,
-        nombreTransporte,
-        nombreDestino,
-        categoria,
-        incluye,
-        noIncluye
-        )
+            const dto = new Package (
+            nombrePaquete,
+            descripcion,
+            imagenUrl,
+            duracionDias,
+            fechaInicioDisponible,
+            descuento,
+            nombreHotel,
+            nombreTransporte,
+            nombreDestino,
+            categoria,
+            incluye,
+            noIncluye
+            )
 
-        const result = await Paquetes.actualizar_package(dto,id_paquete)
+            const result = await Paquetes.actualizar_package(dto,id_paquete)
 
-        return res.status(200).json({
-        success: true,
-        message: "Paquete actualizado exitosamente",
-        result
-        })
-    } catch (error: any) {
+            return res.status(200).json({
+            success: true,
+            message: "Paquete actualizado exitosamente",
+            result
+            })
+        } catch (error: any) {
         console.error("❌ Error al actualizar paquete:", error)
         return res.status(500).json({
         success: false,
         message: "Error al actualizar el paquete"
         })
-    }
+        }
     }
 
     static async Marketing (req: Request, res: Response): Promise<Response> {

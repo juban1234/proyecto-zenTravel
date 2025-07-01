@@ -80,16 +80,20 @@ class admin {
         return await db.execute(sql, values)
     }
 
-    static async añadirHabitacion(habit: Habitacion) {
-        const sql = `call agregar_habitacion_hotel(?,?,?,?)`
-        const values = [
-            habit.tipo,
-            habit.numero,
-            habit.precio,
-            habit.nombre_hotel
-        ]
-        return await db.execute(sql, values);
-    }
+static async añadirHabitacion(habit: Habitacion) {
+    const sql = `CALL agregar_habitacion_hotel(?, ?, ?, ?, ?)`;
+    const values = [
+        habit.tipo,
+        habit.numero,
+        habit.precio,
+        habit.id_hotel,
+        habit.imagen
+    ];
+
+    const [rows] = await db.execute(sql, values);
+    return rows;
+}
+
 
     static async eliminarPaquete(id_paquete: number) {
         const sql = 'DELETE FROM paquete WHERE id_paquete = ?';

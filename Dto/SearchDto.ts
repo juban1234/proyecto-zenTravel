@@ -56,6 +56,7 @@ export class Hotel {
     private _nombre: string;
     private _descripcion: string;
     private _ubicacion: string;
+    private _estrellas: string;
     private _imagenes: string[]; 
     private _ciudad: string;
     
@@ -64,12 +65,14 @@ export class Hotel {
         nombre: string,
         descripcion: string,
         ubicacion: string,
+        estrellas: string,
         imagenes: string[],
         ciudad: string       
     ) {
         this._nombre = nombre;
         this._descripcion = descripcion;
         this._ubicacion = ubicacion;
+        this._estrellas = estrellas;
         this._imagenes = imagenes;
         this._ciudad = ciudad;
     }
@@ -85,6 +88,9 @@ export class Hotel {
 
     get ubicacion(): string {
         return this._ubicacion;
+    }
+    get estrellas(): string {
+        return this._estrellas;
     }
 
     get imagenes(): string[] {
@@ -106,6 +112,9 @@ export class Hotel {
 
     set ubicacion(ubicacion: string) {
         this._ubicacion = ubicacion;
+    }
+    set estrellas(estrellas: string) {
+        this._estrellas = estrellas;
     }
 
     set imagenes(imagenes: string[]) { 

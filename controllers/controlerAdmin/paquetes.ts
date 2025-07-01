@@ -62,7 +62,7 @@ export const createHotel: RequestHandler = async (req, res) => {
             estrellas,
         } = req.body;
 
-        const campos = { nombre, descripcion, ubicacion, ciudad };
+        const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
 
         for (const [campo, valor] of Object.entries(campos)) {
             if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
@@ -89,6 +89,7 @@ export const createHotel: RequestHandler = async (req, res) => {
             nombre,
             descripcion,
             ubicacion,
+            estrellas,
             imagenesUrl,
             ciudad
         );

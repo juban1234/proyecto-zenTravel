@@ -1,13 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import db from "../configs/config";
+import { RowDataPacket } from "mysql2";
 
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
-
-if (!apiKey) {
-  throw new Error("GEMINI_API_KEY no está definida en el archivo .env");
-}
+if (!apiKey) throw new Error("GEMINI_API_KEY no está definida en el archivo .env");
 
 const ai = new GoogleGenAI({ apiKey });
 
@@ -24,8 +23,7 @@ const cleanResponseText = (text: string): string => {
   return withoutAsterisks.replace(/(?:\r\n|\r|\n)/g, '\n').trim();
 };
 
-export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string> => {
-  const prompt = `
+const prompt = `
 Eres un asistente experto en turismo, cultura, gastronomía y planificación de viajes en Colombia. 
 Responde preguntas relacionadas con lugares turísticos, actividades, historia, tradiciones culturales, música, danza, artesanía, gastronomía y recomendaciones personalizadas de viaje en todo el país.
 
@@ -36,10 +34,65 @@ Asume que cualquier pregunta que te hagan está relacionada con un interés en v
 Evita el uso de asteriscos o formatos innecesarios. Sé claro, útil y directo.
 `.trim();
 
+// 🔎 Primero intenta responder desde la base de datos
+const buscarDestinoEnBD = async (pregunta: string): Promise<any[] | string | null> => {
+  const preguntaNormalizada = pregunta.toLowerCase();
+
+  if (preguntaNormalizada.includes("destinos") || preguntaNormalizada.includes("lugares")) {
+    const [destinos] = await db.query<RowDataPacket[]>("SELECT nombre, descripcion FROM destinos");
+    if (destinos.length > 0) {
+      return destinos.map((r) => `🌎 ${r.nombre}: ${r.descripcion}`).join("\n\n");
+    }
+  }
+
+  if (preguntaNormalizada.includes("hotel") || preguntaNormalizada.includes("alojamiento")) {
+    const [hoteles] = await db.query<RowDataPacket[]>("SELECT nombre, ciudad FROM hotel");
+    if (hoteles.length > 0) {
+      return hoteles.map((h) => `🏨 ${h.nombre} en ${h.ciudad}`).join("\n");
+    }
+  }
+
+  if (preguntaNormalizada.includes("paquete") || preguntaNormalizada.includes("promoción")) {
+    const [paquetesResult] = await db.query<any[][]>("CALL listarPaquetes()");
+    const paquetes = paquetesResult[0];
+
+    if (paquetes && paquetes.length > 0) {
+      return paquetes.map((p: any) => ({
+        nombre: p.nombrePaquete,
+        descripcion: p.descripcion,
+        precio: parseFloat(p.precioTotal),
+        imagenUrl: p.imagenURL,
+        fechaInicio: p.fechaInicio,
+        duracionDias: p.duracionDias,
+        estado: p.estado,
+        calificacion: p.calificacion || 8.5, // por defecto si no viene en BD
+      }));
+    }
+  }
+
+  return null;
+};
+
+
+// 🔮 Si no hay resultados en la BD, usa la IA
+export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string | any[]> => {
+  const resultadoBD = await buscarDestinoEnBD(ZenIA);
+  if (resultadoBD) return resultadoBD;
+
   try {
     const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash", // Puedes ajustar según disponibilidad
-      contents: [{ role: "user", parts: [{ text: `${prompt}\n\nPregunta del usuario: ${ZenIA}` }] }],
+      model: "gemini-2.0-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `${prompt}\n\nPregunta del usuario: ${ZenIA}`,
+              
+            },
+          ],
+        },
+      ],
     });
 
     const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";

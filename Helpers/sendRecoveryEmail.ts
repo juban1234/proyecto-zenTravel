@@ -261,7 +261,9 @@ export const emailRol = async (asunto:string , datos:any) => {
     html: `
       Hola ${datos.nombre},<br>
       Hemos recibido tu solicitud para cambiar tu rol a: <strong>${datos.rol}</strong>.<br>
-      Te contactaremos pronto para confirmar.
+      Te contactaremos pronto para confirmar. <br>
+       Datos
+      ${datos[0]}
     `
   };
   await transporter.sendMail(mailOptions);

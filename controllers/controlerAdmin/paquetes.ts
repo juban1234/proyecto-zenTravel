@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import cloudinary from "../../configs/cloudinary"; 
-import { uploadMultiple } from "../../configs/multer";
+import { RequestHandler } from "express";
 import fs from 'fs';
 import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
+import { AuthenticatedRequest } from "../../Helpers/types";
 
 
 export const createDestino = async(req:Request , res:Response) => {
@@ -43,14 +44,11 @@ export const createDestino = async(req:Request , res:Response) => {
 
 }
 
-interface AuthenticatedRequest extends Request {
-    user: { id: string };
-    files?: Express.Multer.File[];
-}
-export const createHotel = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
-    try {
-        
-        const id_usuario = req.user?.id;
+export const createHotel: RequestHandler = async (req, res) => {
+    const reqAuth = req as AuthenticatedRequest;
+    const id_usuario = reqAuth.user?.id;
+
+    try{
 
         if (!id_usuario) {
             return res.status(401).json({ error: "Usuario no autenticado" });
@@ -64,7 +62,7 @@ export const createHotel = async (req: AuthenticatedRequest, res: Response): Pro
             estrellas,
         } = req.body;
 
-        const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
+        const campos = { nombre, descripcion, ubicacion, ciudad };
 
         for (const [campo, valor] of Object.entries(campos)) {
             if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
@@ -72,13 +70,13 @@ export const createHotel = async (req: AuthenticatedRequest, res: Response): Pro
             }
         }
 
-        if (!req.files || req.files.length === 0) {
+        if (!reqAuth.files || reqAuth.files.length === 0) {
             return res.status(400).json({ error: 'Se requiere al menos una imagen' });
         }
 
         const imagenesUrl: string[] = [];
 
-        for (const file of req.files) {
+        for (const file of reqAuth.files) {
             try {
                 const resultado = await cloudinary.uploader.upload(file.path);
                 imagenesUrl.push(resultado.secure_url);
@@ -91,9 +89,8 @@ export const createHotel = async (req: AuthenticatedRequest, res: Response): Pro
             nombre,
             descripcion,
             ubicacion,
-            ciudad,
-            Number(estrellas),
-            imagenesUrl
+            imagenesUrl,
+            ciudad
         );
 
         const idHotel = await admin.añadirHotel(dto);
@@ -108,8 +105,6 @@ export const createHotel = async (req: AuthenticatedRequest, res: Response): Pro
         return res.status(500).json({ error: "Error en el servidor" });
     }
 };
-
-
 
 export const createTransporte = async (req: Request , res:Response) => {
     const { tipo ,empresa ,origen ,destino ,salida ,duracion ,presio ,cantidad ,clase } = req.body;

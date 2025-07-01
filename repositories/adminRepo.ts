@@ -48,14 +48,13 @@ class admin {
     }
 
   static async añadirHotel(hotel: Hotel) {
-  const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion, imagenes,estrellas, ciudad) VALUES (?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion, imagenes, ciudad) VALUES (?, ?, ?, ?, ?)`;
   const values = [
     hotel.nombre,
     hotel.descripcion,
     hotel.ubicacion,
-    hotel.ciudad,
-    hotel.estrellas,
-    hotel.imagenes
+    hotel.imagenes,
+    hotel.ciudad
   ];
   const [result] = await db.execute(sql, values);
   return result;

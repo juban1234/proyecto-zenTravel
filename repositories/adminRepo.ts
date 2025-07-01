@@ -53,9 +53,9 @@ class admin {
     hotel.nombre,
     hotel.descripcion,
     hotel.ubicacion,
-    hotel.imagenes,
+    hotel.ciudad,
     hotel.estrellas,
-    hotel.ciudad
+    hotel.imagenes
   ];
   const [result] = await db.execute(sql, values);
   return result;

@@ -5,6 +5,7 @@ import { createDestino , createHabitacion, createHotel, createTransporte } from 
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
 import { validatorParams } from "../middleware/register-validator";
 import { reporte } from "../controllers/controlerAdmin/soporteController";
+import { uploadMultiple } from "../configs/multer";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post('/CreateUsers',validatorParams,verificarRol('Admin'),newEmpleados)
 
 // control de contenido del sistema
 router.post('/CreateDestiny',verificarRol('Admin','Empleado'),createDestino);
-router.post('/CreateHotel',verificarRol('Admin','Empleado'),createHotel);
+router.post('/CreateHotel',verificarRol('Admin','Empleado'),uploadMultiple,createHotel);
 router.post('/CreateRoom',verificarRol('Admin','Empleado'),createHabitacion);
 router.post ('/CreateTransport',verificarRol('Admin','Empleado'),createTransporte);
 

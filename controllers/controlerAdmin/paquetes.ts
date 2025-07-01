@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import cloudinary from "../../configs/cloudinary"; 
-import upload from '../../configs/multer';
+import { uploadMultiple } from "../../configs/multer";
 import fs from 'fs';
-import { promisify } from 'util';
 import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 
 
 export const createDestino = async(req:Request , res:Response) => {
+    
     
     const { pais, departamento, nombre, descripcion } = req.body;
     
@@ -43,51 +43,70 @@ export const createDestino = async(req:Request , res:Response) => {
 
 }
 
-const uploadMultiple = promisify(upload.array('imagenes')); 
+interface AuthenticatedRequest extends Request {
+    user: { id: string };
+    files?: Express.Multer.File[];
+}
+export const createHotel = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {
+    try {
+        
+        const id_usuario = req.user?.id;
 
-export const createHotel = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    await uploadMultiple(req, res);
+        if (!id_usuario) {
+            return res.status(401).json({ error: "Usuario no autenticado" });
+        }
 
-    const { nombre, descripcion, ubicacion, estrellas, ciudad } = req.body;
+        const {
+            nombre,
+            descripcion,
+            ubicacion,
+            ciudad,
+            estrellas,
+        } = req.body;
 
-    if (!nombre || !descripcion || !ubicacion || !ciudad || !estrellas) {
-      return res.status(400).json({ error: "Todos los campos son requeridos." });
+        const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
+
+        for (const [campo, valor] of Object.entries(campos)) {
+            if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+                return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
+            }
+        }
+
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ error: 'Se requiere al menos una imagen' });
+        }
+
+        const imagenesUrl: string[] = [];
+
+        for (const file of req.files) {
+            try {
+                const resultado = await cloudinary.uploader.upload(file.path);
+                imagenesUrl.push(resultado.secure_url);
+            } finally {
+                fs.unlinkSync(file.path);
+            }
+        }
+
+        const dto = new Hotel(
+            nombre,
+            descripcion,
+            ubicacion,
+            ciudad,
+            Number(estrellas),
+            imagenesUrl
+        );
+
+        const idHotel = await admin.añadirHotel(dto);
+
+        return res.status(201).json({
+            status: "Hotel creado con éxito",
+            idHotel: idHotel
+        });
+
+    } catch (error: any) {
+        console.error("Error al crear el hotel:", error.message || error);
+        return res.status(500).json({ error: "Error en el servidor" });
     }
-
-    const archivos = req.files as Express.Multer.File[];
-
-    if (!archivos || archivos.length === 0) {
-      return res.status(400).json({ error: 'Al menos una imagen es requerida.' });
-    }
-
-    const imagenes: string[] = [];
-
-    for (const archivo of archivos) {
-      const subida = await cloudinary.uploader.upload(archivo.path);
-      imagenes.push(subida.secure_url);
-      fs.unlinkSync(archivo.path);
-    }
-
-    const estrellasNum = Number(estrellas);
-
-    if (isNaN(estrellasNum) || estrellasNum < 1 || estrellasNum > 5) {
-      return res.status(400).json({ error: "El campo 'estrellas' debe ser un número entre 1 y 5." });
-    }
- 
-    const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellasNum, ciudad);
-
-    const resultado = await admin.añadirHotel(nuevoHotel);
-
-    return res.status(201).json({
-      message: "Hotel creado con éxito.",
-      data: resultado,
-    });
-
-  } catch (error: any) {
-    console.error("Error al crear el hotel:", error.message || error);
-    return res.status(500).json({ error: "Error en el servidor" });
-  }
 };
 
 

@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import cloudinary from "../../configs/cloudinary"; 
-import upload from '../../configs/multer';
+import { RequestHandler } from "express";
 import fs from 'fs';
-import { promisify } from 'util';
 import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
+import { AuthenticatedRequest } from "../../Helpers/types";
 
 
 export const createDestino = async(req:Request , res:Response) => {
+    
     
     const { pais, departamento, nombre, descripcion } = req.body;
     
@@ -43,54 +44,67 @@ export const createDestino = async(req:Request , res:Response) => {
 
 }
 
-const uploadMultiple = promisify(upload.array('imagenes')); 
+export const createHotel: RequestHandler = async (req, res) => {
+    const reqAuth = req as AuthenticatedRequest;
+    const id_usuario = reqAuth.user?.id;
 
-export const createHotel = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    await uploadMultiple(req, res);
+    try{
 
-    const { nombre, descripcion, ubicacion, estrellas, ciudad } = req.body;
+        if (!id_usuario) {
+            return res.status(401).json({ error: "Usuario no autenticado" });
+        }
 
-    if (!nombre || !descripcion || !ubicacion || !ciudad || !estrellas) {
-      return res.status(400).json({ error: "Todos los campos son requeridos." });
+        const {
+            nombre,
+            descripcion,
+            ubicacion,
+            ciudad,
+            estrellas,
+        } = req.body;
+
+        const campos = { nombre, descripcion, ubicacion, ciudad };
+
+        for (const [campo, valor] of Object.entries(campos)) {
+            if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+                return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
+            }
+        }
+
+        if (!reqAuth.files || reqAuth.files.length === 0) {
+            return res.status(400).json({ error: 'Se requiere al menos una imagen' });
+        }
+
+        const imagenesUrl: string[] = [];
+
+        for (const file of reqAuth.files) {
+            try {
+                const resultado = await cloudinary.uploader.upload(file.path);
+                imagenesUrl.push(resultado.secure_url);
+            } finally {
+                fs.unlinkSync(file.path);
+            }
+        }
+
+        const dto = new Hotel(
+            nombre,
+            descripcion,
+            ubicacion,
+            imagenesUrl,
+            ciudad
+        );
+
+        const idHotel = await admin.añadirHotel(dto);
+
+        return res.status(201).json({
+            status: "Hotel creado con éxito",
+            idHotel: idHotel
+        });
+
+    } catch (error: any) {
+        console.error("Error al crear el hotel:", error.message || error);
+        return res.status(500).json({ error: "Error en el servidor" });
     }
-
-    const archivos = req.files as Express.Multer.File[];
-
-    if (!archivos || archivos.length === 0) {
-      return res.status(400).json({ error: 'Al menos una imagen es requerida.' });
-    }
-
-    const imagenes: string[] = [];
-
-    for (const archivo of archivos) {
-      const subida = await cloudinary.uploader.upload(archivo.path);
-      imagenes.push(subida.secure_url);
-      fs.unlinkSync(archivo.path);
-    }
-
-    const estrellasNum = Number(estrellas);
-
-    if (isNaN(estrellasNum) || estrellasNum < 1 || estrellasNum > 5) {
-      return res.status(400).json({ error: "El campo 'estrellas' debe ser un número entre 1 y 5." });
-    }
- 
-    const nuevoHotel = new Hotel(nombre, descripcion, ubicacion, imagenes, estrellasNum, ciudad);
-
-    const resultado = await admin.añadirHotel(nuevoHotel);
-
-    return res.status(201).json({
-      message: "Hotel creado con éxito.",
-      data: resultado,
-    });
-
-  } catch (error: any) {
-    console.error("Error al crear el hotel:", error.message || error);
-    return res.status(500).json({ error: "Error en el servidor" });
-  }
 };
-
-
 
 export const createTransporte = async (req: Request , res:Response) => {
     const { tipo ,empresa ,origen ,destino ,salida ,duracion ,presio ,cantidad ,clase } = req.body;

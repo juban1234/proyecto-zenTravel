@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import db from "../configs/config";
 import { RowDataPacket } from "mysql2";
+import { guardarEnMemoria } from "../services/memoriaServi";
+import { detectarIntencion } from "../Intents/geminiIntent";
 
 dotenv.config();
 
@@ -34,7 +36,49 @@ Asume que cualquier pregunta que te hagan está relacionada con un interés en v
 Evita el uso de asteriscos o formatos innecesarios. Sé claro, útil y directo.
 `.trim();
 
-// 🔎 Primero intenta responder desde la base de datos
+// 🔍 Función para consultar según la intención del usuario
+const consultarBDPorIntencion = async (
+  intencion: string
+): Promise<{ tipo: string; datos: any[] } | null> => {
+  switch (intencion) {
+    case "destinos_playa":
+    case "destinos_naturaleza":
+    case "destinos_cultural": {
+      const tipo = intencion.split("_")[1];
+      const [rows] = await db.query<RowDataPacket[]>(
+        "SELECT nombre, descripcion, departamento, pais FROM destinos WHERE tipo = ?",
+        [tipo]
+      );
+      return rows.length ? { tipo: "destinos", datos: rows } : null;
+    }
+
+    case "hoteles": {
+      const [rows] = await db.query<RowDataPacket[]>(
+        "SELECT nombre, ciudad, descripcion FROM hotel"
+      );
+      return rows.length ? { tipo: "hoteles", datos: rows } : null;
+    }
+
+    case "paquetes": {
+      const [rows] = await db.query<RowDataPacket[]>(
+        "SELECT nombrePaquete AS nombre, descripcion, precioTotal, duracionDias, fechaInicio, categoria, incluye, noIncluye, imagenUrl FROM paquete WHERE estado = 'disponible'"
+      );
+      return rows.length ? { tipo: "paquetes", datos: rows } : null;
+    }
+
+    case "transporte": {
+      const [rows] = await db.query<RowDataPacket[]>(
+        "SELECT tipo, empresa, origen, destino, fecha_salida, precio FROM transporte"
+      );
+      return rows.length ? { tipo: "transporte", datos: rows } : null;
+    }
+
+    default:
+      return null;
+  }
+};
+
+// 🧠 Consulta tradicional (opcional, aún útil)
 const buscarDestinoEnBD = async (pregunta: string): Promise<any[] | string | null> => {
   const preguntaNormalizada = pregunta.toLowerCase();
 
@@ -65,7 +109,7 @@ const buscarDestinoEnBD = async (pregunta: string): Promise<any[] | string | nul
         fechaInicio: p.fechaInicio,
         duracionDias: p.duracionDias,
         estado: p.estado,
-        calificacion: p.calificacion || 8.5, // por defecto si no viene en BD
+        calificacion: p.calificacion || 8.5,
       }));
     }
   }
@@ -73,30 +117,37 @@ const buscarDestinoEnBD = async (pregunta: string): Promise<any[] | string | nul
   return null;
 };
 
+// 🚀 Función principal para responder usando IA y memoria
+export const getResponseFromAIZenTravel = async (
+  ZenIA: string,
+  id_usuario: number
+): Promise<{ tipo: string; datos: any }> => {
+  const intencion = detectarIntencion(ZenIA); // ✅ detecta intención del usuario
+  const resultadoBD = await consultarBDPorIntencion(intencion); // ✅ intenta responder con BD
 
-// 🔮 Si no hay resultados en la BD, usa la IA
-export const getResponseFromAIZenTravel = async (ZenIA: string): Promise<string | any[]> => {
-  const resultadoBD = await buscarDestinoEnBD(ZenIA);
-  if (resultadoBD) return resultadoBD;
+  if (resultadoBD) {
+    await guardarEnMemoria(id_usuario, resultadoBD.tipo, JSON.stringify(resultadoBD.datos[0])); // ✅ guarda el resultado
+    return resultadoBD;
+  }
 
+  // 🔮 Si no hay resultados en la BD, responde la IA con Gemini
   try {
+    const promptIA = `
+Eres un asistente empático en turismo colombiano. Haz recomendaciones útiles basadas en preferencias previas si están disponibles.
+
+Pregunta del usuario: ${ZenIA}
+    `.trim();
+
     const result = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              text: `${prompt}\n\nPregunta del usuario: ${ZenIA}`,
-              
-            },
-          ],
-        },
-      ],
+      contents: [{ role: "user", parts: [{ text: promptIA }] }],
     });
 
     const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return smartTruncateText(cleanResponseText(rawText), 1500);
+    const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
+
+    await guardarEnMemoria(id_usuario, "ia", respuestaLimpia); // ✅ guarda también la respuesta de la IA
+    return { tipo: "ia", datos: respuestaLimpia };
 
   } catch (error: any) {
     console.error("Error en Gemini:", error?.message || error);

@@ -89,6 +89,7 @@ export const createHotel: RequestHandler = async (req, res) => {
             nombre,
             descripcion,
             ubicacion,
+            estrellas,
             imagenesUrl,
             ciudad
         );

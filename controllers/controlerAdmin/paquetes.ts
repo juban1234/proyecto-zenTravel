@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import cloudinary from "../../configs/cloudinary"; 
+import upload from "../../configs/multer";
+import { promisify } from "util";
 import { RequestHandler } from "express";
 import fs from 'fs';
 import admin from "../../repositories/adminRepo";
@@ -138,27 +140,71 @@ export const createTransporte = async (req: Request , res:Response) => {
 
 }
 
-export const createHabitacion = async(req: Request , res:Response) => {
-    const {tipo,numero,precio,nombre_hotel} = req.body;
 
+const uploadSingle = promisify(upload.single('imagen'));
+
+export const createHabitacion = async (req: Request, res: Response) => {
     try {
-        
-        const habitacion = await admin.añadirHabitacion(new Habitacion(
+        await uploadSingle(req, res);
+
+        const {
             tipo,
             numero,
             precio,
-            nombre_hotel
-        ))
+            id_hotel,
+        } = req.body;
 
-        return res.status(200).json({
-            status: `habitacion agregada correctamente`,
-            habitacion
-        })
+        if (!req.file) {
+            return res.status(400).json({ error: 'La imagen es requerida' });
+        }
 
-    } catch (error) {
-        console.log(`error en el servidor al momento de agregar una habitacion `,error);
-        return res.status(500).json({
-            status:`error en el servidor al momento de agregar una habitacion`
-        })
+        // Subir imagen a Cloudinary
+        const imagen = await cloudinary.uploader.upload(req.file.path);
+        const imagenUrl = imagen.secure_url;
+
+        // Eliminar archivo local
+        if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+
+
+
+        // Validación de campos obligatorios
+        const campos = {
+            tipo,
+            numero,
+            precio,
+            id_hotel,
+            imagenUrl
+        };
+
+        for (const [campo, valor] of Object.entries(campos)) {
+            if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+                return res.status(400).json({
+                    error: `El campo '${campo}' es requerido y no puede estar vacío`
+                });
+            }
+        }
+
+        // Crear DTO
+        const dto = new Habitacion(
+            tipo,
+            numero,
+            precio,
+            id_hotel,
+            imagenUrl
+        );
+
+
+        const resultado = await admin.añadirHabitacion(dto);
+
+        return res.status(201).json({
+            status: "Habitación creada con éxito",
+            idHabitacion: resultado
+        });
+
+    } catch (error: any) {
+        console.error("Error al crear la habitación:", error.message || error);
+        return res.status(500).json({ error: "Error en el servidor" });
     }
-}
+};

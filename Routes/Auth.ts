@@ -16,5 +16,8 @@ router.get('/InfoUserDTO',verifyToken,informationUser); //funcional
 router.post('/RefreshToken', refreshToken) //funcional
 router.post('/cambio_rol',SolicitarCambioRol) // solicitar cambio de rol del usuario
 
+// calificacion de los hoteles
+router.post("")
+
 export default router;
 

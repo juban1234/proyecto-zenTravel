@@ -36,3 +36,4 @@ export const actualizar = async( req:Request , res:Response) => {
         
     }
 }
+

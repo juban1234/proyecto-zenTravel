@@ -1,12 +1,18 @@
+
 import { Request, Response } from "express";
 import { getResponseFromAIZenTravel } from "../../services/geminiServi";
 
 export const ZenIA = async (req: Request, res: Response) => {
   try {
-    const { ZenIA, id_usuario } = req.body;
+    const { ZenIA } = req.body;
+    const id_usuario = (req as any).user?.id; // 🔐 Extraído del token
 
-    if (!ZenIA || !id_usuario) {
-      return res.status(400).json({ error: "Se requieren 'ZenIA' e 'id_usuario' en el cuerpo de la solicitud." });
+    if (!ZenIA) {
+      return res.status(400).json({ error: "Se requiere una pregunta." });
+    }
+
+    if (!id_usuario) {
+      return res.status(401).json({ error: "Usuario no autenticado." });
     }
 
     const respuesta = await getResponseFromAIZenTravel(ZenIA, id_usuario);

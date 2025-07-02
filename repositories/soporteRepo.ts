@@ -21,6 +21,17 @@ class Soporte {
 
         return row[1]
     }
+
+    static async PuntuacionHotel(data: any){
+        const sql = `INSERT INTO resena_hotel (id_usuario, id_hotel, estrellas) VALUES (? , ? , ?);`
+        const values = [
+            data.id_usuario,
+            data.id_hotel,
+            data.estrella
+        ]
+        const [rows]: any = await db.execute(sql,values)
+        return rows.affectedRows > 0 
+    }
 }
 
 export default Soporte;

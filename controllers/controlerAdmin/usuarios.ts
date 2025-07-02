@@ -3,7 +3,6 @@ import admin from "../../repositories/adminRepo";
 import { Usuario } from "../../Dto/User";
 import generateHash from "../../Helpers/generateHash";
 import generarContrasena from "../../Helpers/generarContraseña";
-import db from "../../configs/config";
 
 
 export const EliminarUsuarios = async(req:Request , res:Response) => {

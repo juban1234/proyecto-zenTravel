@@ -47,19 +47,19 @@ class admin {
         return await db.execute(sql, value)
     }
 
-  static async añadirHotel(hotel: Hotel) {
-  const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion,estrellas,imagenes, ciudad) VALUES (?, ?, ?, ?, ? ,?)`;
-  const values = [
-    hotel.nombre,
-    hotel.descripcion,
-    hotel.ubicacion,
-    hotel.estrellas,
-    hotel.imagenes,
-    hotel.ciudad
-  ];
-  const [result] = await db.execute(sql, values);
-  return result;
-}
+    static async añadirHotel(hotel: Hotel) {
+        const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion,estrellas,imagenes, ciudad) VALUES (?, ?, ?, ?, ? ,?)`;
+        const values = [
+            hotel.nombre,
+            hotel.descripcion,
+            hotel.ubicacion,
+            hotel.estrellas,
+            hotel.imagenes,
+            hotel.ciudad
+        ];
+        const [result] = await db.execute(sql, values);
+        return result;
+    }
 
 
     static async añadirTransporte(trans: Transporte) {
@@ -80,19 +80,19 @@ class admin {
         return await db.execute(sql, values)
     }
 
-static async añadirHabitacion(habit: Habitacion) {
-    const sql = `CALL agregar_habitacion_hotel(?, ?, ?, ?, ?)`;
-    const values = [
-        habit.tipo,
-        habit.numero,
-        habit.precio,
-        habit.id_hotel,
-        habit.imagen
-    ];
+    static async añadirHabitacion(habit: Habitacion) {
+        const sql = `CALL agregar_habitacion_hotel(?, ?, ?, ?, ?)`;
+        const values = [
+            habit.tipo,
+            habit.numero,
+            habit.precio,
+            habit.id_hotel,
+            habit.imagen
+        ];
 
-    const [rows] = await db.execute(sql, values);
-    return rows;
-}
+        const [rows] = await db.execute(sql, values);
+        return rows;
+    }
 
 
     static async eliminarPaquete(id_paquete: number) {

@@ -298,10 +298,14 @@ export class Transporte {
 export class Habitacion {
 
     constructor(
-        public tipo:string,
+        public tipo: string,
         public numero: string,
         public precio: number,
-        public nombre_hotel:string
+        public id_hotel: string,
+        public imagen: string,
+        public disponible?: string,
+        public Tiempo_hospedaje?: number,
+
     ){}
 
 }

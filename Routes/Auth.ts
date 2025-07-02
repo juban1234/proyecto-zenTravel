@@ -5,6 +5,7 @@ import profile from "../controllers/controlerUser/profileController";
 import { validatorParams,validator } from "../middleware/register-validator";
 import { refreshToken } from "../middleware/refreshToken";
 import { customerSupport } from "../controllers/controlerUser/customerSupport";
+import { puntuar } from "../controllers/controlerAdmin/soporteController";
 
 const router = express.Router();
 
@@ -16,8 +17,9 @@ router.get('/InfoUserDTO',verifyToken,informationUser); //funcional
 router.post('/RefreshToken', refreshToken) //funcional
 router.post('/cambio_rol',SolicitarCambioRol) // solicitar cambio de rol del usuario
 
-// calificacion de los hoteles
-router.post("")
+// puntuaciones de las reseñas de hotel
+router.post('/Report/Calificar/:id', verifyToken ,puntuar  )
+router.get('/Report/:id',)
 
 export default router;
 

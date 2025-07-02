@@ -1,22 +1,12 @@
-import db from "../configs/config";
+export const detectarIntencion = (pregunta: string): string => {
+  const texto = pregunta.toLowerCase();
 
-export const buscarDestinoEnBD = async (pregunta: string): Promise<string | null> => {
-  try {
-    const [rows]: any = await db.query(
-      `SELECT nombre, descripcion FROM destinos 
-       WHERE LOWER(nombre) LIKE CONCAT('%', ?, '%') 
-       OR LOWER(descripcion) LIKE CONCAT('%', ?, '%') 
-       LIMIT 1`,
-      [pregunta.toLowerCase(), pregunta.toLowerCase()]
-    );
+  if (texto.includes("playa")) return "destinos_playa";
+  if (texto.includes("naturaleza") || texto.includes("montaña")) return "destinos_naturaleza";
+  if (texto.includes("historia") || texto.includes("cultura")) return "destinos_cultural";
+  if (texto.includes("hotel") || texto.includes("alojamiento")) return "hoteles";
+  if (texto.includes("paquete") || texto.includes("promoción")) return "paquetes";
+  if (texto.includes("transporte") || texto.includes("vuelo") || texto.includes("bus")) return "transporte";
 
-    if (rows.length > 0) {
-      return `📍 ${rows[0].nombre}: ${rows[0].descripcion}`;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error al consultar la BD:", error);
-    return null;
-  }
+  return "general";
 };

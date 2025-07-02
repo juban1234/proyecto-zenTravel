@@ -1,35 +1,50 @@
 import db from "../configs/config";
 import { RowDataPacket } from "mysql2";
 
-// 💾 Guarda lo que el usuario preguntó y lo que recibió
 export const guardarEnMemoria = async (
   id_usuario: number,
   tipo: string,
-  respuesta: string
+  respuesta: string,
+  pregunta: string
 ): Promise<void> => {
   try {
     await db.query(
-      `INSERT INTO memoria_usuario (id_usuario, tipo, respuesta) VALUES (?, ?, ?)`,
-      [id_usuario, tipo, respuesta]
+      `INSERT INTO memoria_usuario (id_usuario, tipo, respuesta, pregunta) VALUES (?, ?, ?, ?)`,
+      [id_usuario, tipo, respuesta, pregunta]
     );
   } catch (error) {
-    console.error("❌ Error al guardar en memoria:", error);
+    console.error("Error al guardar en memoria:", error);
   }
 };
 
-// 🔍 Recuperar historial (opcional)
-export const obtenerHistorialUsuario = async (
-  id_usuario: number
-): Promise<{ tipo: string; respuesta: string; fecha: string }[]> => {
+export const buscarRespuestaPrevia = async (
+  id_usuario: number,
+  pregunta: string
+): Promise<string | null> => {
   try {
-    const [rows] = await db.query<RowDataPacket[]>(
-      `SELECT tipo, respuesta, fecha FROM memoria_usuario WHERE id_usuario = ? ORDER BY fecha DESC`,
+    const [memorias] = await db.query<RowDataPacket[]>(
+      "SELECT pregunta, respuesta FROM memoria_usuario WHERE id_usuario = ? ORDER BY fecha DESC LIMIT 10",
       [id_usuario]
     );
 
-    return rows as any;
+    const normalizar = (texto: string) =>
+      texto.toLowerCase().replace(/[^\u00C0-\u017Fa-z0-9\s]/gi, '').trim();
+
+    const preguntaNorm = normalizar(pregunta);
+
+    for (const memoria of memorias) {
+      const memNorm = normalizar(memoria.pregunta || "");
+      if (
+        preguntaNorm.includes(memNorm) ||
+        memNorm.includes(preguntaNorm)
+      ) {
+        return memoria.respuesta;
+      }
+    }
+
+    return null;
   } catch (error) {
-    console.error("❌ Error al obtener historial del usuario:", error);
-    return [];
+    console.error("Error al buscar en memoria:", error);
+    return null;
   }
 };

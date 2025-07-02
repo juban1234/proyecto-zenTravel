@@ -268,3 +268,15 @@ export const emailRol = async (asunto:string , datos:any) => {
   };
   await transporter.sendMail(mailOptions);
 }
+
+export const UsuarioEmail = async(email:string , password: string) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to:email,
+    html:`se a creado su usuario <br>
+    email: ${email} <br>
+    password: ${password}
+    `
+  }
+  await transporter.sendMail(mailOptions)
+}

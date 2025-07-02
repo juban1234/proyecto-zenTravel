@@ -37,37 +37,44 @@ export const actualizar = async( req:Request , res:Response) => {
     }
 }
 
-export const puntuar = async( req:Request , res:Response) => {
-    const id_usuario = (req as any).user.id;
+export const puntuar = async (req: Request, res: Response) => {
+    const id_usuario = (req as any).user?.id;
 
     try {
-        
-        const {
-            estrellas,
-            id_hotel
-        }  = req.body
+        const { estrellas, id_hotel } = req.body;
 
-        const campos = {
-            estrellas,
-            id_hotel,
-            id_usuario,
+        if (!id_hotel) {
+            return res.status(400).json({ error: "El campo 'id_hotel' es obligatorio" });
         }
 
-        console.log(campos);
-        
-        const result = await Soporte.PuntuacionHotel(campos)
+        const puntuacion = parseFloat(estrellas);
 
-        res.status(201).json({
-            status: `puntuacion subida`,
-            result
-        })
+        if (isNaN(puntuacion)) {
+            return res.status(400).json({ error: "La puntuación debe ser un número" });
+        }
+
+        if (puntuacion < 1 || puntuacion > 5) {
+            return res.status(400).json({ error: "La puntuación debe estar entre 1 y 5" });
+        }
+
+        const campos = {
+            puntuacion,
+            id_hotel,
+            id_usuario,
+        };
+
+        const result = await Soporte.PuntuacionHotel(campos);
+
+        return res.status(201).json({
+            status: "Puntuación registrada correctamente",
+            result,
+        });
 
     } catch (error) {
-        console.error(error);
-        
+        console.error("❌ Error en puntuar:", error);
         return res.status(500).json({
-            messaje: `error al momento de ingresar la puntuacion`,
-            error
-        })
+            mensaje: "Error al ingresar la puntuación",
+            error: error instanceof Error ? error.message : error
+        });
     }
-}
+};

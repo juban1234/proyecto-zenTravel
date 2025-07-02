@@ -10,28 +10,28 @@ import { uploadMultiple } from "../configs/multer";
 const router = express.Router();
 
 // control de usuarios del sistema
-router.patch('User/EditeRol', verificarRol('Admin'),RolUsuario); //funcional
-router.delete('/UserDelete/:nombre',verificarRol('Admin'),EliminarUsuarios) //funcional
-router.get('/Users/:Rol',verificarRol('Admin','Empleado'),TraerUsuario)
-router.post('/CreateUsers',validatorParams,verificarRol('Admin'),newEmpleados)
+router.patch('User/EditeRol', verificarRol('admin'),RolUsuario); //funcional
+router.delete('/UserDelete/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
+router.get('/Users/:Rol',verificarRol('admin','empleado'),TraerUsuario)
+router.post('/CreateUsers',validatorParams,verificarRol('admin'),newEmpleados)
 
 // control de contenido del sistema
-router.post('/CreateDestiny',verificarRol('Admin','Empleado'),createDestino);
-router.post('/CreateHotel',verificarRol('Admin','Empleado'),uploadMultiple,createHotel);
-router.post('/CreateRoom',verificarRol('Admin','Empleado'),createHabitacion);
-router.post ('/CreateTransport',verificarRol('Admin','Empleado'),createTransporte);
+router.post('/CreateDestiny',verificarRol('admin','empleado'),createDestino);
+router.post('/CreateHotel',verificarRol('admin','empleado'),uploadMultiple,createHotel);
+router.post('/CreateRoom',verificarRol('admin','empleado'),createHabitacion);
+router.post ('/CreateTransport',verificarRol('admin','empleado'),createTransporte);
 
 // eliminar contenido del sistema
-router.delete('/deletePackage/:id_paquete',verificarRol('Admin'),deletePaquete);
-router.delete('/deleteDestiny/:id_destino',verificarRol('Admin'),deleteDestino);
-router.delete('/deleteHotel/:id_hotel',verificarRol('Admin'),deleteHotel);
-router.delete('/deleteTransport/:id_transporte',verificarRol('Admin'),deleteTransporte);
+router.delete('/deletePackage/:id_paquete',verificarRol('admin'),deletePaquete);
+router.delete('/deleteDestiny/:id_destino',verificarRol('admin'),deleteDestino);
+router.delete('/deleteHotel/:id_hotel',verificarRol('admin'),deleteHotel);
+router.delete('/deleteTransport/:id_transporte',verificarRol('admin'),deleteTransporte);
 
 //soporte del sistema
 router.get('/Report/Soporte', reporte)
 router.patch('/Report/Act/:id')
 
 //dasbord
-router.get('/Info/Dashboard',Dashboard)
+router.get('/Info/Dashboard',verificarRol('admin'),Dashboard)
 
 export default router;

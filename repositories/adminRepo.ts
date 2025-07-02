@@ -31,8 +31,8 @@ class admin {
             empleado.telefono,
             empleado.password,
             rol]
-
-        return await db.execute(sql, value);
+        const [rows]:any =  await db.execute(sql, value)
+        return rows.affectedRows > 0;
     }
 
     static async añadirDestino(des: Destino) {

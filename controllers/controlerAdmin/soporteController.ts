@@ -38,12 +38,14 @@ export const actualizar = async( req:Request , res:Response) => {
 }
 
 export const puntuar = async( req:Request , res:Response) => {
-    const id_hotel = req.params.id
     const id_usuario = (req as any).user.id;
 
     try {
         
-        const { estrellas } = req.body
+        const {
+            estrellas,
+            id_hotel
+        }  = req.body
 
         const campos = {
             estrellas,
@@ -51,6 +53,8 @@ export const puntuar = async( req:Request , res:Response) => {
             id_usuario,
         }
 
+        console.log(campos);
+        
         const result = await Soporte.PuntuacionHotel(campos)
 
         res.status(201).json({

@@ -7,7 +7,7 @@ import Validator from './Routes/Validator';
 import Paquete from './Routes/Paquete';
 import Reservaciones from './Routes/Reservaciones'
 import ZenIA from './Routes/geminiRoutes';
-import paymentRoutes from './Routes/Payment';
+import mercadoPagoRoutes from './Routes/MercadoPago';
 import admin from './Routes/administrar';
 
 dotenv.config();
@@ -20,7 +20,7 @@ app.use('/Auth', Auth) // completamente funcional
 app.use('/Password',Validator);
 app.use('/packages',Paquete)
 app.use('/reservas',Reservaciones)
-app.use('/api/payments', paymentRoutes);
+app.use('/api/mercado-pago', mercadoPagoRoutes);
 app.use('/IA', ZenIA);
 app.use('/admin',admin)
 

@@ -201,7 +201,7 @@ class admin {
     }
 
     if (D.ubicacion) {
-        campos.push("ciudad = ?");
+        campos.push("ubicacion = ?");
         valores.push(D.ubicacion);
     }   
 

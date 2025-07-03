@@ -3,7 +3,11 @@ import { getResponseFromAIZenTravel } from "../../services/geminiServi";
 
 export const ZenIA = async (req: Request, res: Response) => {
   try {
-    const { ZenIA, id_usuario } = req.body;
+    const id_usuario = (req as any).user.id;
+    const { ZenIA } = req.body;
+
+    console.log(id_usuario);
+    
 
     if (!ZenIA || !id_usuario) {
       return res.status(400).json({ error: "Se requieren 'ZenIA' y 'id_usuario' en el cuerpo de la solicitud." });

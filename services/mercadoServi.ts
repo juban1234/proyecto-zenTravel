@@ -1,7 +1,12 @@
-import { MercadoPagoConfig } from 'mercadopago';
+// ✅ SDK correcto para la versión 2.8.0
+import mercadopago from 'mercadopago';
+import dotenv from 'dotenv';
 
-const mercadopago = new MercadoPagoConfig({
-  accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN as string,
+dotenv.config();
+
+// ✅ Configuración clásica del SDK (v2.x.x)
+mercadopago.configure({
+  access_token: process.env.MERCADO_ACCESS_TOKEN || '',
 });
 
 export default mercadopago;

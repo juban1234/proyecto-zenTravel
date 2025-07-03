@@ -19,7 +19,6 @@ router.post('/cambio_rol',SolicitarCambioRol) // solicitar cambio de rol del usu
 
 // puntuaciones de las reseñas de hotel
 router.post('/Report/Calificar', verifyToken ,puntuar  )
-router.get('/Report/:id',)
 
 export default router;
 

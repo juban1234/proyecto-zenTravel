@@ -1,9 +1,22 @@
 import db from "../configs/config";
 import { RowDataPacket } from "mysql2";
 
+// 🔁 Mapea intenciones extendidas a categorías existentes
+const mapearIntencion = (intencion: string): string => {
+  const sinonimos: { [key: string]: string } = {
+    destinos_románticos: "destinos_playa",
+    destinos_historia: "destinos_cultural",
+    destinos_montaña: "destinos_naturaleza",
+    recomendaciones_personalizadas: "general"
+  };
+  return sinonimos[intencion] || intencion;
+};
+
 export const consultarBDPorIntencion = async (intencion: string): Promise<{ tipo: string; datos: any[] } | null> => {
   try {
-    switch (intencion) {
+    const intencionFinal = mapearIntencion(intencion);
+
+    switch (intencionFinal) {
       case "destinos_playa":
       case "destinos_naturaleza":
       case "destinos_cultural": {
@@ -51,7 +64,6 @@ export const consultarBDPorIntencion = async (intencion: string): Promise<{ tipo
 
       case "transporte": {
         const [transportes] = await db.query<RowDataPacket[]>(`SELECT tipo, empresa, destino, fecha_salida FROM transporte`);
-        
         if (transportes.length > 0) {
           const datos = transportes.map((t) => ({
             tipo: t.tipo,
@@ -67,6 +79,7 @@ export const consultarBDPorIntencion = async (intencion: string): Promise<{ tipo
       default:
         return null;
     }
+
   } catch (error) {
     console.error("Error al consultar BD por intención:", error);
     return null;

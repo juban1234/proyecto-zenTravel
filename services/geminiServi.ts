@@ -57,7 +57,7 @@ export const getResponseFromAIZenTravel = async (
     const tipoDestino = await clasificarIntencionConIA(ZenIA);
     console.log("🎯 Intención detectada por IA:", tipoDestino);
 
-    // 3. Buscar en la base de datos según la intención
+    // 3. Buscar en la base de datos según la intención (con mapeo interno en geminiIntent)
     const resultadoBD = await consultarBDPorIntencion(tipoDestino);
     console.log("📊 Resultado BD:", resultadoBD);
 

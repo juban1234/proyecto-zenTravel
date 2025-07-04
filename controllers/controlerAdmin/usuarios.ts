@@ -71,7 +71,7 @@ export const RolUsuario = async(req:Request , res:Response) => {
 export const newEmpleados = async(req:Request , res:Response) => {
     const {nombre,email,telefono,rol} = req.body;
 
-    const rolesPermitidos = ['vendedor','soporte','admin']
+    const rolesPermitidos = ['cliente','Empleado','Admin']
     const password = generarContrasena()
 
     if (!nombre || !email || !telefono || !password) {
@@ -108,4 +108,21 @@ export const newEmpleados = async(req:Request , res:Response) => {
     
     }
 
+}
+
+export const Dashboard = async(req:Request , res:Response) => {
+    try {
+        const resultSets = await admin.infoDashbord();
+
+        res.json({
+            totalUsuarios: resultSets[0][0]?.totalUsuarios || 0,
+            paquetesActivos: resultSets[1][0]?.paquetesActivos || 0,
+            ventasDelMes: resultSets[2][0]?.ventasDelMes || 0,
+            reservasPendientes: resultSets[3][0]?.reservasPendientes || 0,
+            actividadReciente: resultSets[4] || []
+        });
+    } catch (error) {
+        console.error("❌ Error al obtener dashboard:", error);
+        res.status(500).json({ error: "Error en el servidor al obtener datos del dashboard" });
+    }
 }

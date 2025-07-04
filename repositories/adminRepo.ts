@@ -47,19 +47,19 @@ class admin {
         return await db.execute(sql, value)
     }
 
-  static async añadirHotel(hotel: Hotel) {
-  const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion,estrellas,imagenes, ciudad) VALUES (?, ?, ?, ?, ? ,?)`;
-  const values = [
-    hotel.nombre,
-    hotel.descripcion,
-    hotel.ubicacion,
-    hotel.estrellas,
-    hotel.imagenes,
-    hotel.ciudad
-  ];
-  const [result] = await db.execute(sql, values);
-  return result;
-}
+    static async añadirHotel(hotel: Hotel) {
+        const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion,estrellas,imagenes, ciudad) VALUES (?, ?, ?, ?, ? ,?)`;
+        const values = [
+            hotel.nombre,
+            hotel.descripcion,
+            hotel.ubicacion,
+            hotel.estrellas,
+            hotel.imagenes,
+            hotel.ciudad
+        ];
+        const [result] = await db.execute(sql, values);
+        return result;
+    }
 
 
     static async añadirTransporte(trans: Transporte) {
@@ -80,19 +80,19 @@ class admin {
         return await db.execute(sql, values)
     }
 
-static async añadirHabitacion(habit: Habitacion) {
-    const sql = `CALL agregar_habitacion_hotel(?, ?, ?, ?, ?)`;
-    const values = [
-        habit.tipo,
-        habit.numero,
-        habit.precio,
-        habit.id_hotel,
-        habit.imagen
-    ];
+    static async añadirHabitacion(habit: Habitacion) {
+        const sql = `CALL agregar_habitacion_hotel(?, ?, ?, ?, ?)`;
+        const values = [
+            habit.tipo,
+            habit.numero,
+            habit.precio,
+            habit.id_hotel,
+            habit.imagen
+        ];
 
-    const [rows] = await db.execute(sql, values);
-    return rows;
-}
+        const [rows] = await db.execute(sql, values);
+        return rows;
+    }
 
 
     static async eliminarPaquete(id_paquete: number) {
@@ -142,6 +142,93 @@ static async añadirHabitacion(habit: Habitacion) {
             console.error("Error al eliminar transporte:", error);
             throw error;
         }
+    }
+
+    static async editardestino( id_destino: number, D: any) {
+
+    let campos: string[] = [];
+    let valores: any[] = [];
+
+    if (D.nombre) {
+    campos.push("nombre = ?");
+    valores.push(D.nombre);
+    }
+
+    if (D.pais) {
+    campos.push("pais = ?");
+    valores.push(D.nombre);
+    }
+
+    if (D.departamento) {
+    campos.push("departamento = ?");
+    valores.push(D.nombre);
+    }
+
+    if (D.descripcion) {
+    campos.push("descripcion = ?");
+    valores.push(D.nombre);
+    }
+
+    if (campos.length === 0) {
+    throw new Error("No se enviaron campos válidos para actualizar.");
+    }
+
+    const sql = `
+    UPDATE destinos 
+        SET ${campos.join(", ")}
+        WHERE id_destino = ?
+    `;
+
+    valores.push(id_destino)
+
+    const [result]: any = await db.execute(sql, valores);
+    return result.affectedRows > 0;
+    }
+
+    static async editarHotel( id_hotel:number , D:any ) {
+
+    let campos: string[] = [];
+    let valores: any[] = [];
+
+    if (D.nombre) {
+        campos.push("nombre = ?");
+        valores.push(D.nombre);
+    }
+
+    if (D.descripcion) {
+        campos.push("descripcion = ?");
+        valores.push(D.descripcion);
+    }
+
+    if (D.ubicacion) {
+        campos.push("ciudad = ?");
+        valores.push(D.ubicacion);
+    }   
+
+    if (D.imagenes) {
+        campos.push("imagenes = ?");
+        valores.push(JSON.stringify(D.imagenes));
+    }
+
+    if (campos.length === 0) {
+        throw new Error("No se enviaron campos válidos para actualizar.");
+    }
+
+    const sql = `
+        UPDATE hotel 
+        Set ${campos.join(", ")}
+        WHERE id_hotel = ?
+    `;
+
+    valores.push(id_hotel);
+
+    const [result]: any = await db.execute(sql, valores);
+    return result.affectedRows > 0 ;
+    }
+
+    static async infoDashbord(): Promise<any[][]> {
+        const [rows] = await db.query("CALL obtenerDashboard()");
+        return rows as any[][];
     }
 
 }

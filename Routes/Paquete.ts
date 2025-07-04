@@ -17,18 +17,18 @@ router.get('/RoomReservation/:hotel/:ciudad',buscar_habitacion)
 router.get("/", PackageController.listarPaquetes) // Listar todos los paquetes
 
 // 📦 Rutas protegidas para paquetes (requieren autenticación)
-router.post("/Create/Package",verificarRol("cliente", 'Admin', "Empleado"),PackageController.createPackage) // Crear paquete
-router.post("/Calculate/Package",verificarRol("cliente", 'Admin', "Empleado"), PackageController.valuePackage) // Calcular precio
+router.post("/Create/Package",verificarRol("cliente", 'admin', "empleado"),PackageController.createPackage) // Crear paquete
+router.post("/Calculate/Package",verificarRol("cliente", 'admin', "empleado"), PackageController.valuePackage) // Calcular precio
 router.get("/User/Package", verifyToken, PackageController.traerPaquetes_usuario) // Listar paquetes por usuario
-router.put("/IDPackage/:id", verificarRol("cliente", 'Admin', "Empleado") ,PackageController.actualizarPaquete) // Actualizar paquete
+router.put("/IDPackage/:id", verificarRol("cliente", 'admin', "empleado") ,PackageController.actualizarPaquete) // Actualizar paquete
 
 // rutas para el marketing
-router.post('/Marketing',verificarRol('Admin', "Empleado"),PackageController.Marketing)
+router.post('/Marketing',verificarRol('admin', "empleado"),PackageController.Marketing)
 
 
 //Rutas para editar 
-router.put('/EditarDestino/:id_destino', EditController.Editdestino);
-router.put('/EditarHotel/:id_hotel',EditController.EditarHotel);
+router.put('/EditarDestino/:id_destino', verificarRol('admin', "empleado"),EditController.Editdestino);
+router.put('/EditarHotel/:id_hotel',verificarRol('admin', "empleado"),EditController.EditarHotel);
 
 
 export default router;

@@ -31,8 +31,8 @@ class admin {
             empleado.telefono,
             empleado.password,
             rol]
-
-        return await db.execute(sql, value);
+        const [rows]:any =  await db.execute(sql, value)
+        return rows.affectedRows > 0;
     }
 
     static async añadirDestino(des: Destino) {
@@ -55,7 +55,7 @@ class admin {
             hotel.ubicacion,
             hotel.estrellas,
             hotel.imagenes,
-            hotel.ciudad
+            hotel.ciudad || null
         ];
         const [result] = await db.execute(sql, values);
         return result;
@@ -201,7 +201,7 @@ class admin {
     }
 
     if (D.ubicacion) {
-        campos.push("ciudad = ?");
+        campos.push("ubicacion = ?");
         valores.push(D.ubicacion);
     }   
 

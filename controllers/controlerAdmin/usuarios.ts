@@ -3,6 +3,7 @@ import admin from "../../repositories/adminRepo";
 import { Usuario } from "../../Dto/User";
 import generateHash from "../../Helpers/generateHash";
 import generarContrasena from "../../Helpers/generarContraseña";
+import { UsuarioEmail } from "../../Helpers/sendRecoveryEmail";
 
 
 export const EliminarUsuarios = async(req:Request , res:Response) => {
@@ -58,7 +59,8 @@ export const RolUsuario = async(req:Request , res:Response) => {
         
         const user = admin.editarRoles(nombre,rol)
         return res.status(200).json({
-            status: `${nombre}, su rol fue actualizado a ${rol}`
+            status: `${nombre}, su rol fue actualizado a ${rol}`,
+            user
         })
 
     } catch (error) {
@@ -69,20 +71,22 @@ export const RolUsuario = async(req:Request , res:Response) => {
 }
 
 export const newEmpleados = async(req:Request , res:Response) => {
-    const {nombre,email,telefono,rol} = req.body;
+    const {nombre,email,telefono} = req.body;
+    let {rol} = req.body;
 
-    const rolesPermitidos = ['cliente','Empleado','Admin']
+    const rolesPermitidos = ['cliente','empleado','admin']
     const password = generarContrasena()
 
     if (!nombre || !email || !telefono || !password) {
         return res.status(401).json({status: `faltan campos por ingresar`})
-        
     }
+
+    rol = rol.toLowerCase();
 
     if (!rolesPermitidos.includes(rol) ) {
         return res.status(402).json({status: `el rol: ${rol} , tipo de rol no valido`})
     }
-
+    
 
     const hash = await generateHash(password)
 
@@ -94,12 +98,12 @@ export const newEmpleados = async(req:Request , res:Response) => {
         telefono,
         hash
     ), rol)
-    
-    console.log(empleado);
+
+    await UsuarioEmail(email , password)    
 
     return res.status(200).json({
-        status: `el usuario a sido creado`,
-        password
+        status: `el usuario ha sido creado`,
+        empleado
     })
     
     } catch (error) {

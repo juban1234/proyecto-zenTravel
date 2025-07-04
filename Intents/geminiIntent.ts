@@ -1,22 +1,89 @@
 import db from "../configs/config";
+import { RowDataPacket } from "mysql2";
 
-export const buscarDestinoEnBD = async (pregunta: string): Promise<string | null> => {
+// 🔁 Mapea intenciones extendidas a categorías existentes
+const mapearIntencion = (intencion: string): string => {
+  const sinonimos: { [key: string]: string } = {
+    destinos_románticos: "destinos_playa",
+    destinos_historia: "destinos_cultural",
+    destinos_montaña: "destinos_naturaleza",
+    recomendaciones_personalizadas: "general"
+  };
+  return sinonimos[intencion] || intencion;
+};
+
+export const consultarBDPorIntencion = async (intencion: string): Promise<{ tipo: string; datos: any[] } | null> => {
   try {
-    const [rows]: any = await db.query(
-      `SELECT nombre, descripcion FROM destinos 
-       WHERE LOWER(nombre) LIKE CONCAT('%', ?, '%') 
-       OR LOWER(descripcion) LIKE CONCAT('%', ?, '%') 
-       LIMIT 1`,
-      [pregunta.toLowerCase(), pregunta.toLowerCase()]
-    );
+    const intencionFinal = mapearIntencion(intencion);
 
-    if (rows.length > 0) {
-      return `📍 ${rows[0].nombre}: ${rows[0].descripcion}`;
-    } else {
-      return null;
+    switch (intencionFinal) {
+      case "destinos_playa":
+      case "destinos_naturaleza":
+      case "destinos_cultural": {
+        const [destinos] = await db.query<RowDataPacket[]>(`SELECT nombre, descripcion FROM destinos`);
+        if (destinos.length > 0) {
+          const datos = destinos.map((d) => ({
+            nombre: d.nombre,
+            descripcion: d.descripcion
+          }));
+          return { tipo: "destinos", datos };
+        }
+        break;
+      }
+
+      case "hoteles": {
+        const [hoteles] = await db.query<RowDataPacket[]>(`SELECT nombre, ciudad FROM hotel`);
+        if (hoteles.length > 0) {
+          const datos = hoteles.map((h) => ({
+            nombre: h.nombre,
+            ciudad: h.ciudad
+          }));
+          return { tipo: "hoteles", datos };
+        }
+        break;
+      }
+
+      case "paquetes": {
+        const [paquetesResult] = await db.query<any[][]>(`CALL listarPaquetes()`);
+        const paquetes = paquetesResult[0];
+        if (paquetes && paquetes.length > 0) {
+          const datos = paquetes.map((p: any) => ({
+            nombre: p.nombrePaquete,
+            descripcion: p.descripcion,
+            precio: parseFloat(p.precioTotal),
+            imagenUrl: p.imagenURL,
+            fechaInicio: p.fechaInicio,
+            duracionDias: p.duracionDias,
+            estado: p.estado,
+            calificacion: p.calificacion || 8.5
+          }));
+          return { tipo: "paquetes", datos };
+        }
+        break;
+      }
+
+      case "transporte": {
+        const [transportes] = await db.query<RowDataPacket[]>(`SELECT tipo, empresa, destino, fecha_salida FROM transporte`);
+        if (transportes.length > 0) {
+          const datos = transportes.map((t) => ({
+            tipo: t.tipo,
+            empresa: t.empresa,
+            destino: t.destino,
+            salida: t.fecha_salida
+          }));
+          return { tipo: "transporte", datos };
+        }
+        break;
+      }
+
+      default:
+        return null;
     }
+
   } catch (error) {
-    console.error("Error al consultar la BD:", error);
+    console.error("Error al consultar BD por intención:", error);
     return null;
   }
+
+  return null;
 };

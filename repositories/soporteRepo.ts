@@ -27,7 +27,7 @@ class Soporte {
         const values = [
             data.id_usuario,
             data.id_hotel,
-            data.estrella
+            data.estrellas
         ]
         const [rows]: any = await db.execute(sql,values)
         return rows.affectedRows > 0 

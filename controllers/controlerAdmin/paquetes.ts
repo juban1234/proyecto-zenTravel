@@ -8,6 +8,7 @@ import admin from "../../repositories/adminRepo";
 import { Destino, Habitacion, Hotel , Transporte } from "../../Dto/SearchDto";
 import { AuthenticatedRequest } from "../../Helpers/types";
 
+const uploadSingle = promisify(upload.single('imagen'));
 
 export const createDestino = async(req:Request , res:Response) => {
     
@@ -64,7 +65,7 @@ export const createHotel: RequestHandler = async (req, res) => {
             estrellas,
         } = req.body;
 
-        const campos = { nombre, descripcion, ubicacion, ciudad };
+        const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
 
         for (const [campo, valor] of Object.entries(campos)) {
             if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
@@ -139,9 +140,6 @@ export const createTransporte = async (req: Request , res:Response) => {
     
 
 }
-
-
-const uploadSingle = promisify(upload.single('imagen'));
 
 export const createHabitacion = async (req: Request, res: Response) => {
     try {

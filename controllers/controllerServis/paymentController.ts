@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import paypalServices from '../../services/paypalServi';
 import { generateTokenPaypal } from '../../Helpers/generateToken';
-import db from '../../configs/config'; 
+import db from '../../configs/config';
 
 interface PaymentRequestBody {
   price: number;

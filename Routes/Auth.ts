@@ -16,5 +16,6 @@ router.get('/InfoUserDTO',verifyToken,informationUser); //funcional
 router.post('/RefreshToken', refreshToken) //funcional
 router.post('/cambio_rol',SolicitarCambioRol) // solicitar cambio de rol del usuario
 
+
 export default router;
 

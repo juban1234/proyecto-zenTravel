@@ -24,6 +24,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/IA', ZenIA);
 app.use('/admin',admin)
 
+
 const PORT = process.env.DB_PORT || 10101;
 
 app.listen(PORT, () => {

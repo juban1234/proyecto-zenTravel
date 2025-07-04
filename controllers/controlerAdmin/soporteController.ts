@@ -47,18 +47,17 @@ export const puntuar = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "El campo 'id_hotel' es obligatorio" });
         }
 
-        const puntuacion = parseFloat(estrellas);
 
-        if (isNaN(puntuacion)) {
+        if (isNaN(estrellas)) {
             return res.status(400).json({ error: "La puntuación debe ser un número" });
         }
 
-        if (puntuacion < 1 || puntuacion > 5) {
+        if (estrellas < 1 || estrellas > 5) {
             return res.status(400).json({ error: "La puntuación debe estar entre 1 y 5" });
         }
 
         const campos = {
-            puntuacion,
+            estrellas: Number(estrellas),
             id_hotel,
             id_usuario,
         };

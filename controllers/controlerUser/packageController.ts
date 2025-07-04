@@ -91,7 +91,7 @@ export class PackageController{
         duracionDias,
         fechaInicioDisponible,
         descuento,
-        habitacion,
+        nombreHotel,
         nombreTransporte,
         nombreDestino,
         categoria,
@@ -117,214 +117,14 @@ export class PackageController{
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
-<<<<<<< HEAD
-    const campos = {
-        nombrePaquete,
-        descripcion,
-        duracionDias,
-        fechaInicioDisponible,
-        descuento,
-        habitacion,
-        nombreTransporte,
-        nombreDestino,
-        categoria,
-        incluye,
-        noIncluye,
-        cantidad
-=======
->>>>>>> 68c08c08f68134d8fe1a9e80daaf36a22df4c9a8
     };
 
     static async valuePackage (req: Request, res: Response) {
         try {
             const { id_paquete, estancia } = req.body;  
 
-<<<<<<< HEAD
-    const duracion = parseInt(duracionDias);
-    const desc = parseFloat(descuento);
-    const fechaInicio = new Date(fechaInicioDisponible);
-
-
-    if (isNaN(duracion) || duracion <= 0) {
-        return res.status(400).json({ error: 'duracionDias debe ser un número entero positivo' });
-    }
-
-    if (isNaN(desc) || desc < 0 || desc > 100) {
-        return res.status(400).json({ error: 'descuento debe ser un número entre 0 y 100' });
-    }
-
-    if (isNaN(fechaInicio.getTime())) {
-        return res.status(400).json({ error: 'fechaInicioDisponible no es una fecha válida' });
-    }
-
-
-    const dto = new Package (
-      nombrePaquete,
-      descripcion,
-      imagenUrl,
-      duracionDias,
-      fechaInicioDisponible,
-      descuento,
-      habitacion,
-      nombreTransporte,
-      nombreDestino,
-      categoria,
-      incluye,
-      noIncluye
-    )
-
-    const resultado = await Paquetes.createPackage(dto, id_usuario,cantidad);
-
-    return res.status(201).json({ 
-        status: "Paquete creado con éxito", 
-        idPaquete: resultado 
-    });
-
-    } catch (error: any) {
-        console.error("Error al crear el paquete:", error.message || error);
-        return res.status(500).json({ error: "Error en el servidor" });
-    }
-};
-
-export const valuePackage = async (req: Request, res: Response) => {
-    try {
-        const { id_paquete, duracionDias } = req.body;  
-
-        if (!id_paquete || isNaN(Number(id_paquete))) {
-            return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
-        }
-
-        if (!duracionDias || isNaN(Number(duracionDias)) || Number(duracionDias) <= 0) {
-            return res.status(400).json({ error: "duracionDias es requerido y debe ser un número positivo" });
-        }
-
-        const paquete = await Paquetes.calcularPaquete(Number(id_paquete), Number(duracionDias));
-
-        return res.status(200).json({
-            status:"Paquete actualizado",
-            paquete
-        });
-    } catch (error) {
-        console.error("Error al calcular el total del paquete:", error);
-        return res.status(500).json({ error: "Error en el servidor" });
-    }
-};
-
-
-export const listarPaquetes = async(req: Request, res: Response) => {
-    
-    try{
-        const paquetes = await Paquetes.traerPaquetes()
-
-        return res.status(200).json({
-            status: `paquetes encontrados`,
-            paquetes
-        })
-
-    }catch(error){
-        console.error("Error al traer los paquete del usaurio: ", error);
-        return res.status(500).json({ error: `error en el servidor al momento de buscar los paquetes del usuario` })
-    }
-
-
-}
-
-export const traerPaquetes_usuario = async(req: Request, res: Response) => {
-    const id_usuario = (req as any).user.id ;
-
-    if (!id_usuario) {
-        return res.status(400).json({ status: `usuario no encontrado` })
-    }
-
-    try{
-        const paquetes = await Paquetes.traerPaquetes_usuario(Number(id_usuario))
-
-        return res.status(200).json({
-            status: `paquetes en contrados`,
-            paquetes
-        })
-
-    }catch(error){
-        console.error("Error al traer los paquete del usaurio: ", error);
-        return res.status(500).json({ error: `error en el servidor al momento de buscar los paquetes del usuario` })
-    }
-   
-}
-
-export const actualizarPaquete = async (req: Request, res: Response) => {
-  try {
-
-    const id_paquete = Number(req.params.id)
-
-    const {
-      nombrePaquete,
-      descripcion,
-      imagenUrl,
-      duracionDias,
-      fechaInicioDisponible,
-      descuento,
-      nombreHotel,
-      nombreTransporte,
-      nombreDestino,
-      categoria,
-      incluye,
-      noIncluye
-      } = req.body
-
-    const dto = new Package (
-      nombrePaquete,
-      descripcion,
-      imagenUrl,
-      duracionDias,
-      fechaInicioDisponible,
-      descuento,
-      nombreHotel,
-      nombreTransporte,
-      nombreDestino,
-      categoria,
-      incluye,
-      noIncluye
-      )
-
-    const result = await Paquetes.actualizar_package(dto,id_paquete)
-
-    return res.status(200).json({
-      success: true,
-      message: "Paquete actualizado exitosamente",
-      result
-    })
-  } catch (error: any) {
-    console.error("❌ Error al actualizar paquete:", error)
-    return res.status(500).json({
-      success: false,
-      message: "Error al actualizar el paquete"
-    })
-  }
-}
-
-export const Marketing = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const { nombre, email, mensaje } = req.body;
-        if (!nombre || !email || !mensaje) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
-        }
-
-        const resultado = await Paquetes.createMarketing({ nombre, email, mensaje });
-        console.log("Datos guardados en la base de datos:", resultado);
-
-        // URL de la imagen en Cloudinary
-        const cloudinaryImageUrl = "https://res.cloudinary.com/dscmvgpqd/image/upload/v1748546394/images_m8nuuw.jpg";
-
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'zentravelagencia0@gmail.com',
-                pass: 'gand dlhk crvv zday',
-=======
             if (!id_paquete || isNaN(Number(id_paquete))) {
                 return res.status(400).json({ error: "El id_paquete es requerido y debe ser un número válido" });
->>>>>>> 68c08c08f68134d8fe1a9e80daaf36a22df4c9a8
             }
 
             const paquete = await Paquetes.calcularPaquete(id_paquete,estancia);

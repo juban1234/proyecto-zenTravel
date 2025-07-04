@@ -29,6 +29,9 @@ class Soporte {
             data.id_hotel,
             data.estrellas
         ]
+
+        console.log(values);
+        
         const [rows]: any = await db.execute(sql,values)
         return rows.affectedRows > 0 
     }

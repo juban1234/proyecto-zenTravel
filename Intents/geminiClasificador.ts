@@ -8,27 +8,33 @@ const ai = new GoogleGenAI({ apiKey });
 export const clasificarIntencionConIA = async (pregunta: string): Promise<string> => {
   try {
     const prompt = `
-Clasifica la siguiente intención del usuario en una sola palabra clave sin justificar nada.
+Clasifica la siguiente intención del usuario en una sola palabra clave, SIN justificar y sin explicar. 
+Usa solo una de estas categorías predefinidas:
 
-Usa solo una de las siguientes categorías si es posible:
-- destinos_playa
-- destinos_naturaleza
-- destinos_cultural
-- hoteles
+- aventura
+- relajación
+- historia
+- naturaleza
+- cultural
+- romántico
+- playa
+- gastronomía
+- viaje_familiar
+- viaje_pareja
+- viaje_solo
 - paquetes
+- hoteles
 - transporte
-- destinos_románticos
-- destinos_historia
-- destinos_montaña
-- recomendaciones_personalizadas
 
-Ejemplo:
-Pregunta: Quiero ir al mar → Respuesta: destinos_playa
-Pregunta: Me gustan los paisajes de montaña → Respuesta: destinos_montaña
-Pregunta: Busco algo romántico → Respuesta: destinos_románticos
+Ejemplos:
+Pregunta: Quiero ir a caminar por la montaña → naturaleza  
+Pregunta: Algo con mi pareja → viaje_pareja  
+Pregunta: Me interesa el carnaval de Barranquilla → cultural  
+Pregunta: Busco un lugar para descansar → relajación  
+Pregunta: Quiero ir a la playa → playa  
 
 Pregunta: ${pregunta}
-`;
+`.trim();
 
     const result = await ai.models.generateContent({
       model: "gemini-2.0-flash",

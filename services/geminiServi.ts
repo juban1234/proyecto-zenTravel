@@ -1,6 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
-import db from "../configs/config";
 import { guardarEnMemoria, buscarRespuestaPrevia } from "../services/memoriaServi";
 import { clasificarIntencionConIA } from "../Intents/geminiClasificador";
 import { consultarBDPorIntencion } from "../Intents/geminiIntent";
@@ -25,7 +24,6 @@ const cleanResponseText = (text: string): string => {
   return withoutAsterisks.replace(/(?:\r\n|\r|\n)/g, '\n').trim();
 };
 
-// 🔧 Helper que formatea los datos según tipo
 const formatearRespuesta = (tipo: string, datos: any): string => {
   switch (tipo) {
     case "destinos":
@@ -35,13 +33,42 @@ const formatearRespuesta = (tipo: string, datos: any): string => {
 
     case "hoteles":
       return (datos as any[])
-        .map(h => `• ${h.nombre} en ${h.ciudad}`)
+        .map(h => `• ${h.nombre} en ${h.ciudad} ${h.descripcion} ubicado en ${h.ubicacion} ${h.imagenes}`)
         .join("\n");
 
     case "paquetes":
-      return (datos as any[])
-        .map(p => `• ${p.nombre}: ${p.descripcion} (COP ${p.precio.toLocaleString()})`)
-        .join("\n\n");
+  return (
+    "✨ Aquí tienes algunos paquetes recomendados:\n\n" +
+    (datos as any[])
+      .slice(0, 3)
+      .map(p => {
+        // Intenta parsear los arrays de incluye/noIncluye si vienen como string
+        let incluye: string[] = [];
+        let noIncluye: string[] = [];
+        try {
+          incluye = JSON.parse(p.incluye || "[]");
+          noIncluye = JSON.parse(p.noIncluye || "[]");
+        } catch (err) {
+          incluye = ["Datos no disponibles"];
+          noIncluye = [];
+        }
+
+        return (
+          `📦 ${p.nombre}\n` +
+          `📍 Destino: ${p.destino || "No especificado"} desde ${p.origen || "origen desconocido"}\n` +
+          `🏨 Hotel: ${extraerNombreHotel(p.descripcion)}\n` +
+          `📅 Duración: ${p.duracionDias} días\n` +
+          `📆 Fecha de salida: ${formatearFecha(p.fechaInicio)}\n` +
+          `💰 Precio: COP ${Number(p.precio).toLocaleString("es-CO")}\n` +
+          `⭐ Calificación: ${p.calificacion || "8.5"}\n` +
+          `✅ Incluye: ${incluye.join(", ") || "No especificado"}\n` +
+          (noIncluye.length > 0 ? `❌ No incluye: ${noIncluye.join(", ")}` : "") +
+          `\n🖼 Imagen: ${p.imagenUrl}`
+        );
+      })
+      .join("\n\n") +
+    `\n\n¿Te gustaría ver más opciones o filtrar por algo específico? 🌍`
+  );
 
     case "transporte":
       return (datos as any[])
@@ -51,12 +78,21 @@ const formatearRespuesta = (tipo: string, datos: any): string => {
     case "memoria":
     case "ia":
     case "error":
-      // texto ya limpio
       return datos as string;
 
     default:
       return typeof datos === "string" ? datos : JSON.stringify(datos, null, 2);
   }
+};
+
+const extraerNombreHotel = (descripcion: string): string => {
+  const match = descripcion.match(/hotel\s([^\.,\n]+)/i);
+  return match ? match[0].trim() : "Hotel incluido";
+};
+
+const formatearFecha = (fecha: string | Date): string => {
+  const d = new Date(fecha);
+  return d.toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" });
 };
 
 const prompt =
@@ -66,7 +102,7 @@ const prompt =
 
 "Asume que cualquier pregunta que te hagan está relacionada con un interés en viajar por Colombia, incluso si no se menciona explícitamente un lugar o palabra clave. No necesitas justificar tu conocimiento ni mencionar que eres una IA, simplemente responde como un experto en turismo colombiano."
 
-"Evita el uso de asteriscos o formatos innecesarios. Sé claro, útil y directo."
+"Evita el uso de asteriscos o formatos innecesarios tales como comillas, llaves y todo tipo de formatos que no sean realmente necesarios. Sé claro, útil y directo."
   .trim();
 
 export const getResponseFromAIZenTravel = async (
@@ -74,36 +110,37 @@ export const getResponseFromAIZenTravel = async (
   id_usuario: number
 ): Promise<{ tipo: string; datos: any }> => {
   try {
-    // 1. Verificar memoria
-    const prev = await buscarRespuestaPrevia(id_usuario, ZenIA);
-    if (prev) {
-      const texto = formatearRespuesta("memoria", prev);
+    const respuestaMemoria = await buscarRespuestaPrevia(id_usuario, ZenIA);
+    if (respuestaMemoria) {
+      const texto = formatearRespuesta("memoria", respuestaMemoria);
       return { tipo: "memoria", datos: texto };
     }
 
-    // 2. Clasificar e intentar BD
     const tipo = await clasificarIntencionConIA(ZenIA);
     const resultadoBD = await consultarBDPorIntencion(tipo);
-    if (resultadoBD && resultadoBD.datos?.length) {
+    if (resultadoBD && resultadoBD.datos?.length > 0) {
       const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
-      await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto, ZenIA);
+      await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto); // ✅ aquí ya no se pasa ZenIA
       return { tipo: resultadoBD.tipo, datos: texto };
     }
 
-    // 3. Fallback a Gemini
-    const raw = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [{ role: "user", parts: [{ text: `${prompt}\n\nPregunta del usuario: ${ZenIA}` }] }],
     });
-    const respuestaIA = smartTruncateText(cleanResponseText(raw?.candidates?.[0]?.content?.parts?.[0]?.text || ""), 1500);
-    await guardarEnMemoria(id_usuario, "ia", respuestaIA, ZenIA);
 
-    const textoIA = formatearRespuesta("ia", respuestaIA);
+    const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
+    await guardarEnMemoria(id_usuario, "ia", respuestaLimpia); // ✅ aquí también
+
+    const textoIA = formatearRespuesta("ia", respuestaLimpia);
     return { tipo: "ia", datos: textoIA };
 
   } catch (error: any) {
     console.error("🔥 ERROR DETALLADO en getResponse:", error);
-    const mensaje = "Lo siento, ocurrió un error interno al procesar tu solicitud.";
-    return { tipo: "error", datos: mensaje };
+    return {
+      tipo: "error",
+      datos: "Lo siento, ocurrió un error interno al procesar tu solicitud."
+    };
   }
 };

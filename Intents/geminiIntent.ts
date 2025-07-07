@@ -39,12 +39,15 @@ export const consultarBDPorIntencion = async (
       // 🏨 HOTELES
       case "hoteles": {
         const [hoteles] = await db.query<RowDataPacket[]>(
-          `SELECT nombre, ciudad FROM hotel`
+          `SELECT nombre, ciudad, descripcion, ubicacion, imagenes FROM hotel`
         );
         if (hoteles.length > 0) {
           const datos = hoteles.map((h) => ({
             nombre: h.nombre,
             ciudad: h.ciudad,
+            descripcion: h.descripcion, 
+            ubicacion: h.ubicacion,
+            imagenes: h.imagenes
           }));
           return { tipo: "hoteles", datos };
         }
@@ -65,6 +68,9 @@ export const consultarBDPorIntencion = async (
             duracionDias: p.duracionDias,
             estado: p.estado,
             calificacion: p.calificacion || 8.5,
+            destino: p.nombre_destino,
+            origen: p.nombre_transporte,
+            creador: p.nombre_usuario // <- opcional
           }));
           return { tipo: "paquetes", datos };
         }
@@ -74,12 +80,13 @@ export const consultarBDPorIntencion = async (
       // 🚌 TRANSPORTE
       case "transporte": {
         const [transportes] = await db.query<RowDataPacket[]>(
-          `SELECT tipo, empresa, destino, fecha_salida FROM transporte`
+          `SELECT tipo, empresa, origen, destino, fecha_salida FROM transporte`
         );
         if (transportes.length > 0) {
           const datos = transportes.map((t) => ({
             tipo: t.tipo,
             empresa: t.empresa,
+            origen: t.origen,
             destino: t.destino,
             salida: t.fecha_salida,
           }));
@@ -88,7 +95,7 @@ export const consultarBDPorIntencion = async (
         break;
       }
 
-      // 🎯 INTENCIONES AVANZADAS que dependen de la categoría del paquete
+      // 🎯 INTENCIONES AVANZADAS (filtradas por categoría)
       case "aventura":
       case "relajación":
       case "romántico":
@@ -120,6 +127,9 @@ export const consultarBDPorIntencion = async (
             duracionDias: p.duracionDias,
             estado: p.estado,
             calificacion: p.calificacion || 8.5,
+            destino: p.nombre_destino,
+            origen: p.nombre_transporte,
+            creador: p.nombre_usuario
           }));
           return { tipo: "paquetes", datos };
         }

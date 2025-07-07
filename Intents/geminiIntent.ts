@@ -1,3 +1,4 @@
+// Intents/geminiIntent.ts
 import db from "../configs/config";
 import { RowDataPacket } from "mysql2";
 
@@ -8,6 +9,8 @@ const mapearIntencion = (intencion: string): string => {
     destinos_historia: "historia",
     destinos_montaña: "naturaleza",
     recomendaciones_personalizadas: "paquetes",
+    // Aseguramos que "destinos" si lo clasifica la IA, vaya a la categoría general de destinos
+    destinos: "destinos_general" 
   };
   return sinonimos[intencion] || intencion;
 };
@@ -19,10 +22,11 @@ export const consultarBDPorIntencion = async (
     const intencionFinal = mapearIntencion(intencion);
 
     switch (intencionFinal) {
-      // 🌴 DESTINOS generales
+      // 🌴 DESTINOS generales y específicos
       case "destinos_playa":
       case "destinos_naturaleza":
-      case "destinos_cultural": {
+      case "destinos_cultural":
+      case "destinos_general": { // <--- ¡Añadir este case!
         const [destinos] = await db.query<RowDataPacket[]>(
           `SELECT nombre, descripcion FROM destinos`
         );

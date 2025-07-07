@@ -4,6 +4,8 @@ import { guardarEnMemoria, buscarRespuestaPrevia } from "../services/memoriaServ
 import { clasificarIntencionConIA } from "../Intents/geminiClasificador";
 import { consultarBDPorIntencion } from "../Intents/geminiIntent";
 
+console.log("¡Archivo geminiServi.ts cargado!"); 
+
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -37,38 +39,23 @@ const formatearRespuesta = (tipo: string, datos: any): string => {
         .join("\n");
 
     case "paquetes":
-  return (
-    "✨ Aquí tienes algunos paquetes recomendados:\n\n" +
-    (datos as any[])
-      .slice(0, 3)
-      .map(p => {
-        // Intenta parsear los arrays de incluye/noIncluye si vienen como string
-        let incluye: string[] = [];
-        let noIncluye: string[] = [];
-        try {
-          incluye = JSON.parse(p.incluye || "[]");
-          noIncluye = JSON.parse(p.noIncluye || "[]");
-        } catch (err) {
-          incluye = ["Datos no disponibles"];
-          noIncluye = [];
-        }
-
-        return (
-          `📦 ${p.nombre}\n` +
-          `📍 Destino: ${p.destino || "No especificado"} desde ${p.origen || "origen desconocido"}\n` +
-          `🏨 Hotel: ${extraerNombreHotel(p.descripcion)}\n` +
-          `📅 Duración: ${p.duracionDias} días\n` +
-          `📆 Fecha de salida: ${formatearFecha(p.fechaInicio)}\n` +
-          `💰 Precio: COP ${Number(p.precio).toLocaleString("es-CO")}\n` +
-          `⭐ Calificación: ${p.calificacion || "8.5"}\n` +
-          `✅ Incluye: ${incluye.join(", ") || "No especificado"}\n` +
-          (noIncluye.length > 0 ? `❌ No incluye: ${noIncluye.join(", ")}` : "") +
-          `\n🖼 Imagen: ${p.imagenUrl}`
-        );
-      })
-      .join("\n\n") +
-    `\n\n¿Te gustaría ver más opciones o filtrar por algo específico? 🌍`
-  );
+      return (
+        "✨ Aquí tienes algunos paquetes recomendados:\n\n" +
+        (datos as any[])
+          .slice(0, 3)
+          .map(p =>
+            `📦 Paquete: ${p.nombre}\n` +
+            `📍 Destino: ${p.destino} desde ${p.origen}\n` +
+            `🏨 Hotel: ${extraerNombreHotel(p.descripcion)}\n` +
+            `📅 Duración: ${p.duracionDias} días\n` +
+            `📆 Fecha de salida: ${formatearFecha(p.fechaInicio)}\n` +
+            `💰 Precio: COP ${p.precio.toLocaleString()}\n` +
+            `⭐ Calificación: ${p.calificacion}\n` +
+            `📌 Estado: ${p.estado}`
+          )
+          .join("\n\n") +
+        `\n\n¿Te gustaría más detalles o ver otros paquetes similares? 🧳`
+      );
 
     case "transporte":
       return (datos as any[])
@@ -95,32 +82,33 @@ const formatearFecha = (fecha: string | Date): string => {
   return d.toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" });
 };
 
-const prompt =
-  "Eres un asistente experto en turismo, cultura, gastronomía y planificación de viajes en Colombia. Responde preguntas relacionadas con lugares turísticos, actividades, historia, tradiciones culturales, música, danza, artesanía, gastronomía y recomendaciones personalizadas de viaje en todo el país."
-
-"Ayuda a los usuarios a armar planes de viaje con estimaciones aproximadas de presupuesto por departamento o ciudad colombiana. Incluye sugerencias sobre alojamiento, transporte, alimentación, actividades culturales o recreativas."
-
-"Asume que cualquier pregunta que te hagan está relacionada con un interés en viajar por Colombia, incluso si no se menciona explícitamente un lugar o palabra clave. No necesitas justificar tu conocimiento ni mencionar que eres una IA, simplemente responde como un experto en turismo colombiano."
-
-"Evita el uso de asteriscos o formatos innecesarios tales como comillas, llaves y todo tipo de formatos que no sean realmente necesarios. Sé claro, útil y directo."
-  .trim();
+const prompt = `
+Eres un asistente experto en turismo, cultura, gastronomía y planificación de viajes en Colombia. 
+Responde preguntas relacionadas con lugares turísticos, actividades, historia, tradiciones culturales, música, danza, artesanía, gastronomía y recomendaciones personalizadas de viaje en todo el país.
+Ayuda a los usuarios a armar planes de viaje con estimaciones aproximadas de presupuesto por departamento o ciudad colombiana. Incluye sugerencias sobre alojamiento, transporte, alimentación, actividades culturales o recreativas.
+Asume que cualquier pregunta que te hagan está relacionada con un interés en viajar por Colombia, incluso si no se menciona explícitamente un lugar o palabra clave. No necesitas justificar tu conocimiento ni mencionar que eres una IA, simplemente responde como un experto en turismo colombiano.
+Evita el uso de asteriscos o formatos innecesarios tales como comillas, llaves y todo tipo de formatos que no sean realmente necesarios. Sé claro, útil y directo.
+`.trim();
 
 export const getResponseFromAIZenTravel = async (
   ZenIA: string,
   id_usuario: number
 ): Promise<{ tipo: string; datos: any }> => {
+  console.log(`[DEBUG] getResponseFromAIZenTravel llamado con ZenIA: "${ZenIA}" y id_usuario: ${id_usuario}`);
   try {
-    const respuestaMemoria = await buscarRespuestaPrevia(id_usuario, ZenIA);
-    if (respuestaMemoria) {
-      const texto = formatearRespuesta("memoria", respuestaMemoria);
-      return { tipo: "memoria", datos: texto };
-    }
+    // const respuestaMemoria = await buscarRespuestaPrevia(id_usuario, ZenIA); // COMENTAR ESTA LÍNEA
+    // if (respuestaMemoria) { // COMENTAR ESTA LÍNEA
+    //   const texto = formatearRespuesta("memoria", respuestaMemoria); // COMENTAR ESTA LÍNEA
+    //   return { tipo: "memoria", datos: texto }; // COMENTAR ESTA LÍNEA
+    // } // COMENTAR ESTA LÍNEA
+
+    console.log(`[DEBUG getResponse] Preparando para clasificar intención: "${ZenIA}"`);
 
     const tipo = await clasificarIntencionConIA(ZenIA);
     const resultadoBD = await consultarBDPorIntencion(tipo);
     if (resultadoBD && resultadoBD.datos?.length > 0) {
       const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
-      await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto); // ✅ aquí ya no se pasa ZenIA
+      await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto);
       return { tipo: resultadoBD.tipo, datos: texto };
     }
 
@@ -131,7 +119,7 @@ export const getResponseFromAIZenTravel = async (
 
     const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
-    await guardarEnMemoria(id_usuario, "ia", respuestaLimpia); // ✅ aquí también
+    await guardarEnMemoria(id_usuario, "ia", respuestaLimpia);
 
     const textoIA = formatearRespuesta("ia", respuestaLimpia);
     return { tipo: "ia", datos: textoIA };

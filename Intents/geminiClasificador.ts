@@ -1,37 +1,25 @@
+// Intents/geminiClasificador.ts
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 dotenv.config();
 
-const apiKey = process.env.GEMINI_API_KEY!;
-const ai = new GoogleGenAI({ apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 export const clasificarIntencionConIA = async (pregunta: string): Promise<string> => {
   try {
     const prompt = `
-Clasifica la siguiente intención del usuario en una sola palabra clave, SIN justificar y sin explicar. 
-Usa solo una de estas categorías predefinidas:
+Clasifica la siguiente intención del usuario en una sola palabra clave y sin justificar.
 
-- aventura
-- relajación
-- historia
-- naturaleza
-- cultural
-- romántico
-- playa
-- gastronomía
-- viaje_familiar
-- viaje_pareja
-- viaje_solo
-- paquetes
+Categorías disponibles:
+- destinos_playa
+- destinos_naturaleza
+- destinos_cultural
+- destinos_general
 - hoteles
+- paquetes
 - transporte
 
-Ejemplos:
-Pregunta: Quiero ir a caminar por la montaña → naturaleza  
-Pregunta: Algo con mi pareja → viaje_pareja  
-Pregunta: Me interesa el carnaval de Barranquilla → cultural  
-Pregunta: Busco un lugar para descansar → relajación  
-Pregunta: Quiero ir a la playa → playa  
+Si la intención no encaja con ninguna de estas, responde solamente: general.
 
 Pregunta: ${pregunta}
 `.trim();
@@ -42,6 +30,11 @@ Pregunta: ${pregunta}
     });
 
     const texto = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim().toLowerCase() || "general";
+    
+    // --- NUEVA LÍNEA PARA DEPURACIÓN ---
+    console.log(`[Clasificador IA] Pregunta: "${pregunta}" -> Intención clasificada: "${texto}"`);
+    // ------------------------------------
+
     return texto.replace(/\s+/g, "_");
   } catch (error) {
     console.error("Error en clasificador IA:", error);

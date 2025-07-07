@@ -17,7 +17,7 @@ class Paquetes {
             p.duracionDias,
             p.fechaInicioDisponible,
             p.descuento,
-            p.Habitacion,
+            p.nombreHotel,
             p.nombreTransporte,
             p.nombreDestino,
             p.categoria ?? null,

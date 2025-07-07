@@ -103,6 +103,11 @@ export const getResponseFromAIZenTravel = async (
     let tipo = await clasificarIntencionConIA(ZenIA);
     let resultadoBD = await consultarBDPorIntencion(tipo);
 
+    if (!resultadoBD || !resultadoBD.tipo || !Array.isArray(resultadoBD.datos)) {
+      throw new Error("Respuesta de base de datos malformada");
+    }
+
+
     // Si la intención clasificada es 'sal_del_contexto', o no hay resultado de BD
     if (tipo === "sal_del_contexto" || !resultadoBD || resultadoBD.datos?.length === 0) {
       const aiResponseContent = await ai.models.generateContent({
@@ -126,6 +131,10 @@ export const getResponseFromAIZenTravel = async (
 
   } catch (error: any) {
     console.error("🔥 ERROR DETALLADO en getResponse:", error);
+      if (error.code === 'ER_BAD_FIELD_ERROR') {
+        return { tipo: "error", datos: "Error en los campos al consultar la base de datos" };
+      }
+
     return {
       tipo: "error",
       datos: "Lo siento, ocurrió un error interno al procesar tu solicitud."

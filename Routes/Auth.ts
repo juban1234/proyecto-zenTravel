@@ -9,7 +9,7 @@ import { puntuar } from "../controllers/controlerAdmin/soporteController";
 
 const router = express.Router();
 
-router.post('/Login', login); // Funcional
+router.post('/login', login); // Funcional
 router.post('/Register' ,validatorParams, validator, register); // Funcional
 router.patch('/Profile',verifyToken,profile); // Funcional
 router.post('/CustomerSupport', customerSupport); // funcional

@@ -11,7 +11,7 @@ router.get('/Destiny',buscar); // Funcional
 router.get('/Hotel', SearchHotel); // Funcional
 router.get('/Transport',SearchTranport)
 router.get('/Transport/:origen/:destino',SearchTransporteByName); // funcional
-router.get('/RoomReservation/:hotel/:ciudad',buscar_habitacion)
+router.get('/RoomReservation/:hotel',buscar_habitacion)
 
 // 📦 Rutas públicas para paquetes
 router.get("/", PackageController.listarPaquetes) // Listar todos los paquetes

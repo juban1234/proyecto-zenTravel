@@ -1,7 +1,6 @@
 import db from "../configs/config";
 import { RowDataPacket } from "mysql2";
 
-// Guarda sólo los campos existentes en memoria_usuario
 export const guardarEnMemoria = async (
   id_usuario: number,
   tipo: string,
@@ -17,7 +16,6 @@ export const guardarEnMemoria = async (
   }
 };
 
-// Devuelve la última respuesta guardada para ese usuario
 export const buscarRespuestaPrevia = async (
   id_usuario: number,
   _pregunta: string

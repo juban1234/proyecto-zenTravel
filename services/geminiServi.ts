@@ -4,8 +4,6 @@ import { guardarEnMemoria, buscarRespuestaPrevia } from "../services/memoriaServ
 import { clasificarIntencionConIA } from "../Intents/geminiClasificador";
 import { consultarBDPorIntencion } from "../Intents/geminiIntent";
 
-console.log("¡Archivo geminiServi.ts cargado!"); 
-
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -88,41 +86,43 @@ Responde preguntas relacionadas con lugares turísticos, actividades, historia, 
 Ayuda a los usuarios a armar planes de viaje con estimaciones aproximadas de presupuesto por departamento o ciudad colombiana. Incluye sugerencias sobre alojamiento, transporte, alimentación, actividades culturales o recreativas.
 Asume que cualquier pregunta que te hagan está relacionada con un interés en viajar por Colombia, incluso si no se menciona explícitamente un lugar o palabra clave. No necesitas justificar tu conocimiento ni mencionar que eres una IA, simplemente responde como un experto en turismo colombiano.
 Evita el uso de asteriscos o formatos innecesarios tales como comillas, llaves y todo tipo de formatos que no sean realmente necesarios. Sé claro, útil y directo.
+Si la pregunta no está relacionada con turismo en Colombia, responde amablemente que tu enfoque es el turismo en Colombia y que no puedes ayudar con esa solicitud, sin ofrecer más detalles ni especular.
 `.trim();
 
 export const getResponseFromAIZenTravel = async (
   ZenIA: string,
   id_usuario: number
 ): Promise<{ tipo: string; datos: any }> => {
-  console.log(`[DEBUG] getResponseFromAIZenTravel llamado con ZenIA: "${ZenIA}" y id_usuario: ${id_usuario}`);
   try {
-    // const respuestaMemoria = await buscarRespuestaPrevia(id_usuario, ZenIA); // COMENTAR ESTA LÍNEA
-    // if (respuestaMemoria) { // COMENTAR ESTA LÍNEA
-    //   const texto = formatearRespuesta("memoria", respuestaMemoria); // COMENTAR ESTA LÍNEA
-    //   return { tipo: "memoria", datos: texto }; // COMENTAR ESTA LÍNEA
-    // } // COMENTAR ESTA LÍNEA
-
-    console.log(`[DEBUG getResponse] Preparando para clasificar intención: "${ZenIA}"`);
-
-    const tipo = await clasificarIntencionConIA(ZenIA);
-    const resultadoBD = await consultarBDPorIntencion(tipo);
-    if (resultadoBD && resultadoBD.datos?.length > 0) {
-      const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
-      await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto);
-      return { tipo: resultadoBD.tipo, datos: texto };
+    const respuestaMemoria = await buscarRespuestaPrevia(id_usuario, ZenIA);
+    if (respuestaMemoria) {
+      const texto = formatearRespuesta("memoria", respuestaMemoria);
+      return { tipo: "memoria", datos: texto };
     }
 
-    const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: [{ role: "user", parts: [{ text: `${prompt}\n\nPregunta del usuario: ${ZenIA}` }] }],
-    });
+    let tipo = await clasificarIntencionConIA(ZenIA);
+    let resultadoBD = await consultarBDPorIntencion(tipo);
 
-    const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
-    await guardarEnMemoria(id_usuario, "ia", respuestaLimpia);
-
-    const textoIA = formatearRespuesta("ia", respuestaLimpia);
-    return { tipo: "ia", datos: textoIA };
+    // Si la intención clasificada es 'sal_del_contexto', o no hay resultado de BD
+    if (tipo === "sal_del_contexto" || !resultadoBD || resultadoBD.datos?.length === 0) {
+      const aiResponseContent = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: [{ role: "user", parts: [{ text: `${prompt}\n\nPregunta del usuario: ${ZenIA}` }] }],
+      });
+      
+      const rawText = aiResponseContent?.candidates?.[0]?.content?.parts?.[0]?.text || 
+                      "Lo siento, mi enfoque es el turismo en Colombia y no puedo ayudarte con esa solicitud.";
+      
+      const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
+      await guardarEnMemoria(id_usuario, "ia", respuestaLimpia);
+      const textoIA = formatearRespuesta("ia", respuestaLimpia);
+      return { tipo: "ia", datos: textoIA };
+    }
+    
+    // Si la BD tuvo un resultado, lo usamos.
+    const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
+    await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto);
+    return { tipo: resultadoBD.tipo, datos: texto };
 
   } catch (error: any) {
     console.error("🔥 ERROR DETALLADO en getResponse:", error);

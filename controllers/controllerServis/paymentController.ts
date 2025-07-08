@@ -10,7 +10,7 @@ interface PaymentRequestBody {
   quantity: number;
 }
 
-const CURRENCY = 'COP'; 
+const CURRENCY = 'USD'; 
 const RETURN_URL = process.env.PAYPAL_RETURN_URL || 'https://proyecto-zentravel.onrender.com/api/payments/success';
 const CANCEL_URL = process.env.PAYPAL_CANCEL_URL || 'https://proyecto-zentravel.onrender.com/api/payments/cancel';
 

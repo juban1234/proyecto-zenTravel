@@ -5,7 +5,7 @@ import db from '../../configs/config';
 
 interface PaymentRequestBody {
   price: number;
-  name: string;
+  name: number;
   quantity: number;
 }
 
@@ -18,7 +18,7 @@ export const createPayment = async (req: Request, res: Response) => {
 
   if (
     typeof price !== 'number' || price <= 0 ||
-    typeof name !== 'string' || name.trim() === '' ||
+    typeof name !== 'number' || name <= 0 ||
     typeof quantity !== 'number' || quantity <= 0
   ) {
     return res.status(400).json({ error: 'Parámetros inválidos (price, name, quantity)' });

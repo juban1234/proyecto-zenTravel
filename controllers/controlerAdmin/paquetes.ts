@@ -56,9 +56,6 @@ export const createHotel: RequestHandler = async (req, res) => {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
-    console.log("🟡 req.body:", req.body);
-    console.log("🟡 req.files:", reqAuth.files);
-
     const {
       nombre,
       descripcion,
@@ -75,6 +72,10 @@ export const createHotel: RequestHandler = async (req, res) => {
       }
     }
 
+    // 🔍 Diagnóstico de archivos recibidos
+    console.log("📥 req.files recibido:", reqAuth.files);
+    console.log("🔑 Claves en req.files:", Object.keys(reqAuth.files || {}));
+
     if (!reqAuth.files || Object.keys(reqAuth.files).length === 0) {
       return res.status(400).json({ error: 'Se requieren imágenes del hotel y de las habitaciones' });
     }
@@ -87,8 +88,9 @@ export const createHotel: RequestHandler = async (req, res) => {
     const imagenesHotel = files.imagenes || [];
     const imagenesHabitaciones = files.imageneshabitaciones || [];
 
-    console.log("🟡 imagenesHotel:", imagenesHotel.length);
-    console.log("🟡 imagenesHabitaciones:", imagenesHabitaciones.length);
+    // Mostrar cuántas imágenes llegaron en cada grupo
+    console.log(`🏨 Imágenes del hotel recibidas: ${imagenesHotel.length}`);
+    console.log(`🛏️ Imágenes de habitaciones recibidas: ${imagenesHabitaciones.length}`);
 
     if (imagenesHotel.length === 0) {
       return res.status(400).json({ error: 'Se requiere al menos una imagen del hotel' });
@@ -120,7 +122,7 @@ export const createHotel: RequestHandler = async (req, res) => {
       estrellas,
       imagenesUrl,
       ciudad,
-      imagenesHabitacionesUrl
+      imagenesHabitacionesUrl 
     );
 
     const idHotel = await admin.añadirHotel(dto);
@@ -131,7 +133,7 @@ export const createHotel: RequestHandler = async (req, res) => {
     });
 
   } catch (error: any) {
-    console.error("🔴 Error al crear el hotel:", error);
+    console.error("❌ Error al crear el hotel:", error.message || error);
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };

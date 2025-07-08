@@ -51,8 +51,7 @@ export const createHotel: RequestHandler = async (req, res) => {
     const reqAuth = req as AuthenticatedRequest;
     const id_usuario = reqAuth.user?.id;
 
-    try{
-
+    try {
         if (!id_usuario) {
             return res.status(401).json({ error: "Usuario no autenticado" });
         }
@@ -62,7 +61,7 @@ export const createHotel: RequestHandler = async (req, res) => {
             descripcion,
             ubicacion,
             ciudad,
-            estrellas,
+            estrellas
         } = req.body;
 
         const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
@@ -73,19 +72,39 @@ export const createHotel: RequestHandler = async (req, res) => {
             }
         }
 
-        if (!reqAuth.files || reqAuth.files.length === 0) {
-            return res.status(400).json({ error: 'Se requiere al menos una imagen' });
+        if (!reqAuth.files || Object.keys(reqAuth.files).length === 0) {
+            return res.status(400).json({ error: 'Se requieren imágenes del hotel y de las habitaciones' });
+        }
+
+        const files = reqAuth.files as {
+            imagenes?: Express.Multer.File[];
+            imageneshabitaciones?: Express.Multer.File[];
+        };
+
+        const imagenesHotel = files.imagenes || [];
+        const imagenesHabitaciones = files.imageneshabitaciones || [];
+
+        if (imagenesHotel.length === 0) {
+            return res.status(400).json({ error: 'Se requiere al menos una imagen del hotel' });
+        }
+
+        if (imagenesHabitaciones.length === 0) {
+            return res.status(400).json({ error: 'Se requiere al menos una imagen de habitación' });
         }
 
         const imagenesUrl: string[] = [];
+        const imagenesHabitacionesUrl: string[] = [];
 
-        for (const file of reqAuth.files) {
-            try {
-                const resultado = await cloudinary.uploader.upload(file.path);
-                imagenesUrl.push(resultado.secure_url);
-            } finally {
-                fs.unlinkSync(file.path);
-            }
+        for (const file of imagenesHotel) {
+            const resultado = await cloudinary.uploader.upload(file.path);
+            imagenesUrl.push(resultado.secure_url);
+            fs.unlinkSync(file.path);
+        }
+
+        for (const file of imagenesHabitaciones) {
+            const resultado = await cloudinary.uploader.upload(file.path);
+            imagenesHabitacionesUrl.push(resultado.secure_url);
+            fs.unlinkSync(file.path);
         }
 
         const dto = new Hotel(
@@ -94,7 +113,8 @@ export const createHotel: RequestHandler = async (req, res) => {
             ubicacion,
             estrellas,
             imagenesUrl,
-            ciudad
+            ciudad,
+            imagenesHabitacionesUrl 
         );
 
         const idHotel = await admin.añadirHotel(dto);
@@ -138,7 +158,6 @@ export const createTransporte = async (req: Request , res:Response) => {
         })
     }
     
-
 }
 
 export const createHabitacion = async (req: Request, res: Response) => {
@@ -156,18 +175,13 @@ export const createHabitacion = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'La imagen es requerida' });
         }
 
-        // Subir imagen a Cloudinary
         const imagen = await cloudinary.uploader.upload(req.file.path);
         const imagenUrl = imagen.secure_url;
 
-        // Eliminar archivo local
         if (fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
         }
 
-
-
-        // Validación de campos obligatorios
         const campos = {
             tipo,
             numero,
@@ -183,8 +197,6 @@ export const createHabitacion = async (req: Request, res: Response) => {
                 });
             }
         }
-
-        // Crear DTO
         const dto = new Habitacion(
             tipo,
             numero,
@@ -192,7 +204,6 @@ export const createHabitacion = async (req: Request, res: Response) => {
             id_hotel,
             imagenUrl
         );
-
 
         const resultado = await admin.añadirHabitacion(dto);
 

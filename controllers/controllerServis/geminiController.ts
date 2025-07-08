@@ -22,7 +22,8 @@ export const ZenIA = async (req: Request, res: Response) => {
     console.error("Error en ZenIA:", error);
     res.status(500).json({
       tipo: "error",
-      datos: "Error interno al procesar."
+      datos: "Error interno al procesar.",
+      error
     });
   }
 };

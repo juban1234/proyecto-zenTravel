@@ -103,31 +103,31 @@ export const getResponseFromAIZenTravel = async (
     let tipo = await clasificarIntencionConIA(ZenIA);
     let resultadoBD = await consultarBDPorIntencion(tipo);
 
-    if (!resultadoBD || !resultadoBD.tipo || !Array.isArray(resultadoBD.datos)) {
-      throw new Error("Respuesta de base de datos malformada");
-    }
-
-
-    // Si la intención clasificada es 'sal_del_contexto', o no hay resultado de BD
-    if (tipo === "sal_del_contexto" || !resultadoBD || resultadoBD.datos?.length === 0) {
+    // 👉 Si es 'sal_del_contexto' o no hay datos, responde con IA
+    if (tipo === "sal_del_contexto" || !resultadoBD?.datos || resultadoBD.datos.length === 0) {
       const aiResponseContent = await ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: [{ role: "user", parts: [{ text: `${prompt}\n\nPregunta del usuario: ${ZenIA}` }] }],
       });
-      
-      const rawText = aiResponseContent?.candidates?.[0]?.content?.parts?.[0]?.text || 
-      "Lo siento, mi enfoque es el turismo en Colombia y no puedo ayudarte con esa solicitud.";
-      
+
+      const rawText = aiResponseContent?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "Lo siento, mi enfoque es el turismo en Colombia y no puedo ayudarte con esa solicitud.";
+
       const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
       await guardarEnMemoria(id_usuario, "ia", respuestaLimpia, ZenIA);
       const textoIA = formatearRespuesta("ia", respuestaLimpia);
       return { tipo: "ia", datos: textoIA };
     }
-    
-    // Si la BD tuvo un resultado, lo usamos.
+
+    // 👉 Verificación de integridad de datos después de asegurarte que sí hay datos
+    if (!resultadoBD || !resultadoBD.tipo || !Array.isArray(resultadoBD.datos)) {
+      throw new Error("Respuesta de base de datos malformada");
+    }
+
+    // 👉 Si la BD tuvo un resultado válido, lo usas.
     const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
     await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto, ZenIA);
-    return { tipo: resultadoBD.tipo, datos: texto };
+    return { tipo: resultadoBD.tipo, datos: texto };  
 
   } catch (error: any) {
     console.error("🔥 ERROR DETALLADO en getResponse:", error);

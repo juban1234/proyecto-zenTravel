@@ -10,7 +10,8 @@ interface PaymentRequestBody {
 }
 
 const CURRENCY = 'USD';
-const RETURN_URL = process.env.PAYPAL_RETURN_URL || 'https://proyecto-zentravel.onrender.com/api/payments/success';
+// process.env.PAYPAL_RETURN_URL ||
+const RETURN_URL =  'http://localhost:5173/paquetes';
 const CANCEL_URL = process.env.PAYPAL_CANCEL_URL || 'https://proyecto-zentravel.onrender.com/api/payments/cancel';
 
 export const createPayment = async (req: Request, res: Response) => {
@@ -87,7 +88,7 @@ export const createPayment = async (req: Request, res: Response) => {
 };
 
 export const successPayment = async (req: Request, res: Response) => {
-  const { paymentId, PayerID } = req.query;
+  const { paymentId, PayerID , id_paquete } = req.query;
 
   if (!paymentId || !PayerID) {
     return res.status(400).json({ error: 'Parámetros faltantes en la respuesta de PayPal' });
@@ -109,8 +110,8 @@ export const successPayment = async (req: Request, res: Response) => {
     const customToken = payment.transactions[0]?.custom;
 
     await db.query(
-      `INSERT INTO pago (id_reserva, monto, metodoPago, estado) VALUES (?, ?, ?, ?)`,
-      [null, monto, metodoPago, estado]
+      `INSERT INTO pago (id_paquete, monto, metodoPago, estado) VALUES (?, ?, ?, ?)`,
+      [id_paquete, monto, metodoPago, estado]
     );
 
     return res.status(200).json({

@@ -32,6 +32,6 @@ router.get('/Report/Soporte', reporte)
 router.patch('/Report/Act/:id')
 
 //dasbord
-router.get('/Info/Dashboard',verificarRol('admin'),Dashboard)
+router.get('/Info/Dashboard',verificarRol('admin' , 'empleado'),Dashboard)
 
 export default router;

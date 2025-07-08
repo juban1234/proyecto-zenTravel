@@ -53,77 +53,89 @@ export class SearchDto {
 }
 
 export class Hotel {
-    private _nombre: string;
-    private _descripcion: string;
-    private _ubicacion: string;
-    private _estrellas: string;
-    private _imagenes: string[]; 
-    private _ciudad: string;
-    
+  private _nombre: string;
+  private _descripcion: string;
+  private _ubicacion: string;
+  private _estrellas: string;
+  private _imagenes: string[]; 
+  private _ciudad: string;
+  private _imageneshabitaciones: string[]; // 🆕 campo nuevo
 
-    constructor(
-        nombre: string,
-        descripcion: string,
-        ubicacion: string,
-        estrellas: string,
-        imagenes: string[],
-        ciudad: string       
-    ) {
-        this._nombre = nombre;
-        this._descripcion = descripcion;
-        this._ubicacion = ubicacion;
-        this._estrellas = estrellas;
-        this._imagenes = imagenes;
-        this._ciudad = ciudad;
-    }
+  constructor(
+    nombre: string,
+    descripcion: string,
+    ubicacion: string,
+    estrellas: string,
+    imagenes: string[],
+    ciudad: string,
+    imageneshabitaciones: string[] = [] // 🆕 default para evitar errores si no se pasa
+  ) {
+    this._nombre = nombre;
+    this._descripcion = descripcion;
+    this._ubicacion = ubicacion;
+    this._estrellas = estrellas;
+    this._imagenes = imagenes;
+    this._ciudad = ciudad;
+    this._imageneshabitaciones = imageneshabitaciones; // 🆕 asignación
+  }
 
-    // Getters
-    get nombre(): string {
-        return this._nombre;
-    }
+  // Getters
+  get nombre(): string {
+    return this._nombre;
+  }
 
-    get descripcion(): string {
-        return this._descripcion;
-    }
+  get descripcion(): string {
+    return this._descripcion;
+  }
 
-    get ubicacion(): string {
-        return this._ubicacion;
-    }
-    get estrellas(): string {
-        return this._estrellas;
-    }
+  get ubicacion(): string {
+    return this._ubicacion;
+  }
 
-    get imagenes(): string[] {
-        return this._imagenes;
-    }
+  get estrellas(): string {
+    return this._estrellas;
+  }
 
-    get ciudad(): string {
-        return this._ciudad;
-    }
+  get imagenes(): string[] {
+    return this._imagenes;
+  }
 
-    // Setters
-    set nombre(nombre: string) {
-        this._nombre = nombre;
-    }
+  get ciudad(): string {
+    return this._ciudad;
+  }
 
-    set descripcion(descripcion: string) {
-        this._descripcion = descripcion;
-    }
+  get imageneshabitaciones(): string[] { // 🆕 getter
+    return this._imageneshabitaciones;
+  }
 
-    set ubicacion(ubicacion: string) {
-        this._ubicacion = ubicacion;
-    }
-    set estrellas(estrellas: string) {
-        this._estrellas = estrellas;
-    }
+  // Setters
+  set nombre(nombre: string) {
+    this._nombre = nombre;
+  }
 
-    set imagenes(imagenes: string[]) { 
-        this._imagenes = imagenes;
-    }
+  set descripcion(descripcion: string) {
+    this._descripcion = descripcion;
+  }
 
-    set ciudad(ciudad: string) {
-        this._ciudad = ciudad;
-    }
+  set ubicacion(ubicacion: string) {
+    this._ubicacion = ubicacion;
+  }
+
+  set estrellas(estrellas: string) {
+    this._estrellas = estrellas;
+  }
+
+  set imagenes(imagenes: string[]) {
+    this._imagenes = imagenes;
+  }
+
+  set ciudad(ciudad: string) {
+    this._ciudad = ciudad;
+  }
+
+  set imageneshabitaciones(imagenes: string[]) { // 🆕 setter
+    this._imageneshabitaciones = imagenes;
+  }
 }
 
 export class Destino {

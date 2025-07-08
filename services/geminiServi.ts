@@ -116,17 +116,17 @@ export const getResponseFromAIZenTravel = async (
       });
       
       const rawText = aiResponseContent?.candidates?.[0]?.content?.parts?.[0]?.text || 
-                      "Lo siento, mi enfoque es el turismo en Colombia y no puedo ayudarte con esa solicitud.";
+      "Lo siento, mi enfoque es el turismo en Colombia y no puedo ayudarte con esa solicitud.";
       
       const respuestaLimpia = smartTruncateText(cleanResponseText(rawText), 1500);
-      await guardarEnMemoria(id_usuario, "ia", respuestaLimpia);
+      await guardarEnMemoria(id_usuario, "ia", respuestaLimpia, ZenIA);
       const textoIA = formatearRespuesta("ia", respuestaLimpia);
       return { tipo: "ia", datos: textoIA };
     }
     
     // Si la BD tuvo un resultado, lo usamos.
     const texto = formatearRespuesta(resultadoBD.tipo, resultadoBD.datos);
-    await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto);
+    await guardarEnMemoria(id_usuario, resultadoBD.tipo, texto, ZenIA);
     return { tipo: resultadoBD.tipo, datos: texto };
 
   } catch (error: any) {

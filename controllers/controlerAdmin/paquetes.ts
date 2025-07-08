@@ -48,86 +48,92 @@ export const createDestino = async(req:Request , res:Response) => {
 }
 
 export const createHotel: RequestHandler = async (req, res) => {
-    const reqAuth = req as AuthenticatedRequest;
-    const id_usuario = reqAuth.user?.id;
+  const reqAuth = req as AuthenticatedRequest;
+  const id_usuario = reqAuth.user?.id;
 
-    try {
-        if (!id_usuario) {
-            return res.status(401).json({ error: "Usuario no autenticado" });
-        }
-
-        const {
-            nombre,
-            descripcion,
-            ubicacion,
-            ciudad,
-            estrellas
-        } = req.body;
-
-        const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
-
-        for (const [campo, valor] of Object.entries(campos)) {
-            if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
-                return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
-            }
-        }
-
-        if (!reqAuth.files || Object.keys(reqAuth.files).length === 0) {
-            return res.status(400).json({ error: 'Se requieren imágenes del hotel y de las habitaciones' });
-        }
-
-        const files = reqAuth.files as {
-            imagenes?: Express.Multer.File[];
-            imageneshabitaciones?: Express.Multer.File[];
-        };
-
-        const imagenesHotel = files.imagenes || [];
-        const imagenesHabitaciones = files.imageneshabitaciones || [];
-
-        if (imagenesHotel.length === 0) {
-            return res.status(400).json({ error: 'Se requiere al menos una imagen del hotel' });
-        }
-
-        if (imagenesHabitaciones.length === 0) {
-            return res.status(400).json({ error: 'Se requiere al menos una imagen de habitación' });
-        }
-
-        const imagenesUrl: string[] = [];
-        const imagenesHabitacionesUrl: string[] = [];
-
-        for (const file of imagenesHotel) {
-            const resultado = await cloudinary.uploader.upload(file.path);
-            imagenesUrl.push(resultado.secure_url);
-            fs.unlinkSync(file.path);
-        }
-
-        for (const file of imagenesHabitaciones) {
-            const resultado = await cloudinary.uploader.upload(file.path);
-            imagenesHabitacionesUrl.push(resultado.secure_url);
-            fs.unlinkSync(file.path);
-        }
-
-        const dto = new Hotel(
-            nombre,
-            descripcion,
-            ubicacion,
-            estrellas,
-            imagenesUrl,
-            ciudad,
-            imagenesHabitacionesUrl 
-        );
-
-        const idHotel = await admin.añadirHotel(dto);
-
-        return res.status(201).json({
-            status: "Hotel creado con éxito",
-            idHotel: idHotel
-        });
-
-    } catch (error: any) {
-        console.error("Error al crear el hotel:", error.message || error);
-        return res.status(500).json({ error: "Error en el servidor" });
+  try {
+    if (!id_usuario) {
+      return res.status(401).json({ error: "Usuario no autenticado" });
     }
+
+    console.log("🟡 req.body:", req.body);
+    console.log("🟡 req.files:", reqAuth.files);
+
+    const {
+      nombre,
+      descripcion,
+      ubicacion,
+      ciudad,
+      estrellas
+    } = req.body;
+
+    const campos = { nombre, descripcion, ubicacion, ciudad, estrellas };
+
+    for (const [campo, valor] of Object.entries(campos)) {
+      if (!valor || (typeof valor === 'string' && valor.trim() === '')) {
+        return res.status(400).json({ error: `El campo '${campo}' es requerido y no puede estar vacío` });
+      }
+    }
+
+    if (!reqAuth.files || Object.keys(reqAuth.files).length === 0) {
+      return res.status(400).json({ error: 'Se requieren imágenes del hotel y de las habitaciones' });
+    }
+
+    const files = reqAuth.files as {
+      imagenes?: Express.Multer.File[];
+      imageneshabitaciones?: Express.Multer.File[];
+    };
+
+    const imagenesHotel = files.imagenes || [];
+    const imagenesHabitaciones = files.imageneshabitaciones || [];
+
+    console.log("🟡 imagenesHotel:", imagenesHotel.length);
+    console.log("🟡 imagenesHabitaciones:", imagenesHabitaciones.length);
+
+    if (imagenesHotel.length === 0) {
+      return res.status(400).json({ error: 'Se requiere al menos una imagen del hotel' });
+    }
+
+    if (imagenesHabitaciones.length === 0) {
+      return res.status(400).json({ error: 'Se requiere al menos una imagen de habitación' });
+    }
+
+    const imagenesUrl: string[] = [];
+    const imagenesHabitacionesUrl: string[] = [];
+
+    for (const file of imagenesHotel) {
+      const resultado = await cloudinary.uploader.upload(file.path);
+      imagenesUrl.push(resultado.secure_url);
+      fs.unlinkSync(file.path);
+    }
+
+    for (const file of imagenesHabitaciones) {
+      const resultado = await cloudinary.uploader.upload(file.path);
+      imagenesHabitacionesUrl.push(resultado.secure_url);
+      fs.unlinkSync(file.path);
+    }
+
+    const dto = new Hotel(
+      nombre,
+      descripcion,
+      ubicacion,
+      estrellas,
+      imagenesUrl,
+      ciudad,
+      imagenesHabitacionesUrl
+    );
+
+    const idHotel = await admin.añadirHotel(dto);
+
+    return res.status(201).json({
+      status: "Hotel creado con éxito",
+      idHotel: idHotel
+    });
+
+  } catch (error: any) {
+    console.error("🔴 Error al crear el hotel:", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 
 export const createTransporte = async (req: Request , res:Response) => {

@@ -9,9 +9,8 @@ interface PaymentRequestBody {
   quantity: number;
 }
 
-const CURRENCY = 'USD';
-// process.env.PAYPAL_RETURN_URL ||
-const RETURN_URL =  'http://localhost:5173/paquetes';
+const CURRENCY = 'COP'; 
+const RETURN_URL = process.env.PAYPAL_RETURN_URL || 'https://proyecto-zentravel.onrender.com/api/payments/success';
 const CANCEL_URL = process.env.PAYPAL_CANCEL_URL || 'https://proyecto-zentravel.onrender.com/api/payments/cancel';
 
 export const createPayment = async (req: Request, res: Response) => {

@@ -6,30 +6,33 @@ import generarContrasena from "../../Helpers/generarContraseña";
 import { UsuarioEmail } from "../../Helpers/sendRecoveryEmail";
 
 
-export const EliminarUsuarios = async(req:Request , res:Response) => {
-    
-    const nombre = req.params.nombre;
+export const EliminarUsuarioPorId = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
 
-    if (!nombre) {
-        return res.status(401).json({status: `no ha ingresado el nombre del usuario`});
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    await admin.deleadUserById(id);
+
+    return res.status(200).json({ status: "Usuario eliminado correctamente" });
+
+  } catch (error: any) {
+    console.error("❌ Error al eliminar usuario por ID:", error);
+
+    const msg = error?.sqlMessage || error?.message || "";
+
+    if (msg.includes("El usuario no existe")) {
+      return res.status(404).json({ error: "El usuario no existe." });
     }
 
-    try {
-        
-        const UserDelect = await admin.deleadUser(nombre);
+    return res.status(500).json({ error: "Error en el servidor", detalle: msg });
+  }
+};
 
-        return res.status(200).json({
-            status: "ok usuario eliminado",
-            UserDelect
-        })
 
-    } catch (error) {
 
-        console.error("❌ Error al eliminar los usuarios:", error);
-        return res.status(500).json({ error: "Error en el servidor" });
-    }
-
-}
 
 export const TraerUsuario = async(req:Request , res:Response) => {
     const Rol = req.params.Rol

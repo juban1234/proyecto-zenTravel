@@ -11,11 +11,18 @@ class admin {
         return await rows || null;
     }
 
-    static async deleadUser(nombre: String) {
-        const sql = `call zentravel.Eliminar_usuario(?)`;
-        const [rows]: any = await db.execute(sql, [nombre]);
-        return rows[0] || null;
-    }
+static async deleadUserById(id_usuario: number) {
+  const sql = 'CALL zentravel.Eliminar_usuario_por_id(?)';
+  const values = [id_usuario];
+
+  try {
+    const [rows]: any = await db.execute(sql, values);
+    return rows[0] || null;
+  } catch (error) {
+    console.error("❌ Error en el procedimiento almacenado:", error);
+    throw error; 
+  }
+}
 
     static async editarRoles(nombre: String, rol: String) {
         const sql = `call zentravel.actualizar_rol( ? , ?)`
@@ -48,19 +55,20 @@ class admin {
     }
 
     static async añadirHotel(hotel: Hotel) {
-        const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion,estrellas,imagenes, ciudad) VALUES (?, ?, ?, ?, ? ,?)`;
+        const sql = `INSERT INTO hotel (nombre, descripcion, ubicacion, estrellas, imagenes, ciudad, imageneshabitaciones) 
+               VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const values = [
             hotel.nombre,
             hotel.descripcion,
             hotel.ubicacion,
             hotel.estrellas,
             hotel.imagenes,
-            hotel.ciudad || null
+            hotel.ciudad,
+          (hotel.imageneshabitaciones)     // ✅ nuevo campo
         ];
         const [result] = await db.execute(sql, values);
         return result;
     }
-
 
     static async añadirTransporte(trans: Transporte) {
         const sql = `insert into transporte(tipo,empresa,origen,destino,fecha_salida,duracion,precio,capacidad,clase)values(?,?,?,?,?,?,?,?,?)`;

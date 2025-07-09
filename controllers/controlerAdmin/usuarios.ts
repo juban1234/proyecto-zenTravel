@@ -14,23 +14,24 @@ export const EliminarUsuarioPorId = async (req: Request, res: Response) => {
   }
 
   try {
-    // ✅ Llamada al procedimiento almacenado
     await admin.deleadUserById(id);
 
-    // ✅ Si no lanza error, se eliminó correctamente
     return res.status(200).json({ status: "Usuario eliminado correctamente" });
 
   } catch (error: any) {
     console.error("❌ Error al eliminar usuario por ID:", error);
 
-    // ✅ Manejo del mensaje del SIGNAL desde el procedimiento
-    if (error.sqlMessage?.includes("El usuario no existe")) {
+    const msg = error?.sqlMessage || error?.message || "";
+
+    if (msg.includes("El usuario no existe")) {
       return res.status(404).json({ error: "El usuario no existe." });
     }
 
-    return res.status(500).json({ error: "Error en el servidor" });
+    return res.status(500).json({ error: "Error en el servidor", detalle: msg });
   }
 };
+
+
 
 
 export const TraerUsuario = async(req:Request , res:Response) => {

@@ -1,5 +1,5 @@
 import express from "express";
-import { EliminarUsuarios , TraerUsuario , RolUsuario ,newEmpleados,Dashboard} from "../controllers/controlerAdmin/usuarios";
+import { EliminarUsuarioPorId , TraerUsuario , RolUsuario ,newEmpleados,Dashboard} from "../controllers/controlerAdmin/usuarios";
 import { verificarRol } from "../middleware/validatorRol";
 import { createDestino , createHabitacion, createHotel, createTransporte } from "../controllers/controlerAdmin/paquetes";
 import { deleteDestino, deleteHotel, deletePaquete, deleteTransporte } from "../controllers/controlerAdmin/DeleteController";
@@ -11,7 +11,7 @@ const router = express.Router();
 
 // control de usuarios del sistema
 router.patch('User/EditeRol', verificarRol('admin'),RolUsuario); //funcional
-router.delete('/UserDelete/:nombre',verificarRol('admin'),EliminarUsuarios) //funcional
+router.delete('/UserDelete/:id', verificarRol('admin'), EliminarUsuarioPorId); //funcional
 router.get('/Users/:Rol',verificarRol('admin','empleado'),TraerUsuario)
 router.post('/CreateUsers',validatorParams,verificarRol('admin'),newEmpleados)
 

@@ -11,11 +11,18 @@ class admin {
         return await rows || null;
     }
 
-    static async deleadUser(nombre: String) {
-        const sql = `call zentravel.Eliminar_usuario(?)`;
-        const [rows]: any = await db.execute(sql, [nombre]);
-        return rows[0] || null;
-    }
+static async deleadUserById(id_usuario: number) {
+  const sql = 'CALL zentravel.Eliminar_usuario_por_id(?)';
+  const values = [id_usuario];
+
+  try {
+    const [rows]: any = await db.execute(sql, values);
+    return rows[0] || null;
+  } catch (error) {
+    console.error("❌ Error en el procedimiento almacenado:", error);
+    throw error; 
+  }
+}
 
     static async editarRoles(nombre: String, rol: String) {
         const sql = `call zentravel.actualizar_rol( ? , ?)`

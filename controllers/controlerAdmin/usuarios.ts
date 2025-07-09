@@ -31,9 +31,6 @@ export const EliminarUsuarioPorId = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
 export const TraerUsuario = async(req:Request , res:Response) => {
     const Rol = req.params.Rol
     try {

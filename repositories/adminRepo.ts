@@ -152,7 +152,7 @@ static async deleadUserById(id_usuario: number) {
         }
     }
 
-    static async editardestino( id_destino: number, D: any) {
+    static async editardestino( id_destino: number, D: any ) {
 
     let campos: string[] = [];
     let valores: any[] = [];
@@ -216,6 +216,11 @@ static async deleadUserById(id_usuario: number) {
     if (D.imagenes) {
         campos.push("imagenes = ?");
         valores.push(JSON.stringify(D.imagenes));
+    }
+
+    if(D.imageHabitacion){
+        campos.push("imageneshabitaciones = ?");
+        valores.push(JSON.stringify(D.imageHabitacion));
     }
 
     if (campos.length === 0) {

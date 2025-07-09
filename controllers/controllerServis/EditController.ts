@@ -73,10 +73,17 @@ export class EditController {
       };
 
       let imagenes: string | undefined;
+      let imageHabitacion: string | undefined;
 
       if (req.file) {
         const imagen = await cloudinary.uploader.upload(req.file.path);
         imagenes = imagen.secure_url;
+        fs.unlinkSync(req.file.path);
+      }
+
+      if (req.file) {
+        const imagen = await cloudinary.uploader.upload(req.file.path);
+        imageHabitacion = imagen.secure_url;
         fs.unlinkSync(req.file.path);
       }
 
@@ -88,6 +95,10 @@ export class EditController {
 
       if (imagenes) {
         dataParaActualizar.imagenes = imagenes;
+      }
+
+      if (imageHabitacion){
+        dataParaActualizar.imageHabitacion = imageHabitacion;
       }
 
       const resultado = await admin.editarHotel(id_hotel, dataParaActualizar);

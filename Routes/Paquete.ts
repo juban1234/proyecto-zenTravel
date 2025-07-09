@@ -4,6 +4,7 @@ import {PackageController} from "../controllers/controlerUser/packageController"
 import { EditController } from "../controllers/controllerServis/EditController";
 import verifyToken from "../middleware/verifyToken";
 import { verificarRol } from "../middleware/validatorRol";
+import { uploadMultiple } from "../configs/multer";
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.post('/Marketing',verificarRol('admin', "empleado"),PackageController.Mar
 
 //Rutas para editar 
 router.put('/EditarDestino/:id_destino', verificarRol('admin', "empleado"),EditController.Editdestino);
-router.put('/EditarHotel/:id_hotel',verificarRol('admin', "empleado"),EditController.EditarHotel);
+router.put('/EditarHotel/:id_hotel',uploadMultiple,verificarRol('admin', "empleado"),EditController.EditarHotel);
 
 
 export default router;

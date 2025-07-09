@@ -193,8 +193,7 @@ static async deleadUserById(id_usuario: number) {
     return result.affectedRows > 0;
     }
 
-    static async editarHotel( id_hotel:number , D:any ) {
-
+    static async editarHotel(id_hotel: number, D: any) {
     let campos: string[] = [];
     let valores: any[] = [];
 
@@ -211,16 +210,16 @@ static async deleadUserById(id_usuario: number) {
     if (D.ubicacion) {
         campos.push("ubicacion = ?");
         valores.push(D.ubicacion);
-    }   
+    }
 
     if (D.imagenes) {
         campos.push("imagenes = ?");
         valores.push(JSON.stringify(D.imagenes));
     }
 
-    if(D.imageHabitacion){
+    if (D.imagenesHabitaciones) {
         campos.push("imageneshabitaciones = ?");
-        valores.push(JSON.stringify(D.imageHabitacion));
+        valores.push(JSON.stringify(D.imagenesHabitaciones));
     }
 
     if (campos.length === 0) {
@@ -229,15 +228,17 @@ static async deleadUserById(id_usuario: number) {
 
     const sql = `
         UPDATE hotel 
-        Set ${campos.join(", ")}
+        SET ${campos.join(", ")}
         WHERE id_hotel = ?
     `;
 
     valores.push(id_hotel);
+    console.log("Valores a actualizar:", valores);
 
     const [result]: any = await db.execute(sql, valores);
-    return result.affectedRows > 0 ;
+    return result.affectedRows > 0;
     }
+
 
     static async infoDashbord(): Promise<any[][]> {
         const [rows] = await db.query("CALL obtenerDashboard()");

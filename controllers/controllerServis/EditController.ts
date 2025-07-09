@@ -6,6 +6,7 @@ import upload from '../../configs/multer';
 import fs from 'fs';
 import { promisify } from 'util';
 import admin from "../../repositories/adminRepo";
+import { unlink } from "fs/promises";
 
 const uploadSingle = promisify(upload.single('imagen'));
 
@@ -55,16 +56,14 @@ export class EditController {
     }
   }
 
-  static async EditarHotel(req: Request, res: Response): Promise<Response> {
+static async EditarHotel(req: Request, res: Response): Promise<Response> {
     try {
-      await uploadSingle(req, res); // puede o no haber imagen
-
       const id_hotel = Number(req.params.id_hotel);
       const { nombre, descripcion, ubicacion } = req.body;
 
-      if (!id_hotel) {
-        return res.status(401).json({ error: "Usuario no autenticado" });
-      }
+      // if (!id_hotel || !nombre || !descripcion || !ubicacion) {
+      //   return res.status(400).json({ error: "Faltan campos obligatorios o ID inválido" });
+      // }
 
       const campos = {
         nombre: nombre?.trim(),
@@ -72,35 +71,50 @@ export class EditController {
         ubicacion: ubicacion?.trim()
       };
 
-      let imagenes: string | undefined;
-      let imageHabitacion: string | undefined;
+      // Acceder a los archivos desde req.files
+      const imagenes = (req.files as any)['imagenes'] || [];
+      const imagenesHabitaciones = (req.files as any)['imageneshabitaciones'] || [];
 
-      if (req.file) {
-        const imagen = await cloudinary.uploader.upload(req.file.path);
-        imagenes = imagen.secure_url;
-        fs.unlinkSync(req.file.path);
+      const urlsImagenes: string[] = [];
+      const urlsHabitaciones: string[] = [];
+
+      // Subir imágenes generales del hotel
+      for (const file of imagenes) {
+        const result = await cloudinary.uploader.upload(file.path);
+        urlsImagenes.push(result.secure_url);
+        await unlink(file.path); // Borra archivo local
       }
 
-      if (req.file) {
-        const imagen = await cloudinary.uploader.upload(req.file.path);
-        imageHabitacion = imagen.secure_url;
-        fs.unlinkSync(req.file.path);
+      // Subir imágenes de las habitaciones
+      for (const file of imagenesHabitaciones) {
+        const result = await cloudinary.uploader.upload(file.path);
+        urlsHabitaciones.push(result.secure_url);
+        await unlink(file.path); // Borra archivo local
       }
 
+      // Armar el objeto para actualizar
       const dataParaActualizar: any = {
         nombre: campos.nombre,
         descripcion: campos.descripcion,
         ubicacion: campos.ubicacion,
       };
 
-      if (imagenes) {
-        dataParaActualizar.imagenes = imagenes;
+
+      if (urlsImagenes.length > 0) {
+        dataParaActualizar.imagenes = urlsImagenes;
       }
 
-      if (imageHabitacion){
-        dataParaActualizar.imageHabitacion = imageHabitacion;
+      if (urlsHabitaciones.length > 0) {
+        dataParaActualizar.imagenesHabitaciones = urlsHabitaciones;
       }
 
+
+
+      if(!dataParaActualizar) {
+        return res.status(404).json({ error: `faltan los campos`, dataParaActualizar});
+      }
+
+      // Actualizar en base de datos
       const resultado = await admin.editarHotel(id_hotel, dataParaActualizar);
 
       if (!resultado) {

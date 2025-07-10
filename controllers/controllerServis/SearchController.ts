@@ -41,10 +41,12 @@ export const SearchHotelName = async(req: Request, res: Response) => {
         }
 
         const resultado = await searchRepo.buscarHotelesCiudad(ciudad)
+        let nombre = resultado.nombre
 
         return res.status(200).json({
-            menssage:` hoteles encontrados` ,
-            resultado
+            menssage:` hoteles encontrados`,
+            resultado,
+            nombre
         })
 
     }catch(error){

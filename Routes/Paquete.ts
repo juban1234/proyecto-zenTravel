@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.get('/Destiny',buscar); // Funcional
 router.get('/Hotel', SearchHotel); // Funcional
+router.get('/Hotel/:ciudad',)
 router.get('/Transport',SearchTranport)
 router.get('/Transport/:origen/:destino',SearchTransporteByName); // funcional
 router.get('/RoomReservation/:hotel',buscar_habitacion)

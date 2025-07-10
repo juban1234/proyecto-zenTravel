@@ -14,6 +14,12 @@ class searchRepo {
         return rows
     }
 
+    static async buscarHotelesCiudad(ciudad:string){
+        const sql = `select * from hotel where ciudad = ?`
+        const [rows]: any = await db.execute(sql,[ciudad])
+        return rows.nombre
+    }
+
     static async buscartransporte() {
         const sql = `select * from Transporte`
         const [rows]: any = await db.execute(sql)

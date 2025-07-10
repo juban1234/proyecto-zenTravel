@@ -201,18 +201,18 @@ export class PackageController{
             } = req.body
 
             const dto = new Package (
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicioDisponible,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino,
-            categoria,
-            incluye,
-            noIncluye
+                nombrePaquete,
+                descripcion,
+                imagenUrl,
+                duracionDias,
+                fechaInicioDisponible,
+                descuento,
+                nombreHotel,
+                nombreTransporte,
+                nombreDestino,
+                categoria,
+                incluye,
+                noIncluye
             )
 
             const result = await Paquetes.actualizar_package(dto,id_paquete)

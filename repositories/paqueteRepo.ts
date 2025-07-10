@@ -57,12 +57,69 @@ class Paquetes {
         return rows [0]
     }
 
-    static async actualizar_package(P: Package, id_usuario: number) {
-        const sql = `call ActualizarPaqueteFlexible(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-        const values = [
-            P.nombrePaquete
-        ];
+    static async actualizar_package(P: any) {
+        const updates: string[] = [];
+        const values: any[] = [];
+
+        if (P.nombrePaquete !== undefined) {
+            updates.push("nombrePaquete = ?");
+            values.push(P.nombrePaquete);
+        }
+        if (P.descripcion !== undefined) {
+            updates.push("descripcion = ?");
+            values.push(P.descripcion);
+        }
+        if (P.imagenUrl !== undefined) {
+            updates.push("imagenUrl = ?");
+            values.push(P.imagenUrl);
+        }
+        if (P.duracionDias !== undefined) {
+            updates.push("duracionDias = ?");
+            values.push(Number(P.duracionDias));
+        }
+        if (P.fechaInicioDisponible !== undefined) {
+            updates.push("fechaInicioDisponible = ?");
+            values.push(P.fechaInicioDisponible);
+        }
+        if (P.descuento !== undefined) {
+            updates.push("descuento = ?");
+            values.push(Number(P.descuento));
+        }
+        if (P.nombreHotel !== undefined) {
+            updates.push("id_habitacion = ?");
+            values.push(P.nombreHotel);
+        }
+        if (P.nombreTransporte !== undefined) {
+            updates.push("id_transporte = ?");
+            values.push(P.nombreTransporte);
+        }
+        if (P.nombreDestino !== undefined) {
+            updates.push("id_destino = ?");
+            values.push(P.nombreDestino);
+        }
+        if (P.categoria !== undefined) {
+            updates.push("categoria = ?");
+            values.push(P.categoria);
+        }
+        if (P.incluye !== undefined) {
+            updates.push("incluye = ?");
+            values.push(Array.isArray(P.incluye) ? P.incluye.join(", ") : P.incluye);
+        }
+        if (P.noIncluye !== undefined) {
+            updates.push("noIncluye = ?");
+            values.push(Array.isArray(P.noIncluye) ? P.noIncluye.join(", ") : P.noIncluye);
+        }
+
+        if (updates.length === 0) {
+            return "no se a actualizado ningun campo";
+        }
+
+        updates.push("updated_at = CURRENT_TIMESTAMP");
+        values.push(P.id_paquete); 
+
+        const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`;
         const [rows]: any = await db.execute(sql, values);
+
         return rows;
     }
 

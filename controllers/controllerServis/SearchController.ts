@@ -48,7 +48,10 @@ export const SearchHotelName = async(req: Request, res: Response) => {
         })
 
     }catch(error){
-
+        return res.status(500).json({
+            messaje:`ocurrio un error al trer la informcacion de los hoteles`,
+            error
+        })
     }
 }
 

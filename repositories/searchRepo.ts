@@ -15,7 +15,7 @@ class searchRepo {
     }
 
     static async buscarHotelesCiudad(ciudad:string){
-        const sql = `select * from hotel where ciudad = ?`
+        const sql = `select h.nombre from hotel h where ciudad = ?`
         const [rows]: any = await db.execute(sql,[ciudad])
         return rows
     }

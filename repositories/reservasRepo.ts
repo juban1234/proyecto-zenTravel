@@ -3,7 +3,7 @@ import db from '../configs/config';
 
 class reservaRepo {
     static async crearReserva(R:any) {
-        const sql = 'CALL CrearReserva(?, ?, ?,?, ?, ? ,?)';
+        const sql = 'CALL CrearReserva(?, ?, ?,?, ?, ?)';
         const values = [
             R.id_usuario,
             R.cedula, 

@@ -21,8 +21,8 @@ export const consultarBDPorIntencion = async (
       case "destinos_playa":
       case "destinos_naturaleza":
       case "destinos_cultural":
+        // Aquí podrías poner lógica en el futuro
         break;
-      }
 
       case "hoteles": {
         const [hoteles] = await db.query<RowDataPacket[]>(
@@ -32,7 +32,7 @@ export const consultarBDPorIntencion = async (
           const datos = hoteles.map((h) => ({
             nombre: h.nombre,
             ciudad: h.ciudad,
-            descripcion: h.descripcion, 
+            descripcion: h.descripcion,
             ubicacion: h.ubicacion,
             imagenes: h.imagenes
           }));
@@ -73,7 +73,7 @@ export const consultarBDPorIntencion = async (
             empresa: t.empresa,
             origen: t.origen,
             destino: t.destino,
-            salida: t.fecha_salida,
+            salida: t.fecha_salida
           }));
           return { tipo: "transporte", datos };
         }

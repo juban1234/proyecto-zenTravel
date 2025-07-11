@@ -14,7 +14,6 @@ Categorías disponibles:
 - destinos_playa
 - destinos_naturaleza
 - destinos_cultural
-- destinos_generales
 - hoteles
 - paquetes
 - transporte

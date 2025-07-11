@@ -6,8 +6,7 @@ const mapearIntencion = (intencion: string): string => {
     destinos_romanticos: "romantico",
     destinos_historia: "historia",
     destinos_montana: "naturaleza",
-    recomendaciones_personalizadas: "paquetes",
-    destinos: "destinos_generales", 
+    recomendaciones_personalizadas: "paquetes"
   };
   return sinonimos[intencion] || intencion;
 };
@@ -22,17 +21,6 @@ export const consultarBDPorIntencion = async (
       case "destinos_playa":
       case "destinos_naturaleza":
       case "destinos_cultural":
-      case "destinos_generales": {
-        const [destinos] = await db.query<RowDataPacket[]>(
-          `SELECT nombre, descripcion FROM destinos`
-        );
-        if (destinos.length > 0) {
-          const datos = destinos.map((d) => ({
-            nombre: d.nombre,
-            descripcion: d.descripcion,
-          }));
-          return { tipo: "destinos", datos };
-        }
         break;
       }
 

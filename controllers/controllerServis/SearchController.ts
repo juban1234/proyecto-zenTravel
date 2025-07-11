@@ -31,6 +31,30 @@ export const SearchHotel = async (req: Request, res: Response) => {
     }
 };
 
+export const SearchHotelName = async(req: Request, res: Response) => {
+    const ciudad = req.params.ciudad
+
+    try{
+
+        if(!ciudad){
+            return res.status(400).json({ messaje:'se deve rellenar de manera decuada la ciudad' })
+        }
+
+        const resultado = await searchRepo.buscarHotelesCiudad(ciudad)
+
+        return res.status(200).json({
+            menssage:` hoteles encontrados`,
+            resultado
+        })
+
+    }catch(error){
+        return res.status(500).json({
+            messaje:`ocurrio un error al trer la informcacion de los hoteles`,
+            error
+        })
+    }
+}
+
 export const SearchTranport = async(req: Request, res: Response) => {
     try {
         

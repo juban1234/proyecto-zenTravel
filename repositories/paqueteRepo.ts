@@ -57,7 +57,7 @@ class Paquetes {
         return rows [0]
     }
 
-    static async actualizar_package(P: Package, id_usuario: number) {
+    static async actualizar_package(P: any) {
         const updates: string[] = [];
         const values: any[] = [];
 
@@ -86,15 +86,15 @@ class Paquetes {
             values.push(Number(P.descuento));
         }
         if (P.nombreHotel !== undefined) {
-            updates.push("nombreHotel = ?");
+            updates.push("id_habitacion = ?");
             values.push(P.nombreHotel);
         }
         if (P.nombreTransporte !== undefined) {
-            updates.push("nombreTransporte = ?");
+            updates.push("id_transporte = ?");
             values.push(P.nombreTransporte);
         }
         if (P.nombreDestino !== undefined) {
-            updates.push("nombreDestino = ?");
+            updates.push("id_destino = ?");
             values.push(P.nombreDestino);
         }
         if (P.categoria !== undefined) {
@@ -115,7 +115,7 @@ class Paquetes {
         }
 
         updates.push("updated_at = CURRENT_TIMESTAMP");
-        values.push(id_usuario); 
+        values.push(P.id_paquete); 
 
         const sql = `UPDATE PAQUETE SET ${updates.join(", ")} WHERE id_paquete = ?`;
         const [rows]: any = await db.execute(sql, values);

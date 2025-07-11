@@ -4,17 +4,18 @@ import { Request, Response } from "express";
 
 export const reserva = async (req: Request, res: Response) => {
     try {
-      const { cedula, id_paquete } = req.body;
+      const { cedula, fecha_inicio , fecha_fin ,id_habitacion,observacion } = req.body;
       const id_usuario = (req as any).user.id;
   
-      console.log("📩 Recibiendo datos de la reserva:", { id_usuario, cedula, id_paquete });
+      console.log("📩 Recibiendo datos de la reserva:", { id_usuario, cedula, fecha_inicio , fecha_fin ,id_habitacion,observacion });
   
-      const HacerReserva = await reservaRepo.crearReserva(
-        new Reservas( cedula, id_usuario, id_paquete)
-      );
+      const campos: any = {
+        id_usuario,cedula, fecha_inicio , fecha_fin ,id_habitacion,observacion 
+      }
 
-      console.log("✅ Reserva creada con éxito ", HacerReserva);
-      return res.status(201).json({ status: "Reserva creada con éxito" });
+      const HacerReserva = await reservaRepo.crearReserva(campos);
+
+      return res.status(201).json({ status: "Reserva creada con éxito", estado: HacerReserva });
   
     } catch (error: any) {
       console.error("❌ Error al crear la reserva:", error);

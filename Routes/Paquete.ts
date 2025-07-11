@@ -1,5 +1,5 @@
 import express from "express";
-import { buscar ,SearchHotel,SearchTransporteByName,buscar_habitacion,SearchTranport} from "../controllers/controllerServis/SearchController";
+import { buscar ,SearchHotel,SearchTransporteByName,buscar_habitacion,SearchTranport, SearchHotelName} from "../controllers/controllerServis/SearchController";
 import {PackageController} from "../controllers/controlerUser/packageController";
 import { EditController } from "../controllers/controllerServis/EditController";
 import verifyToken from "../middleware/verifyToken";
@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.get('/Destiny',buscar); // Funcional
 router.get('/Hotel', SearchHotel); // Funcional
+router.get('/Hotel/:ciudad',SearchHotelName)
 router.get('/Transport',SearchTranport)
 router.get('/Transport/:origen/:destino',SearchTransporteByName); // funcional
 router.get('/RoomReservation/:hotel',buscar_habitacion)

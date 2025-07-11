@@ -6,8 +6,7 @@ const mapearIntencion = (intencion: string): string => {
     destinos_romanticos: "romantico",
     destinos_historia: "historia",
     destinos_montana: "naturaleza",
-    recomendaciones_personalizadas: "paquetes",
-    destinos: "destinos_generales", 
+    recomendaciones_personalizadas: "paquetes"
   };
   return sinonimos[intencion] || intencion;
 };
@@ -22,19 +21,8 @@ export const consultarBDPorIntencion = async (
       case "destinos_playa":
       case "destinos_naturaleza":
       case "destinos_cultural":
-      case "destinos_generales": {
-        const [destinos] = await db.query<RowDataPacket[]>(
-          `SELECT nombre, descripcion FROM destinos`
-        );
-        if (destinos.length > 0) {
-          const datos = destinos.map((d) => ({
-            nombre: d.nombre,
-            descripcion: d.descripcion,
-          }));
-          return { tipo: "destinos", datos };
-        }
+        // Aquí podrías poner lógica en el futuro
         break;
-      }
 
       case "hoteles": {
         const [hoteles] = await db.query<RowDataPacket[]>(
@@ -44,7 +32,7 @@ export const consultarBDPorIntencion = async (
           const datos = hoteles.map((h) => ({
             nombre: h.nombre,
             ciudad: h.ciudad,
-            descripcion: h.descripcion, 
+            descripcion: h.descripcion,
             ubicacion: h.ubicacion,
             imagenes: h.imagenes
           }));
@@ -85,7 +73,7 @@ export const consultarBDPorIntencion = async (
             empresa: t.empresa,
             origen: t.origen,
             destino: t.destino,
-            salida: t.fecha_salida,
+            salida: t.fecha_salida
           }));
           return { tipo: "transporte", datos };
         }

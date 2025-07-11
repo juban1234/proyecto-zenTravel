@@ -186,36 +186,37 @@ export class PackageController{
             const id_paquete = Number(req.params.id)
 
             const {
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicioDisponible,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino,
-            categoria,
-            incluye,
-            noIncluye
+                nombrePaquete,
+                descripcion,
+                imagenUrl,
+                duracionDias,
+                fechaInicioDisponible,
+                descuento,
+                nombreHotel,
+                nombreTransporte,
+                nombreDestino,
+                categoria,
+                incluye,
+                noIncluye
             } = req.body
 
-            const dto = new Package (
-            nombrePaquete,
-            descripcion,
-            imagenUrl,
-            duracionDias,
-            fechaInicioDisponible,
-            descuento,
-            nombreHotel,
-            nombreTransporte,
-            nombreDestino,
-            categoria,
-            incluye,
-            noIncluye
-            )
+            const dto:any = {
+                id_paquete,
+                nombrePaquete,
+                descripcion,
+                imagenUrl,
+                duracionDias,
+                fechaInicioDisponible,
+                descuento,
+                nombreHotel,
+                nombreTransporte,
+                nombreDestino,
+                categoria,
+                incluye,
+                noIncluye
+            }
 
-            const result = await Paquetes.actualizar_package(dto,id_paquete)
+            const result = await Paquetes.actualizar_package(dto,)
 
             return res.status(200).json({
             success: true,

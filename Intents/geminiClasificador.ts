@@ -8,13 +8,12 @@ export const clasificarIntencionConIA = async (pregunta: string): Promise<string
   try {
     const prompt = `
 Clasifica la siguiente intención del usuario en una sola palabra clave y sin justificar. 
-Las categorías deben ser en minúsculas y usar guiones bajos si son compuestas.
+Las categorías deben ser en minúsculas y usar guiones bajos si son compuestas., tambien como precaucion si sete pregunta sobre informacion actual , por ejemplo que se puede hacer en el quindio entonses usa informacion de la web para preguntar 
 
 Categorías disponibles:
 - destinos_playa
 - destinos_naturaleza
 - destinos_cultural
-- destinos_generales
 - hoteles
 - paquetes
 - transporte
